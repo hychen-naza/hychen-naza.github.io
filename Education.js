@@ -1,8 +1,3 @@
-
-import "Education.css";
-
-
-
 <!-- Education -->
 <div id="education" className="Education section">
   <h1>Education</h1>
