@@ -18,6 +18,21 @@
   padding-top: 30px;
 }
 
+.Education h3 {
+  color: #757575;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  padding-top: 10px;
+}
+
+.Education-background {    
+  opacity: .3;
+  height: 100vh;
+  position: fixed;
+  width: 100vw;
+  z-index: -1;
+  top: 0;
+}
+
 .Experience h4 {
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
