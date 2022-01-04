@@ -1,1 +1,63 @@
-index
+---
+layout: default
+title: "Slim and Efficient Neural Network Design for Resource-Constrained SAR Target Recognition"
+---
+
+<center><h1>{{ page.title }}</h1></center>
+
+<td>
+	<center>
+		Remote Sensing, vol. 10, pp.  1618, Oct. 2018<br>
+		<br>
+		<b>Hongyi Chen</b>, Fan Zhang, Bo Tang, Qiang Yin and Xian Sun<br>
+		<br>
+		<img style="vertical-align:middle" src="SSA_RL_Navigation"  width="100%" height="inherit"/>		
+	</center>
+</td>
+
+<br>
+	
+<td>
+	<hr>
+	<h3 style="margin-bottom:10px;">Abstract</h3>
+  Deep convolutional neural networks (CNN) have been recently applied to synthetic
+  aperture radar (SAR) for automatic target recognition (ATR) and have achieved state-of-the-art results
+  with significantly improved recognition performance. However, the training period of deep CNN is
+  long, and the size of the network is huge, sometimes reaching hundreds of megabytes. These two
+  factors of deep CNN hinders its practical implementation and deployment in real-time SAR platforms
+  that are typically resource-constrained. To address this challenge, this paper presents three strategies
+  of network compression and acceleration to decrease computing and memory resource dependencies
+  while maintaining a competitive accuracy. First, we introduce a new weight-based network pruning
+  and adaptive architecture squeezing method to reduce the network storage and the time of inference
+  and training process, meanwhile maintain a balance between compression ratio and classification
+  accuracy. Then we employ weight quantization and coding to compress the network storage space.
+  Due to the fact that the amount of calculation is mainly reflected in the convolution layer, a fast
+  approach for pruned convolutional layers is proposed to reduce the number of multiplication by
+  exploiting the sparsity in the activation inputs and weights. Experimental results show that the
+  convolutional neural networks for SAR-ATR can be compressed by 40 × without loss of accuracy,
+  and the number of multiplication can be reduced by 15 × . Combining these strategies, we can easily
+  load the network in resource-constrained platforms, speed up the inference process to get the results
+  in real-time or even retrain a more suitable network with new image data in a specific situation.
+</td>
+
+<td>
+	<h3> Paper: [<a href="Remote_sensing_2018.pdf">PDF</a>] &nbsp; &nbsp; &nbsp</h3>
+</td>
+
+	
+<br>
+<br>
+
+<h3 style="margin-bottom:0px;">Bibtex</h3>
+<pre>
+@article{article,
+author = {Chen, Hongyi and Zhang, Fan and Tang, Bo and Yin, Qiang and Sun, Xian},
+year = {2018},
+month = {10},
+pages = {1618},
+title = {Slim and Efficient Neural Network Design for Resource-Constrained SAR Target Recognition},
+volume = {10},
+journal = {Remote Sensing},
+doi = {10.3390/rs10101618}
+}
+</pre>
