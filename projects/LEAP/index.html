@@ -409,16 +409,16 @@ pre {
         <center>
             <div class="author-row-new">
                 <a href="https://hychen-naza.github.io/">Hongyi Chen*<sup>1</sup></a>,
-                <a href="https://yilundu.github.io/">Yilun Du*<sup>1</sup></a>,
-                <a href="">Yiye Chen<sup>1</sup></a>
-                <a href="https://scholar.google.com/citations?user=rRJ9wTJMUB8C&hl=en">Joshua B. Tenenbaum<sup>1</sup></a>,
-                <a href="https://www.ece.gatech.edu/faculty-staff-directory/patricio-antonio-vela">Patricio Vela<sup>2</sup></a>
+                <a href="https://yilundu.github.io/">Yilun Du*<sup>2</sup></a>,
+                <a href="">Yiye Chen*<sup>1</sup></a>
+                <a href="https://scholar.google.com/citations?user=rRJ9wTJMUB8C&hl=en">Joshua B. Tenenbaum<sup>2</sup></a>,
+                <a href="https://www.ece.gatech.edu/faculty-staff-directory/patricio-antonio-vela">Patricio Vela<sup>1</sup></a>
             </div>
         </center>
         <center>
         <div class="affiliations">
-            <span><sup>1</sup> MIT</span>
-            <span><sup>2</sup> Google Brain</span><br/>
+            <span><sup>1</sup> GaTech</span>
+            <span><sup>2</sup> MIT</span><br/>
         </div>
 
         <br>*indicates equal contribution. 
@@ -455,21 +455,7 @@ pre {
                 <video width="650" loop autoplay muted>
                     <source src="materials/teaser-2.mp4" type="video/mp4">
                 </video>
-
-                <br><br>
-                
-                <video width="960" loop autoplay muted>
-                    <source src="materials/all_results.mp4" type="video/mp4">
-                </video>
-
-                <!-- <br><br> -->
-
-                <!-- <video width="800" loop autoplay muted style="border:1px solid black">
-                    <source src="materials/new3.mp4" type="video/mp4">
-                </video>
- -->
             </figure>
-
         </center>
     </section>
     
@@ -575,58 +561,42 @@ pre {
 
         <div class="row vspace-top">
         <div class="col-sm-3">
-            <video width="100%" playsinline="" autoplay="" loop="" preload="" muted="">
-                <source src="materials/related/teaser_glide.mp4" type="video/mp4">
-            </video>
+            <div class="move-down">
+                <img src="materials/related/dd.png" class="img-fluid" alt="dd" style="width:100%">
+            </div>
         </div>
         <div class="col-sm-9">
           <div class="paper-title">
-            <a href="https://energy-based-model.github.io/Compositional-Visual-Generation-with-Composable-Diffusion-Models/">Compositional Visual Generation with Composable Diffusion Models</a>
+            <a href="https://anuragajay.github.io/decision-diffuser/">Is Conditional Generative Modeling All You Need for Decision-Making?</a>
         </div>
         <div>
-            We present a method to compose different diffusion models together, drawing on the close connection of
-            diffusion models with EBMs. We illustrate how compositional operators enable
-            the ability to composing multiple sets of objects together as well as generate images subject to 
-            complex text prompts.
+            We illustrate how conditional generative modeling is a powerful paradigm for decision-making, enabling us
+            utilize a reward conditional model to effectively perform offline RL. We further illustrate how conditional generative modeling enables
+            us to compose multiple different constraints and skills together.
         </div>
         </div>
         </div>
 
         <div class="row vspace-top">
         <div class="col-sm-3">
-            <video width="100%" playsinline="" autoplay="" loop="" preload="" muted="">
-                <source src="materials/related/clevr_teaser.mp4" type="video/mp4">
-            </video>
+            <div class="move-down">
+                <video width="100%" playsinline="" autoplay="" loop="" preload="" muted="">
+                    <source src="materials/related/diffuser.mp4" type="video/mp4">
+                </video>
+            </div>
         </div>
         <div class="col-sm-9">
           <div class="paper-title">
-            <a href="https://composevisualrelations.github.io/">Learning to Compose Visual Relations</a>
-          </div>
-          <div>
-            The visual world around us can be described as a structured set of objects and their associated relations. In this work, we propose to represent each relation as an unnormalized density (an energy-based model), enabling us to compose separate relations in a factorized manner. We show that such a factorized decomposition allows the model to both generate and edit scenes that have multiple sets of relations more faithfully. 
-          </div>
-        </div>
-        </div>
-
-        <div class="row vspace-top">
-        <div class="col-sm-3">
-            <img src="materials/related/comp_cartoon.png" class="img-fluid" alt="comp_carton" style="width:100%">
-        </div>
-        <div class="col-sm-9">
-          <div class="paper-title">
-            <a href="https://energy-based-model.github.io/compositional-generation-inference/">Compositional Visual Generation with Energy Based Models</a>
+            <a href="https://diffusion-planning.github.io/">Planning with Diffusion for Flexible Behavior Synthesis </a>
         </div>
         <div>
-            We present a set of compositional operators that enable EBMs to exhibit <b>zero-shot compositional</b> visual generation, enabling us to compose visual concepts
-            (through operators of conjunction, disjunction, or negation) together in a zero-shot manner.
-            Our approach enables us to generate faces given a  description
-            ((Smiling AND Female) OR (NOT Smiling AND Male)) or to combine several different objects together.
+            We illustrate how may utilize a trajectory level diffusion model as an effective data-driven planner. We
+            illustrate how this planner enables us to flexibly generate long sequences of actions subject novel goals and 
+            constraints as well as perform effective offline RL. 
         </div>
         </div>
-
+        </div>
     </section> 
-
-
 
     <section>
         This webpage template was recycled from <a href='https://nv-tlabs.github.io/LION/'>here</a>.
