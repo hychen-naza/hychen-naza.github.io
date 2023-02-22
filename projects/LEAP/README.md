@@ -1,3 +1,3 @@
-# composing-pretrained-models-web
+# Planning with Sequence Models through Iterative Energy Minimization
 
-https://energy-based-model.github.io/composing-pretrained-models-web/
+https://hychen-naza.github.io/projects/LEAP/index.html
