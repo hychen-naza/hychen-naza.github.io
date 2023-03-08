@@ -450,7 +450,6 @@ pre {
     <section id="teaser-image">
         <center>
             <center><p><b>A unified framework for composing pre-trained models.</b></p></center>
-
             <figure>
                 <video width="650" loop autoplay muted>
                     <source src="materials/teaser-2.mp4" type="video/mp4">
@@ -483,45 +482,25 @@ pre {
     By repeating the above steps iteratively, LEAP generates the trajectory with low energy value.</p></left>
             <center><img class="card-img-top" src="materials/method9.png" style="width:950px"></center>     
             </div>
-
-
-            <br><br><br>
-
-            <div class="flex-row">
-                <div class="mx-auto">
-                    <left><p><b>Overview of the proposed unified framework.</b> Dashed lines are omitted for certain tasks. Orange lines represent the components used to refine the generated result.</p></left>
-                    <br>
-                    <center><img class="card-img-top" src="materials/framework.png" style="width:400px"></center>
-
-                    <br><br>
-
-                    <!-- <video width="800" loop autoplay muted style="border:1px solid black"> -->
-                    <video width="850" loop autoplay muted controls>
-                        <source src="materials/new3-2.mp4" type="video/mp4">
-                    </video>
-                </div>
-
-                <br><br>
-                <p><b>Image generation: </b> A pre-trained diffusion model is used as the generator, and multiple scorers, such as CLIP and image classifiers, are used to provide feedback to the generator.</p>
-                <p><b>Video question answering: </b> GPT-2 is used as the generator, and a set of CLIP models are used as scorers.</p>
-                <p><b>Grade school math: </b> GPT-2 is used as the generator, and a set of question-solution classifiers are used as scorers.</p>
-                <p><b>Robot manipulation: </b> MPC+World model is used as the generator, and a pre-trained image segmentation model is used to compute the scores from multiple camera views to select the best action.</p>
-
-            </div>
-
     </section>
 
     <section id="results">
         <hr>
         <h2>Babyai Results</h2>  
-            <center>
-            <figure>
-                <video class="centered" width="100%" autoplay loop muted playsinline class="video-background " >
-                    <source src="materials/vqa.mp4#t=0.001" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </figure>
-            </center>
+            <left><p><b>BabyAI Quantitative Performance.</b> The task success rate of LEAP and a variety of prior algorithms on BabyAI env. Models are trained with 500 optimal trajectory demos in each environment, and results are averaged over 5 random seeds.</p></left>
+            <br>
+            <center><img class="card-img-top" src="materials/babyai_result.png" style="width:400px"></center>
+            <br><br>
+        
+            <left><p><b>Qualitative Visualization of Planning and Execution Procedure in BabyAI.</b> Left subfigure depicts the planning through iterative energy minimization where N is the sample iteration number.
+    Right subfigure shows the execution of the concatenate action sequences. Two task settings are illustrated:
+    <b>Trajectory planning</b>, where the task is to solely plan a trajectory leading to the goal location.
+    <b>Instruction completion</b>, where a sequence of tasks are commanded, and an additional "Open" is involved to get through the doors.
+    Target locations are marked with yellow box.</p></left>
+            <br>
+            <center><img class="card-img-top" src="materials/baby_6.png" style="width:400px"></center>
+            <br><br>
+
         <hr>
         
         <hr>
