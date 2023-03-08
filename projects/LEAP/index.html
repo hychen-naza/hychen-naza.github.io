@@ -478,7 +478,10 @@ pre {
         <h2>Method</h2>
             
             <div class="mx-auto">
-                <left><p>The proposed framework that composes a "generator" and an ensemble of "scorers" through iterative consensus enables zero-shot generalization across a variety of multimodal tasks.</p></left>
+                <left><p>LEAP generates plans via Gibbs sampling different actions based on a learned trajectory energy model $E_\theta(\btau{})$.
+    In each iteration,  Masked Language Model (MLM) predicts the energy of alternative actions at selected timesteps in a trajectory.
+    A new trajectory is generated using a Gibbs sampler, with individual actions sampled based on the energy distribution.
+    By repeating the above steps iteratively, LEAP generates the trajectory with low energy value.</p></left>
                 <center><img class="card-img-top" src="materials/teaser.png" style="width:950px"></center>
             </div>
 
