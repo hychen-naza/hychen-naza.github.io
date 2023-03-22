@@ -615,24 +615,7 @@ pre {
           Check out a list of our related papers on compositionality. A full list can be found <a href="https://energy-based-model.github.io/Energy-based-Model-MIT/">here</a>!
           <br>
 
-        <div class="row vspace-top">
-        <div class="col-sm-3">
-            <div class="move-down">
-                <img src="materials/related/dd.png" class="img-fluid" alt="dd" style="width:100%">
-            </div>
-        </div>
-        <div class="col-sm-9">
-          <div class="paper-title">
-            <a href="https://anuragajay.github.io/decision-diffuser/">Is Conditional Generative Modeling All You Need for Decision-Making?</a>
-        </div>
-        <div>
-            We illustrate how conditional generative modeling is a powerful paradigm for decision-making, enabling us
-            utilize a reward conditional model to effectively perform offline RL. We further illustrate how conditional generative modeling enables
-            us to compose multiple different constraints and skills together.
-        </div>
-        </div>
-        </div>
-
+       
         <div class="row vspace-top">
         <div class="col-sm-3">
             <div class="move-down">
@@ -652,6 +635,43 @@ pre {
         </div>
         </div>
         </div>
+        
+        
+        <div class="row vspace-top">
+        <div class="col-sm-3">
+            <div class="move-down">
+                <video width="100%" playsinline="" autoplay="" loop="" preload="" muted="">
+                    <source src="materials/related/irem.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+        <div class="col-sm-9">
+          <div class="paper-title">
+            <a href="https://arxiv.org/abs/2206.15448">Learning Iterative Reasoning through Energy Minimization</a>
+        </div>
+        <div>
+            Deep learning has excelled on complex pattern recognition tasks such as image classification and object recognition. However, it struggles with tasks requiring nontrivial reasoning, such as algorithmic computation. Humans are able to solve such tasks through iterative reasoning -- spending more time thinking about harder tasks. Most existing neural networks, however, exhibit a fixed computational budget controlled by the neural network architecture, preventing additional computational processing on harder tasks. In this work, we present a new framework for iterative reasoning with neural networks. We train a neural network to parameterize an energy landscape over all outputs, and implement each step of the iterative reasoning as an energy minimization step to find a minimal energy solution. By formulating reasoning as an energy minimization problem, for harder problems that lead to more complex energy landscapes, we may then adjust our underlying computational budget by running a more complex optimization procedure. We empirically illustrate that our iterative reasoning approach can solve more accurate and generalizable algorithmic reasoning tasks in both graph and continuous domains. Finally, we illustrate that our approach can recursively solve algorithmic problems requiring nested reasoning. 
+        </div>
+        </div>
+        </div>
+        
+        <div class="row vspace-top">
+        <div class="col-sm-3">
+            <div class="move-down">
+                <img src="materials/related/emb_plan.png" class="img-fluid" alt="dd" style="width:100%">
+            </div>
+        </div>
+        <div class="col-sm-9">
+          <div class="paper-title">
+            <a href="https://arxiv.org/pdf/1909.06878.pdf">Model Based Planning with Energy Based Models</a>
+        </div>
+        <div>
+            Model-based planning holds great promise for improving both sample efficiency and generalization in reinforcement learning (RL). We show that energy-based models (EBMs) are a promising class of models to use for model-based planning. EBMs naturally support inference of intermediate states given start and goal state distributions. We provide an online algorithm to train EBMs while interacting with the environment, and show that EBMs allow for significantly better online learning than corresponding feed-forward networks. We further show that EBMs support maximum entropy state inference and are able to generate diverse state space plans. We show that inference purely in state space - without planning actions - allows for better generalization to previously unseen obstacles in the environment and prevents the planner from exploiting the dynamics model by applying uncharacteristic action sequences. 
+        </div>
+        </div>
+        </div>
+
+        
     </section> 
 
     <section>
