@@ -480,7 +480,14 @@ pre {
     In each iteration,  Masked Language Model (MLM) predicts the energy of alternative actions at selected timesteps in a trajectory.
     A new trajectory is generated using a Gibbs sampler, with individual actions sampled based on the energy distribution.
     By repeating the above steps iteratively, LEAP generates the trajectory with low energy value.</p></left>
-            <center><img class="card-img-top" src="materials/method9.png" style="width:950px"></center>     
+            <center>
+                <!-- <img class="card-img-top" src="materials/method9.png" style="width:950px"> -->
+                <figure>
+                    <video width="900" loop autoplay muted>
+                        <source src="materials/web_method_speedup.mp4" type="video/mp4">
+                    </video>
+                </figure>
+            </center>     
             </div>
     </section>
 
