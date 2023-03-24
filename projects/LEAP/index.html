@@ -476,7 +476,7 @@ pre {
         <hr>
         <h2>Method</h2>
             <div class="mx-auto">
-                <left><p>LEAP generates plans via Gibbs sampling different actions based on a learned trajectory energy model $E_\theta(\btau{})$.
+                <left><p>LEAP generates plans via Gibbs sampling different actions based on a learned trajectory energy model $$E_\theta(\btau{})$$.
     In each iteration,  Masked Language Model (MLM) predicts the energy of alternative actions at selected timesteps in a trajectory.
     A new trajectory is generated using a Gibbs sampler, with individual actions sampled based on the energy distribution.
     By repeating the above steps iteratively, LEAP generates the trajectory with low energy value.</p></left>
@@ -498,7 +498,7 @@ pre {
             
             <div>
               <table>
-                <p><b>MazeS4 and MazeS7 Envs</b>: Go to the grey key. LEAP model with N=30 takes fewer steps to finish the tasks compared to model with N=5. (N - sampling iteration number)</p>
+                <p><b>MazeS4 and MazeS7 Envs</b>: Go to the grey key. LEAP model with N=30 takes fewer steps to finish the tasks compared to model with N=5. <b>(N - sampling iteration number)</b></p>
                 <tr>
                   <td>
                   <video width="150" height="150" loop autoplay muted controls>
@@ -629,7 +629,7 @@ pre {
         <div class="col-sm-3">
             <div class="move-down">
                 <video width="100%" playsinline="" autoplay="" loop="" preload="" muted="">
-                    <source src="materials/related/diffuser.mp4" type="video/mp4">
+                    <source src="materials/related/diffuser.mp4" type="video/mp4" style: "padding-top: 15px;">
                 </video>
             </div>
         </div>
