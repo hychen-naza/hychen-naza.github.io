@@ -495,11 +495,12 @@ pre {
     <section id="results">
         <hr>
         <h2>Babyai Results</h2>  
-            <left><p><b>BabyAI Performance.</b> The task success rate and efficiency of LEAP improve as the plan iteration number increases.</p></left>
-            
+            <left><p><b>BabyAI Performance.</b> Action plans are generated using an energy function defined globally across actions, enabling our LEAP model to choose each action in the entire trajectory context. 
+                Moreover, the action plan generation procedure is iterative, allowing us to leverage computational time to find better solutions towards final goals. 
+                We evaluate our results on four Envs as a factor of the number of iterations of planning. We find that our success rate increases with increases planning steps, with the LEAP model with Iterations=10 or 30 takes fewer steps to finish the tasks compared to planning horizon 5.</p></left>
             <div>
               <table>
-                <p><b>MazeS4 and MazeS7 Envs</b>: Go to the grey key. LEAP model with Iterations=30 takes fewer steps to finish the tasks compared to model with Iterations=5.</p>
+                <p><b>MazeS4 and MazeS7 Envs</b>: Go to the grey key. </p>
                 <tr>
                   <td>
                   <video width="150" height="150" loop autoplay muted controls>
@@ -546,7 +547,7 @@ pre {
               </table>
                 
               <table>
-                <p><b>MazeS4R2Close Env</b>: Open the door and go to the red ball. <b>PickupLoc Env</b>: Pick up the purple ball. In this env, LEAP model with Iterations=10 also achieves higher efficiency than model with Iterations=5.</p>
+                <p><b>MazeS4R2Close Env</b>: Open the door and go to the red ball. <b>PickupLoc Env</b>: Pick up the purple ball.</p>
                 <tr>
                   <td>
                   <video width="150" height="150" loop autoplay muted controls>
@@ -596,7 +597,8 @@ pre {
         
         <hr>
         <h2>Atari Results</h2>  
-        <left><p><b>Atari Performance in Breakout, Qbert and Pong games.</b> LEAP model is trained with 1% DQN-replay Atari dataset. </p></left>
+        <left><p><b>Atari Performance in Breakout, Qbert and Pong games.</b> We further evaluate our approach on the dynamically changing Atari games with high-dimensional visual state. 
+            Due to above features , we train and test our model without the goal state, and update the plan after each step of execution to avoid unexpected changes in the world.</p></left>
             <div>
               <center>
               <table>
@@ -626,9 +628,9 @@ pre {
 
         <hr>
         <h2>Property Results</h2>  
-            <left><p><b>Property Test on Modified BabyAI Environments.</b></left></p>
-            <left><p>For Online Adaptation ability, multiple lethal lava zones are added at the test time. And LEAP model is required to avoid the dangerous lava zones with constraint energy function <i>E<sub>constraint</sub>(&tau;)</i>.</left></p> 
-            <left><p>For Generalization ability in unseen testing environments, we train the LEAP model in easier environments (single-room world) but test them in more challenging environments (maze world). 
+            <left><p><b>LEAP can generalize to settings in which the environment is changed at test time.</b></left></p>
+            <left><p><b>Online Adaptation:</b> multiple lethal lava zones are added at the test time. And LEAP model is required to avoid the dangerous lava zones with constraint energy function <i>E<sub>constraint</sub>(&tau;)</i>.</left></p> 
+            <left><p><b>Generalization:</b> we train the LEAP model in easier environments (single-room world) but test them in more challenging environments (maze world). 
             In these settings, as long as the learned function <i>E<sub>&theta;</sub>(&tau;)</i> generalizes, and we may simply leverage more steps of sampling to recover a successful plan in this more complex environment.</left></p>
             <div>
               <center>
