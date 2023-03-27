@@ -626,8 +626,9 @@ pre {
 
         <hr>
         <h2>Property Results</h2>  
-            <left><p><b>Property Test on Modified BabyAI Environments.</b> For Online Adaptation, LEAP model is required to avoid the dangerous lava grids. 
-            For Generalization, LEAP model is trained on easy env but tested on hard env.
+            <left><p><b>Property Test on Modified BabyAI Environments.</b> 
+            For Online Adaptation ability, multiple lethal lava zones are added at the test time. And LEAP model is required to avoid the dangerous lava zones with constraint energy function <i>E<sub>constraint</sub>(&tau;)</i>. 
+            For Generalization ability in unseen testing environments, we train the LEAP model in easier environments but test them in more challenging environments. In the video below, the model is trained in single-room world but tested in maze world containing multi-rooms connected by narrow path.
             <div>
               <center>
               <table>
