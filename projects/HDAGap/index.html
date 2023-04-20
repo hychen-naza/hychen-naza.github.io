@@ -1,16 +1,49 @@
 ---
 layout: default
-title: "HDAGap"
+title: "Safe Hierarchical Navigation in Cluttered Dynamic Uncertain Environments"
 ---
 
 <center><h1>{{ page.title }}</h1></center>
 
 <td>
 	<center>
-		IEEE Control System Letters, vol. 6, pp.  1928 - 1933, Dec. 2021<br>
+		IEEE Conference on Decision and Control (CDC), 2022<br>
 		<br>
-		<b>Hongyi Chen</b>, Changliu Liu<br>
+		<b>Hongyi Chen</b>, Shiyu Feng, Ye Zhao, Changliu Liu, and Patricio A. Vela<br>
 		<br>
 		<img style="vertical-align:middle" src="SSA_RL_Navigation"  width="100%" height="inherit"/>		
 	</center>
 </td>
+
+<td>
+	<hr>
+	<h3 style="margin-bottom:10px;">Abstract</h3>
+  	This paper describes a hierarchical solution consisting of a multi-phase planner and a low-level safe controller to jointly solve the safe navigation problem in crowded, dynamic, and uncertain environments. 
+	The planner employs dynamic gap analysis and trajectory optimization to achieve collision avoidance with respect to the predicted trajectories of dynamic agents within the sensing and planning horizon and with robustness to agent uncertainty. 
+	To address uncertainty over the planning horizon and real-time safety, a fast reactive safe set algorithm (SSA) is adopted, which monitors and modifies the unsafe control during trajectory tracking. 
+	Compared to other existing methods, our approach offers theoretical guarantees of safety and achieves collision-free navigation with higher probability in uncertain environments, as demonstrated in scenarios with 20 and 50 dynamic agents.
+</td>
+
+
+<center>
+    <img style="vertical-align:middle" src="https://github.com/hychen-naza/H-DAGap/blob/main/visulization.gif" />
+</center>
+
+<td>
+	<h3> Paper: [<a href="https://ieeexplore.ieee.org/document/9992674">PDF</a>] &nbsp; &nbsp; &nbsp; Code: [<a href="https://github.com/hychen-naza/H-DAGap">GitHub</a>] &nbsp; &nbsp; &nbsp</h3>
+</td>
+
+	
+<br>
+<br>
+
+<h3 style="margin-bottom:0px;">Bibtex</h3>
+<pre>
+@INPROCEEDINGS{9992674,
+  author={Chen, Hongyi and Feng, Shiyu and Zhao, Ye and Liu, Changliu and Vela, Patricio A.},
+  booktitle={2022 IEEE 61st Conference on Decision and Control (CDC)}, 
+  title={Safe Hierarchical Navigation in Crowded Dynamic Uncertain Environments}, 
+  year={2022},
+  pages={1174-1181},
+  doi={10.1109/CDC51059.2022.9992674}}
+</pre>
