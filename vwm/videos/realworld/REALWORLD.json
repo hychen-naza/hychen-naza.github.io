@@ -1,0 +1,146 @@
+{
+ "_comment": "DreamRehearse real-robot rollouts. Source: HF repo hchen657Naza/real_world_videos, 4K/1080p camcorder takes staged on the node at <capture-path>/raw. Each web clip is a real-time trim of a single raw take (no speed change, no letterboxing). Raw clip id and source in/out timestamps per cell: hammer_ours=C0370 06.0-25.0s; hammer_base=C0355 12.0-31.0s; pour_ours=C0106 08.0-32.0s; pour_base=C0104 08.0-31.0s; tongs_ours=C0416 14.0-42.0s; tongs_base=C0417 10.0-33.0s; ood_vision_ours_1=C0089 13.0-35.0s; ood_vision_ours_2=C0092 12.0-35.0s; ood_vision_ours_3=C0095 18.0-40.3s; ood_vision_base_1=C0096 13.0-32.1s; ood_vision_base_2=C0097 09.0-30.7s. Hammer and tongs takes are 3840x2160@29.97 sources; pour and OOD takes are 1920x1080@50 sources; all are 16:9 and scale to 1280x720 with no padding. Encode: ffmpeg libx264 preset slow CRF 23, yuv420p, high profile, +faststart, -an (no audio), source frame rate preserved. Every outcome field below is a per-clip judgement made by inspecting frames of that take, not inferred from the directory name; see the pour row for a deliberate 'unclear'. Note: pour_base was re-cut from C0102 to C0104 because C0102 never lifts the bottle; C0104 completes the full pour gesture. Every base pour take was staged with an EMPTY bottle, so pour transfer is not assessable on the base side.",
+ "comparison": [
+  {
+   "task": "hammer",
+   "label": "Hammer",
+   "caption": "The robot picks up a rubber mallet and strikes the button on the red block.",
+   "ours": {
+    "src": "videos/realworld/hammer_ours.mp4",
+    "clip": "C0370",
+    "outcome": "success",
+    "duration_s": 19.0,
+    "width": 1280,
+    "height": 720
+   },
+   "base": {
+    "src": "videos/realworld/hammer_base.mp4",
+    "clip": "C0355",
+    "outcome": "failure",
+    "duration_s": 19.0,
+    "width": 1280,
+    "height": 720
+   }
+  },
+  {
+   "task": "pour",
+   "label": "Pour",
+   "caption": "The robot picks up a bottle of candies and tips it over the yellow bowl to pour them in.",
+   "ours": {
+    "src": "videos/realworld/pour_ours.mp4",
+    "clip": "C0106",
+    "outcome": "unclear",
+    "duration_s": 24.0,
+    "width": 1280,
+    "height": 720,
+    "note": "Pour motion completed; one candy enters the bowl, then bounces out. Bulk stays in the bottle."
+   },
+   "base": {
+    "src": "videos/realworld/pour_base.mp4",
+    "clip": "C0104",
+    "outcome": "unclear",
+    "note": "Pour motion completed; bottle was staged empty, so transfer is not assessable.",
+    "duration_s": 23.0,
+    "width": 1280,
+    "height": 720
+   }
+  },
+  {
+   "task": "tongs",
+   "label": "Tongs",
+   "caption": "The robot picks up a pair of kitchen tongs, grips a small red cube with them, and places it on the blue plate.",
+   "ours": {
+    "src": "videos/realworld/tongs_ours.mp4",
+    "clip": "C0416",
+    "outcome": "success",
+    "duration_s": 28.0,
+    "width": 1280,
+    "height": 720
+   },
+   "base": {
+    "src": "videos/realworld/tongs_base.mp4",
+    "clip": "C0417",
+    "outcome": "failure",
+    "duration_s": 23.0,
+    "width": 1280,
+    "height": 720
+   }
+  }
+ ],
+ "robustness": [
+  {
+   "variant": "vision",
+   "label": "Tablecloth and clutter",
+   "caption": "The same hammer-the-button task, but staged on a white tablecloth and surrounded by kitchen clutter (a pan, stacked cups, plates, bread and utensils) in a rearranged layout.",
+   "ours_clips": [
+    {
+     "src": "videos/realworld/ood_vision_ours_1.mp4",
+     "clip": "C0089",
+     "outcome": "success",
+     "duration_s": 22.0,
+     "width": 1280,
+     "height": 720
+    },
+    {
+     "src": "videos/realworld/ood_vision_ours_2.mp4",
+     "clip": "C0092",
+     "outcome": "success",
+     "duration_s": 23.0,
+     "width": 1280,
+     "height": 720
+    },
+    {
+     "src": "videos/realworld/ood_vision_ours_3.mp4",
+     "clip": "C0095",
+     "outcome": "success",
+     "duration_s": 22.3,
+     "width": 1280,
+     "height": 720
+    }
+   ],
+   "base_clips": [
+    {
+     "src": "videos/realworld/ood_vision_base_1.mp4",
+     "clip": "C0096",
+     "outcome": "failure",
+     "duration_s": 19.1,
+     "width": 1280,
+     "height": 720
+    },
+    {
+     "src": "videos/realworld/ood_vision_base_2.mp4",
+     "clip": "C0097",
+     "outcome": "failure",
+     "duration_s": 21.7,
+     "width": 1280,
+     "height": 720
+    }
+   ]
+  }
+ ],
+ "failure_clips": [
+  {
+   "task": "hammer",
+   "clip": "C0340",
+   "note": "Ours. Grasps the mallet handle cleanly and carries it to the red block, but the head tracks too high and passes to the left of the button without ever pressing it; the button cap is still proud at the end of the take."
+  },
+  {
+   "task": "tongs",
+   "clip": "C0402",
+   "note": "Ours. Picks up the tongs and closes them on the red cube, but the cube is not retained during the lift; the tongs are set down on the blue plate empty and the plate is still empty at the end of the take."
+  },
+  {
+   "task": "tongs",
+   "clip": "C0406",
+   "note": "Ours. Picks up the tongs and grips the red cube, then loses it in transit and drops it on the bare table just short of the plate; the tongs end up resting on the plate with the cube beside it, off the plate."
+  }
+ ],
+ "meta": {
+  "source_repo": "hchen657Naza/real_world_videos",
+  "policies": {
+   "ours": "ACT trained on 5 real demonstrations plus 40 world-model dream demonstrations. For the robustness row it additionally saw out-of-distribution dreams (a white tablecloth and a different cluttered object layout).",
+   "base": "ACT trained on the same 5 real demonstrations only, with no dream data. For the robustness row it saw no OOD dreams."
+  },
+  "encode": "H.264 (libx264, preset slow, CRF 23), yuv420p, high profile, +faststart, no audio. Scaled to 720p on the long edge preserving the source 16:9 aspect ratio (1280x720), source frame rate and real-time playback speed preserved; each clip is a straight trim of one raw take."
+ }
+}

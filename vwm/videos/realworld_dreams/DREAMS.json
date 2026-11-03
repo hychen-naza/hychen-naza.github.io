@@ -1,0 +1,241 @@
+{
+ "_comment": "Real vs skeleton vs dream triplets of real-world world-model rollouts. SOURCES. hammer: dreams hchen657Naza/realworld_vwm_all hammer/dream/dreams/demo_<N>.mp4, skeletons hammer/dream/skeletons/demo_<N>_skeleton_448x256.mp4, real video hammer/real/videos/demo<NNN>_cam1_rgb.mp4 (1280x720; the real videos use a zero-padded 3-digit id, so dream demo_77 pairs with real demo077, verified against hammer/real/manifest.json step counts and by frame-by-frame inspection of the shared first frame). tongs: dreams tongs/real/dreams_realskel_wm_h53_step2500/demo_<N>.mp4, skeletons tongs/real/skeletons/demo_<N>_skeleton_448x256.mp4, real video tongs/real/videos/demo_<N>_cam1_rgb.mp4 (1280x720). pour: dreams pour/dream/dreams/demo_<N>.mp4, skeletons pour/dream/skeletons/demo_<N>_skeleton_448x256.mp4; the pour real videos are not in the HF repo and were taken from the capture node at <capture-path>/<group>/<source_episode>/rgb_448x256.mp4, with <group> and <source_episode> resolved through pour/dream/manifest.json. ood vision: hchen657Naza/real_world_videos OOD/vision/<episode>/{dream.mp4,skeleton_448x256.mp4,cam1_rgb.png}; there is no real video for these scenes, only the cam1_rgb.png anchor still, because the scenes were never demonstrated. CHECKPOINTS. hammer dreams: OSCAR-2B + LoRA r16 ckpt_real_hammer_handover_448x256_hist5_lora29/lora_step4500.pt, 29-frame chunks with sparse-history conditioning (5 history + 24 future), hammer caption, seed 42, frame 0 copied from the real first frame and frames 1+ generated. tongs dreams: OSCAR-2B + LoRA r16 ckpt_real_hammer_spray_tongs40_448x256_hist5f48_lora53/lora_step2500.pt, 53-frame chunks (5 history + 48 future); these 40 demos are inside that model's training set, and the repo reports mean PSNR 19.9 dB against the real video (17.5 dB over the last 5 s). pour dreams: OSCAR-2B + LoRA r16 alpha 32 real3task_448x256_hist5_lora/lora_step4500.pt, a 3-task real LoRA over real_hammer + real_handover + real_pour, 29-frame chunks (5 history + 24 future); pour frame 0 is itself generated, the model being seeded with the real first frame repeated as a constant input so no later real frame leaks into the rollout. ood vision dreams: OSCAR-2B + LoRA ckpt_real_hammer_handover_spray_tongs_448x256_hist5_lora29/lora_step5500.pt, 29-frame chunks (5 history + 24 future). Note that OOD/vision/<episode>/manifest.json does NOT name a checkpoint or a conditioning source; the checkpoint above is stated by realworld_vwm_all/hammer/act_ckpts/act_stateful_real5_dream41_oodvision_step75000/CHECKPOINT.md, which describes these same 15 clips as world-model rollouts of held-out sim trajectories. ENCODE. Every clip, including the 1280x720 real videos, is scaled to exactly 448x256 with lanczos. That scale is anisotropic, because the 16:9 cam1 view is 1.778:1 and 448x256 is 1.75:1, and it is deliberate: 448x256 is the framing the world model itself sees and the framing the skeleton renders use, so matching it keeps the three columns pixel-comparable. libx264, preset slow, crf 23, profile high, level 4.0, keyint 40, yuv420p, +faststart, no audio. Within each triplet all three clips carry the same decoded frame count and the same 20 fps; the frame count was taken from the dream and applied with -frames:v to all three. No triplet needed trimming: every real, skeleton and dream trio already agreed exactly on decoded frame count.",
+ "tasks": [
+  {
+   "task": "hammer",
+   "label": "Hammer",
+   "caption": "The arm picks up the hammer and strikes the black peg on the orange block.",
+   "conditioning": "fitted-sim skeleton",
+   "episodes": [
+    {
+     "id": "demo_77",
+     "real": {
+      "src": "videos/realworld_dreams/hammer_demo_77_real.mp4"
+     },
+     "skeleton": {
+      "src": "videos/realworld_dreams/hammer_demo_77_skeleton.mp4"
+     },
+     "dream": {
+      "src": "videos/realworld_dreams/hammer_demo_77_dream.mp4"
+     },
+     "frames": 243,
+     "fps": 20
+    },
+    {
+     "id": "demo_101",
+     "real": {
+      "src": "videos/realworld_dreams/hammer_demo_101_real.mp4"
+     },
+     "skeleton": {
+      "src": "videos/realworld_dreams/hammer_demo_101_skeleton.mp4"
+     },
+     "dream": {
+      "src": "videos/realworld_dreams/hammer_demo_101_dream.mp4"
+     },
+     "frames": 252,
+     "fps": 20
+    },
+    {
+     "id": "demo_137",
+     "real": {
+      "src": "videos/realworld_dreams/hammer_demo_137_real.mp4"
+     },
+     "skeleton": {
+      "src": "videos/realworld_dreams/hammer_demo_137_skeleton.mp4"
+     },
+     "dream": {
+      "src": "videos/realworld_dreams/hammer_demo_137_dream.mp4"
+     },
+     "frames": 253,
+     "fps": 20
+    }
+   ],
+   "note": "These dreams were conditioned on skeletons rendered from the fitted-sim joint positions, the Isaac replay of each demo after system identification, not from the real measured joints. So even where the world model is faithful the dream will not track the real video frame for frame: the conditioning trajectory itself differs from the real one."
+  },
+  {
+   "task": "tongs",
+   "label": "Tongs",
+   "caption": "The arm picks up the tongs, grips a small red cube with them and sets it on the blue plate.",
+   "conditioning": "real skeleton",
+   "episodes": [
+    {
+     "id": "demo_25",
+     "real": {
+      "src": "videos/realworld_dreams/tongs_demo_25_real.mp4"
+     },
+     "skeleton": {
+      "src": "videos/realworld_dreams/tongs_demo_25_skeleton.mp4"
+     },
+     "dream": {
+      "src": "videos/realworld_dreams/tongs_demo_25_dream.mp4"
+     },
+     "frames": 581,
+     "fps": 20
+    },
+    {
+     "id": "demo_33",
+     "real": {
+      "src": "videos/realworld_dreams/tongs_demo_33_real.mp4"
+     },
+     "skeleton": {
+      "src": "videos/realworld_dreams/tongs_demo_33_skeleton.mp4"
+     },
+     "dream": {
+      "src": "videos/realworld_dreams/tongs_demo_33_dream.mp4"
+     },
+     "frames": 583,
+     "fps": 20
+    },
+    {
+     "id": "demo_21",
+     "real": {
+      "src": "videos/realworld_dreams/tongs_demo_21_real.mp4"
+     },
+     "skeleton": {
+      "src": "videos/realworld_dreams/tongs_demo_21_skeleton.mp4"
+     },
+     "dream": {
+      "src": "videos/realworld_dreams/tongs_demo_21_dream.mp4"
+     },
+     "frames": 578,
+     "fps": 20
+    }
+   ],
+   "note": "Conditioned on the real measured skeleton, so the dream and the real video should line up step for step. Generated by a different and longer-horizon model than hammer and pour: ckpt_real_hammer_spray_tongs40_448x256_hist5f48_lora53/lora_step2500.pt, 5 history plus 48 future frames. These 40 demos are inside that model's training set, so this is a reconstruction of seen trajectories rather than a held-out test."
+  },
+  {
+   "task": "pour",
+   "label": "Pour",
+   "caption": "The hand grasps the wine bottle and pours it into the bowl.",
+   "conditioning": "real skeleton",
+   "episodes": [
+    {
+     "id": "demo_28",
+     "real": {
+      "src": "videos/realworld_dreams/pour_demo_28_real.mp4"
+     },
+     "skeleton": {
+      "src": "videos/realworld_dreams/pour_demo_28_skeleton.mp4"
+     },
+     "dream": {
+      "src": "videos/realworld_dreams/pour_demo_28_dream.mp4"
+     },
+     "frames": 329,
+     "fps": 20
+    },
+    {
+     "id": "demo_47",
+     "real": {
+      "src": "videos/realworld_dreams/pour_demo_47_real.mp4"
+     },
+     "skeleton": {
+      "src": "videos/realworld_dreams/pour_demo_47_skeleton.mp4"
+     },
+     "dream": {
+      "src": "videos/realworld_dreams/pour_demo_47_dream.mp4"
+     },
+     "frames": 329,
+     "fps": 20
+    },
+    {
+     "id": "demo_38",
+     "real": {
+      "src": "videos/realworld_dreams/pour_demo_38_real.mp4"
+     },
+     "skeleton": {
+      "src": "videos/realworld_dreams/pour_demo_38_skeleton.mp4"
+     },
+     "dream": {
+      "src": "videos/realworld_dreams/pour_demo_38_dream.mp4"
+     },
+     "frames": 327,
+     "fps": 20
+    }
+   ],
+   "note": "Conditioned on the real measured joint positions, so the dream tracks the real video step for step. Generated by real3task_448x256_hist5_lora/lora_step4500.pt, a 3-task real LoRA over hammer, handover and pour, with 5 history plus 24 future frames. Frame 0 of a pour dream is generated rather than copied from the real video."
+  }
+ ],
+ "ood": [
+  {
+   "variant": "vision",
+   "label": "Tablecloth and clutter",
+   "caption": "The same hammer task, but the dark lab table is draped in a white cloth and littered with kitchen objects that do not appear in the recorded scenes.",
+   "conditioning": "sim skeleton (held-out sim demo)",
+   "episodes": [
+    {
+     "id": "demo_17",
+     "anchor": {
+      "src": "videos/realworld_dreams/ood_vision_demo_17_anchor.png"
+     },
+     "skeleton": {
+      "src": "videos/realworld_dreams/ood_vision_demo_17_skeleton.mp4"
+     },
+     "dream": {
+      "src": "videos/realworld_dreams/ood_vision_demo_17_dream.mp4"
+     },
+     "frames": 240,
+     "fps": 20
+    },
+    {
+     "id": "demo_47",
+     "anchor": {
+      "src": "videos/realworld_dreams/ood_vision_demo_47_anchor.png"
+     },
+     "skeleton": {
+      "src": "videos/realworld_dreams/ood_vision_demo_47_skeleton.mp4"
+     },
+     "dream": {
+      "src": "videos/realworld_dreams/ood_vision_demo_47_dream.mp4"
+     },
+     "frames": 240,
+     "fps": 20
+    },
+    {
+     "id": "demo_52",
+     "anchor": {
+      "src": "videos/realworld_dreams/ood_vision_demo_52_anchor.png"
+     },
+     "skeleton": {
+      "src": "videos/realworld_dreams/ood_vision_demo_52_skeleton.mp4"
+     },
+     "dream": {
+      "src": "videos/realworld_dreams/ood_vision_demo_52_dream.mp4"
+     },
+     "frames": 244,
+     "fps": 20
+    }
+   ],
+   "note": "There is no real column for these scenes and none can be made. The scenes were never demonstrated: each episode pairs a held-out saved simulation demo with a single cam1 still of the current real scene, and the per-episode manifest says in so many words that this is a scene reference rather than synchronised per-step images or a real rollout. The anchor is that still, the one real pixel budget the model was given. The trajectories come from the success-filtered sim replay set tableheight-0750-0755-n147.hdf5 (table height 0.750 to 0.755 m, task_type hammer_hit_nail, env DexScaleLiteSimStateReplay), so the conditioning skeletons are rendered from simulated joint positions, not real measured ones."
+  }
+ ],
+ "meta": {
+  "resolution": "448x256",
+  "fps": 20,
+  "robot": "Tianji 7-DoF arm with a right Sharpa hand, 29 joints, ZED cam1 (serial redacted), 20 Hz",
+  "sources": {
+   "hammer": "hf://datasets/hchen657Naza/realworld_vwm_all @ hammer/{dream/dreams,dream/skeletons,real/videos}",
+   "tongs": "hf://datasets/hchen657Naza/realworld_vwm_all @ tongs/real/{dreams_realskel_wm_h53_step2500,skeletons,videos}",
+   "pour_dream": "hf://datasets/hchen657Naza/realworld_vwm_all @ pour/dream/{dreams,skeletons}",
+   "pour_real": "capture node <capture-node> @ <capture-path>/<group>/<source_episode>/rgb_448x256.mp4, mapped via pour/dream/manifest.json (demo_28 and demo_47 are both group front_pointcloud)",
+   "ood_vision": "hf://datasets/hchen657Naza/real_world_videos @ OOD/vision/<episode>/{dream.mp4,skeleton_448x256.mp4,cam1_rgb.png}"
+  },
+  "checkpoints": {
+   "hammer": "OSCAR-2B + LoRA r16, ckpt_real_hammer_handover_448x256_hist5_lora29/lora_step4500.pt, 5 history + 24 future",
+   "tongs": "OSCAR-2B + LoRA r16, ckpt_real_hammer_spray_tongs40_448x256_hist5f48_lora53/lora_step2500.pt, 5 history + 48 future",
+   "pour": "OSCAR-2B + LoRA r16 alpha 32, real3task_448x256_hist5_lora/lora_step4500.pt, 5 history + 24 future",
+   "ood_vision": "OSCAR-2B + LoRA, ckpt_real_hammer_handover_spray_tongs_448x256_hist5_lora29/lora_step5500.pt, 5 history + 24 future, per act_stateful_real5_dream41_oodvision_step75000/CHECKPOINT.md rather than the episode manifests, which are silent on it"
+  },
+  "encode": "H.264 (libx264, preset slow, crf 23, profile high, level 4.0, keyint 40), yuv420p, +faststart, no audio, every clip scaled to exactly 448x256 with lanczos including the 1280x720 real videos. The scale is anisotropic by design so that all three columns share the 448x256 framing the world model and the skeleton renders use. Within each triplet all clips carry the same decoded frame count at 20 fps; no triplet needed trimming.",
+  "episode_id_mapping": "hammer dream demo_<N> pairs with real demo<NNN>, zero-padded to three digits (demo_77 -> demo077, demo_101 -> demo101). tongs and pour use demo_<N> on both sides. In all three tasks the demo ids are sparse, not a contiguous 0..n range.",
+  "_added": [
+   {
+    "episodes": [
+     "hammer/demo_137",
+     "pour/demo_38",
+     "tongs/demo_21"
+    ],
+    "why": "the three dream clips used in the paper's real-world figure"
+   }
+  ]
+ }
+}

@@ -1,0 +1,57 @@
+<!-- ===================================================== real-world dreams
+     Drop-in section for index.html. Append it verbatim between the
+     #robustness section and the #compare section (the nav already links
+     #dreams in that position). It carries no <link> or <script> of its own:
+     css/dreams.css and js/dreams.js are loaded from index.html's head and
+     footer alongside style.css and main.js.
+     Every label, caption, conditioning string, episode id, frame count and
+     clip path below comes from videos/realworld_dreams/DREAMS.json; the only
+     text written here is the column key, which names the three roles.
+-->
+<section class="section" id="dreams">
+  <div class="container">
+    <h2 class="section__title">Dreams of the real workspace</h2>
+    <p class="section__kicker">
+      One episode per row, every task at once, shown three ways: the
+      <strong>real recording</strong>, the <strong>rendered skeleton</strong> that conditions the
+      world model, and the <strong>dream</strong> the model generates from that skeleton. Shuffle
+      re-rolls which recorded episode each row is showing. The three clips in a row are the same
+      length and run off a single clock, so whatever differs between them is the model and not
+      three video players drifting apart.
+    </p>
+
+    <!-- The column key, stated once. The skeleton is what goes in and the dream is the
+         only thing that comes out; a reader who skips the prose should still not be able
+         to read the skeleton as a prediction. -->
+    <ul class="rwd-key" aria-label="What the three columns are">
+      <li class="rwd-key__item rwd-key__item--real">
+        <span class="rwd-key__swatch" aria-hidden="true"></span>
+        <span class="rwd-key__name">Real</span>
+        <span class="rwd-key__role">ground truth &mdash; recorded on the robot</span>
+      </li>
+      <li class="rwd-key__item rwd-key__item--skeleton">
+        <span class="rwd-key__swatch" aria-hidden="true"></span>
+        <span class="rwd-key__name">Skeleton</span>
+        <span class="rwd-key__role">input &mdash; drawn, not predicted</span>
+      </li>
+      <li class="rwd-key__item rwd-key__item--dream">
+        <span class="rwd-key__swatch" aria-hidden="true"></span>
+        <span class="rwd-key__name">Dream</span>
+        <span class="rwd-key__role">output &mdash; the only generated video here</span>
+      </li>
+    </ul>
+
+    <div id="dreams-rows" class="rwd-rows">
+      <p class="gallery__loading">Loading real-world dreams&hellip;</p>
+    </div>
+
+    <p class="gallery__note">
+      Each row's <strong>conditioned on</strong> chip says where its skeleton came from, and that
+      decides what a mismatch means. Where the skeleton was fitted in simulation, the real clip
+      beside the dream is a <em>different</em> trajectory, so the two are not expected to line up
+      frame for frame. Only where the skeleton came from the real episode itself is a
+      frame-for-frame match the right thing to look for. These are individual episodes of the
+      world model, not policy success rates &mdash; those are in <a href="#results">Results</a>.
+    </p>
+  </div>
+</section>

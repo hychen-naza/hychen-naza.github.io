@@ -1,0 +1,347 @@
+/* ============================================================
+   Real-world world-model dreams (#dreams)
+
+   One row per group, three clips across: real | skeleton | dream. Every group
+   is on the page at once showing one of its episodes, and the shared .picker
+   strip above them re-rolls all of them at once.
+
+   The accent pair is the page's existing two-way pair -- --real for the
+   ground-truth recording, --dream for the one generated video -- plus a
+   deliberately neutral third for the skeleton, because the skeleton is an
+   input and must never read as a model output.
+
+   Loaded after css/style.css; adds nothing to :root and overrides nothing in
+   it. Rendering lives in js/dreams.js.
+   ============================================================ */
+
+#dreams {
+  /* the conditioning input gets no accent of its own, by design */
+  --skel: #6b7280;
+  /* clips are 448x256; js/dreams.js overrides this from DREAMS.json
+     meta.resolution so a re-encode at another size is not cropped */
+  --rwd-aspect: 7 / 4;
+}
+
+/* ----------- column key ----------- */
+.rwd-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 4px;
+  padding: 0;
+  list-style: none;
+}
+.rwd-key__item {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  padding: 9px 14px 9px 12px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--key-accent, var(--rule-strong));
+  border-radius: var(--radius-sm);
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  line-height: 1.35;
+  box-shadow: var(--shadow-sm);
+}
+.rwd-key__item--real     { --key-accent: var(--real); }
+.rwd-key__item--skeleton { --key-accent: var(--skel); }
+.rwd-key__item--dream    { --key-accent: var(--dream); }
+.rwd-key__swatch {
+  width: 9px; height: 9px;
+  flex: none;
+  border-radius: 2px;
+  background: var(--key-accent);
+  transform: translateY(-1px);
+}
+/* the skeleton swatch is hollow: the same shape as the other two, but visibly
+   not one of the model's two outputs */
+.rwd-key__item--skeleton .rwd-key__swatch {
+  background: transparent;
+  border: 1.5px dashed var(--key-accent);
+  border-radius: 2px;
+}
+.rwd-key__name { font-weight: 700; color: var(--ink); }
+.rwd-key__role { color: var(--muted); }
+
+/* ----------- the shuffle control ----------- */
+/* #dreams-rows holds two children: the shared .picker control strip (defined
+   in css/style.css and deliberately not restyled here, so this strip and the
+   robustness one are the same control) and the stage holding one row per
+   group. Everything below is scoped to this section's own rwd- classes. */
+.rwd-rows { display: grid; gap: 20px; margin-top: 26px; }
+
+/* The button's own look — pill, icon size, hover/press/focus — is the shared
+   .picker__btn component's, so nothing here touches it. The only addition is
+   the line beside it saying what one click does, counted off the index rather
+   than written down. */
+.rwd-shuffle__hint {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+/* ----------- groups (one per task / OOD variant) ----------- */
+.rwd-stage { display: grid; gap: 34px; }
+
+.rwd-group { display: grid; gap: 14px; }
+.rwd-group__hdr { max-width: 80ch; }
+.rwd-group__eyebrow {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.rwd-group--ood .rwd-group__eyebrow { color: var(--accent-dk); }
+.rwd-group__title {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.22rem;
+  margin: 3px 0 0;
+  color: var(--ink);
+}
+.rwd-group__caption {
+  margin: 4px 0 0;
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+/* why a frame-for-frame mismatch is or is not a defect in this group; derived
+   from the group's own conditioning string, never from its name */
+.rwd-group__note {
+  margin: 7px 0 0;
+  padding-left: 11px;
+  border-left: 2px solid var(--rule-strong);
+  font-family: var(--serif);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.rwd-group--ood .rwd-group__note { border-left-color: color-mix(in srgb, var(--accent) 45%, #fff 55%); }
+
+/* ----------- one episode row ----------- */
+.rwd-row {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.rwd-row__hdr {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 20px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg-alt);
+}
+/* the row carries no title of its own: it is titled by its group's heading
+   directly above it (aria-labelledby), and the episode number is deliberately
+   not printed anywhere — it lives on the row as data-episode */
+.rwd-row__meta {
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+/* where this row's conditioning skeleton came from; the whole point of the
+   chip is that it travels with the row rather than living in a footnote */
+.rwd-row__cond {
+  margin: 0 0 0 auto;
+  flex: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px dashed var(--rule-strong);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+.rwd-row__cond-k {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-size: 0.64rem;
+}
+.rwd-row__cond-v { font-weight: 600; color: var(--ink-soft); }
+
+.rwd-row__ctrls {
+  flex: none;
+  display: flex;
+  gap: 8px;
+}
+
+/* ----------- the three-up ----------- */
+.rwd-trio {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--rule);
+}
+.rwd-cell {
+  margin: 0;
+  padding: 13px 16px 15px;
+  background: #fff;
+  border-top: 3px solid var(--cell-accent, var(--rule-strong));
+}
+.rwd-cell--real     { --cell-accent: var(--real); }
+.rwd-cell--anchor   { --cell-accent: var(--real); }
+.rwd-cell--skeleton { --cell-accent: var(--skel); border-top-style: dashed; }
+.rwd-cell--dream    { --cell-accent: var(--dream); }
+
+.rwd-cell__head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 9px;
+  margin-bottom: 10px;
+  font-family: var(--sans);
+}
+.rwd-cell__eyebrow {
+  font-size: 0.70rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--cell-accent) 74%, #000 26%);
+}
+/* in / out / ground truth, as a chip, so the three roles are legible at a
+   glance: filled for the generated video, outlined for ground truth, dashed
+   for the input */
+.rwd-cell__role {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border: 1px solid color-mix(in srgb, var(--cell-accent) 32%, #fff 68%);
+  background: color-mix(in srgb, var(--cell-accent) 8%, #fff 92%);
+  color: color-mix(in srgb, var(--cell-accent) 76%, #000 24%);
+}
+.rwd-cell--skeleton .rwd-cell__role { border-style: dashed; }
+.rwd-cell--dream .rwd-cell__role {
+  background: var(--dream);
+  border-color: var(--dream);
+  color: #fff;
+}
+
+/* ----------- the clip itself ----------- */
+.rwd-frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  aspect-ratio: var(--rwd-aspect, 7 / 4);
+  background: #0c0d10;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+.rwd-frame video,
+.rwd-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+button.rwd-frame:hover {
+  border-color: var(--cell-accent);
+  box-shadow: var(--shadow-md);
+}
+.rwd-frame:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* a clip whose mp4 failed to load loses the enlarge affordance with it */
+.rwd-frame:disabled { cursor: default; }
+
+/* A still frame is not a clip and should not pretend to be one: no play
+   affordance, and a corner tag saying what it is. */
+.rwd-frame--still { cursor: default; }
+.rwd-frame--still::after {
+  content: "still";
+  position: absolute;
+  right: 7px; bottom: 7px;
+  z-index: 2;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(10, 12, 16, .62);
+  backdrop-filter: blur(4px);
+}
+/* no asset on disk yet, or it failed to load: a labelled hole, never a broken
+   player */
+.rwd-frame--missing::before {
+  content: attr(data-missing);
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: #8b919c;
+  background: repeating-linear-gradient(45deg, #15171c, #15171c 8px, #1b1e24 8px, #1b1e24 16px);
+  z-index: 3;
+}
+
+.rwd-cell__meta {
+  margin-top: 8px;
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.rwd-cell__meta:empty { display: none; }
+/* the sentence that keeps a column honest: whether this real clip is the same
+   trajectory the dream was conditioned on, or a different one */
+.rwd-cell__caveat {
+  display: block;
+  margin-top: 3px;
+  color: var(--ink-soft);
+}
+
+/* ----------- lightbox legend, one row per role ----------- */
+/* drives the shared #lightbox legend that main.js already styles for its own
+   pairs; adding classes here rather than touching css/style.css */
+.lightbox__legend .legend--rwd-real  { color: var(--real);  border-top-color: var(--real); }
+.lightbox__legend .legend--rwd-skel  { color: #9aa3b2;      border-top-color: #9aa3b2; }
+.lightbox__legend .legend--rwd-dream { color: var(--dream); border-top-color: var(--dream); }
+
+/* ----------- responsive ----------- */
+/* 1180px of container gives three 448-wide clips room to breathe; below that
+   they stack, in the same real -> skeleton -> dream reading order. */
+@media (max-width: 900px) {
+  .rwd-trio { grid-template-columns: 1fr; }
+  .rwd-row__hdr { flex-wrap: wrap; }
+  .rwd-row__cond { margin-left: 0; order: 3; }
+  .rwd-row__ctrls { margin-left: auto; }
+}
+@media (max-width: 560px) {
+  .rwd-key__item { width: 100%; }
+}
+
+/* ----------- reduced motion ----------- */
+/* rows start paused under this preference (see DR_REDUCED in js/dreams.js);
+   the row's own play button opts in. */
+@media (prefers-reduced-motion: reduce) {
+  .rwd-frame { transition: none; }
+}

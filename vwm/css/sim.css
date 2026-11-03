@@ -1,0 +1,360 @@
+/* ============================================================
+   Simulation: training data and world-model fidelity (#simulation)
+
+   Two blocks of rows. A row plays its cells side by side off one clock, and
+   `cells` is variable length -- gt only, gt + skeleton, gt + dream + skeleton --
+   so the grid is driven by the row's own column count (--sim-cols / data-cells)
+   rather than being three wide by assumption. Dividers are drawn on the cells
+   themselves, not as a grid gap over a coloured ground, so a one- or two-cell
+   row leaves no empty slot and no stray rule.
+
+   The accent pair is the page's existing two-way pair -- --real for the
+   simulator's ground truth, --dream for the one generated video -- plus the same
+   deliberately neutral grey the dreams section gives the skeleton, because the
+   skeleton is an input and must never read as a model output.
+
+   Loaded after css/style.css; adds nothing to :root and overrides nothing in it.
+   The shuffle control is the shared .picker / .picker__btn component and is not
+   restyled here. Rendering lives in js/sim.js.
+   ============================================================ */
+
+.sim-blocks {
+  display: grid;
+  gap: 56px;
+  /* the conditioning input gets no accent of its own, by design */
+  --skel: #6b7280;
+  /* clips are 448x256; js/sim.js overrides this per row from the row's own
+     width/height, so a re-encode at another size is letterboxed rather than
+     cropped to a hard-coded aspect */
+  --sim-aspect: 7 / 4;
+}
+
+/* ----------- column key ----------- */
+.sim-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 30px;
+  padding: 0;
+  list-style: none;
+}
+.sim-key__item {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  padding: 9px 14px 9px 12px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--sim-key-accent, var(--rule-strong));
+  border-radius: var(--radius-sm);
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  line-height: 1.35;
+  box-shadow: var(--shadow-sm);
+}
+.sim-key__item--gt       { --sim-key-accent: var(--real); }
+.sim-key__item--dream    { --sim-key-accent: var(--dream); }
+.sim-key__item--skeleton { --sim-key-accent: #6b7280; }
+.sim-key__swatch {
+  width: 9px; height: 9px;
+  flex: none;
+  border-radius: 2px;
+  background: var(--sim-key-accent);
+  transform: translateY(-1px);
+}
+/* the skeleton swatch is hollow: the same shape as the other two, but visibly
+   not one of the model's outputs */
+.sim-key__item--skeleton .sim-key__swatch {
+  background: transparent;
+  border: 1.5px dashed var(--sim-key-accent);
+}
+.sim-key__name { font-weight: 700; color: var(--ink); }
+.sim-key__role { color: var(--muted); }
+
+/* ----------- a block (trained_on / fidelity) ----------- */
+.sim-block { display: grid; gap: 14px; }
+.sim-block__hdr { max-width: 80ch; }
+.sim-block__title {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin: 0;
+  color: var(--ink);
+}
+.sim-block__caption {
+  margin: 5px 0 0;
+  font-family: var(--serif);
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+/* The button's own look -- pill, icon size, hover/press/focus -- is the shared
+   .picker__btn component's, so nothing here touches it. The only addition is the
+   line beside it saying what one click does, counted off the file rather than
+   written down. */
+.sim-shuffle__hint {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.sim-stage { display: grid; gap: 20px; }
+
+/* ----------- one episode row ----------- */
+.sim-row {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.sim-row__hdr {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 20px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg-alt);
+}
+.sim-row__text { min-width: 0; }
+/* the row's heading, from the file; the episode id is deliberately not printed
+   anywhere -- it lives on the row as data-row-id */
+.sim-row__title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.02rem;
+  line-height: 1.3;
+  color: var(--ink);
+}
+.sim-row__meta {
+  margin: 2px 0 0;
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The training split, as a chip. A failed episode is a training example, so the
+   chip is marked but never coloured like a verdict: it borrows --bad's hue at low
+   strength and says the word, rather than reading as a red failure badge. */
+.sim-chip {
+  margin: 0 0 0 auto;
+  flex: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px dashed var(--rule-strong);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+.sim-chip__k {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-size: 0.64rem;
+}
+.sim-chip__v { font-weight: 600; color: var(--ink-soft); }
+.sim-chip--failed {
+  border-color: color-mix(in srgb, var(--bad) 32%, #fff 68%);
+  background: color-mix(in srgb, var(--bad) 5%, #fff 95%);
+}
+.sim-chip--failed .sim-chip__v { color: color-mix(in srgb, var(--bad) 78%, #000 22%); }
+
+/* Why this row has the shape it has: a failed split is a training example, an
+   absent skeleton column is unrecoverable conditioning rather than an omission.
+   Both are about the row's shape, which is what a reader would otherwise read as
+   a defect. */
+.sim-row__note {
+  margin: 0;
+  padding: 10px 20px 0;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.sim-row__note + .sim-row__note { padding-top: 4px; }
+.sim-row__note:last-of-type { padding-bottom: 2px; }
+
+/* ----------- the cells: 1, 2 or 3 across ----------- */
+/* The column count comes from the row (js/sim.js sets --sim-cols and
+   data-cells), so a two-cell row is two equal columns and not two thirds of a
+   three-column grid with a hole in it. A single cell is capped instead of being
+   stretched across the whole container. */
+.sim-cells {
+  display: grid;
+  grid-template-columns: repeat(var(--sim-cols, 3), minmax(0, 1fr));
+}
+.sim-cells[data-cells="1"] { grid-template-columns: minmax(0, 34rem); }
+.sim-cell {
+  margin: 0;
+  min-width: 0;
+  padding: 13px 16px 15px;
+  background: #fff;
+  border-top: 3px solid var(--sim-cell-accent, var(--rule-strong));
+}
+/* dividers on the cells, so there is no coloured grid ground to show through
+   next to a short row */
+.sim-cell + .sim-cell { border-left: 1px solid var(--rule); }
+.sim-cell--gt       { --sim-cell-accent: var(--real); }
+.sim-cell--dream    { --sim-cell-accent: var(--dream); }
+.sim-cell--skeleton { --sim-cell-accent: #6b7280; border-top-style: dashed; }
+
+.sim-cell__head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 9px;
+  margin-bottom: 10px;
+  font-family: var(--sans);
+}
+.sim-cell__eyebrow {
+  font-size: 0.70rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--sim-cell-accent) 74%, #000 26%);
+}
+/* the role, as a chip, so the kinds are legible at a glance: filled for the
+   generated video, outlined for ground truth, dashed for the input */
+.sim-cell__role {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  border: 1px solid color-mix(in srgb, var(--sim-cell-accent) 32%, #fff 68%);
+  background: color-mix(in srgb, var(--sim-cell-accent) 8%, #fff 92%);
+  color: color-mix(in srgb, var(--sim-cell-accent) 76%, #000 24%);
+}
+.sim-cell--skeleton .sim-cell__role { border-style: dashed; }
+.sim-cell--dream .sim-cell__role {
+  background: var(--dream);
+  border-color: var(--dream);
+  color: #fff;
+}
+
+/* ----------- the clip itself ----------- */
+.sim-frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  aspect-ratio: var(--sim-aspect, 7 / 4);
+  background: #0c0d10;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+.sim-frame video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+button.sim-frame:hover:not(:disabled) {
+  border-color: var(--sim-cell-accent);
+  box-shadow: var(--shadow-md);
+}
+.sim-frame:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* a clip whose mp4 failed to load loses the enlarge affordance with it */
+.sim-frame:disabled { cursor: default; }
+/* no asset on disk yet, or it failed to load: a labelled hole, never a broken
+   player */
+.sim-frame--missing::before {
+  content: attr(data-missing);
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: #8b919c;
+  background: repeating-linear-gradient(45deg, #15171c, #15171c 8px, #1b1e24 8px, #1b1e24 16px);
+  z-index: 3;
+}
+
+/* What this column is, in words. It is in the caption rather than over the
+   picture so it still says which video is which with video disabled. */
+.sim-cell__meta {
+  margin-top: 8px;
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.sim-cell__meta:empty { display: none; }
+
+/* ----------- row controls ----------- */
+/* The same 34px square control the real-robot and dreams rows use, under this
+   section's own class so nothing here can be caught by a .rw-* selector in
+   js/main.js. */
+.sim-row__ctrls {
+  flex: none;
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+.sim-ctrl {
+  display: inline-grid;
+  place-items: center;
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid var(--rule-strong);
+  color: var(--ink-soft);
+  transition: color .15s, border-color .15s;
+}
+.sim-ctrl:hover { color: var(--accent-dk); border-color: var(--accent); }
+.sim-ctrl:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sim-ctrl svg { width: 15px; height: 15px; }
+
+/* ----------- lightbox legend, one row per kind ----------- */
+/* drives the shared #lightbox legend that main.js already styles for its own
+   pairs; adding classes here rather than touching css/style.css */
+.lightbox__legend .legend--sim-gt    { color: var(--real);  border-top-color: var(--real); }
+.lightbox__legend .legend--sim-dream { color: var(--dream); border-top-color: var(--dream); }
+.lightbox__legend .legend--sim-skel  { color: #9aa3b2;      border-top-color: #9aa3b2; }
+
+/* ----------- responsive ----------- */
+/* 1180px of container gives three 448-wide clips room; below that the cells
+   stack, in the same gt -> dream -> skeleton reading order. Nothing is given a
+   min-width in px, so a row still fits at 400px without scrolling sideways. */
+@media (max-width: 900px) {
+  .sim-cells,
+  .sim-cells[data-cells="1"] { grid-template-columns: minmax(0, 1fr); }
+  .sim-cell + .sim-cell {
+    border-left: 0;
+    border-top-width: 3px;
+  }
+  .sim-row__hdr { flex-wrap: wrap; }
+  .sim-chip { margin-left: 0; order: 3; }
+  .sim-row__ctrls { margin-left: auto; }
+}
+@media (max-width: 560px) {
+  .sim-key__item { width: 100%; }
+  .sim-blocks { gap: 42px; }
+  .sim-row__hdr { padding: 11px 14px; }
+  .sim-cell { padding: 12px 14px 14px; }
+  .sim-row__note { padding-left: 14px; padding-right: 14px; }
+}
+
+/* ----------- reduced motion ----------- */
+/* rows start paused under this preference (see SIM_REDUCED in js/sim.js); the
+   row's own play button opts in. */
+@media (prefers-reduced-motion: reduce) {
+  .sim-frame, .sim-ctrl { transition: none; }
+}

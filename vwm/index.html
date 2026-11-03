@@ -1,0 +1,867 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Dream Rehearsal — Video World Models Turn Any Source of Action into Robot Demonstrations</title>
+  <meta name="description" content="DreamRehearse: a skeleton-conditioned video world model turns any teacher, any trajectory, and any scene into robot training demonstrations."/>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/dreams.css"/>
+  <link rel="stylesheet" href="css/sim.css"/>
+  <!-- Authors: ANONYMOUS. When the paper is de-anonymized, uncomment and fill in:
+       <meta name="author" content="..."/>
+  -->
+  <meta name="author" content="Hongyi Chen, Liquan Wang, Shuo Cheng, Qiyang Yan, Jeffrey Ichnowski, Zackory Erickson, Homanga Bharadhwaj, Nur Muhammad Mahi Shafiullah"/>
+</head>
+<body>
+
+<!-- =====================================================================
+     hero
+     A full-viewport dark panel: the robot video behind, the paper's title,
+     authors and links in front. The nav lives inside it while you are at the
+     top and is replaced by the sticky #topnav once you scroll past, so the
+     first screen is the paper and not a toolbar.
+     ===================================================================== -->
+<header class="hero" id="top">
+  <!-- aria-hidden: the video is atmosphere. Everything it shows is shown again,
+       labelled and scrubable, in the real-robot section. -->
+  <div class="hero__media" aria-hidden="true">
+    <img class="hero__poster" src="assets/hero.jpg" width="1920" height="1080" alt=""
+         decoding="async"/>
+    <!-- The src is in data-src and js/main.js moves it: a decorative 2 MB
+         autoplaying loop should not be on the critical path, and a visitor who
+         asked for reduced motion never gets it at all. -->
+    <video id="hero-video" muted loop playsinline preload="none" tabindex="-1"
+           data-src="assets/hero.mp4"></video>
+  </div>
+  <div class="hero__shade" aria-hidden="true"></div>
+
+  <nav class="hero__nav" aria-label="Primary">
+    <a class="brand" href="#top" aria-label="DreamRehearse, back to top">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span class="brand__word">DreamRehearse</span>
+    </a>
+    <div class="hero__navlinks">
+      <a href="#method">Method</a>
+      <a href="#robotwin">RoboTwin</a>
+      <a href="#egobench">EgoBench</a>
+      <a href="#realrobot">Real robot</a>
+      <a href="#trex">T-Rex</a>
+      <a href="#bibtex">BibTeX</a>
+    </div>
+  </nav>
+
+  <div class="hero__content">
+    <!-- SLOT:tagline -->
+<div class="hero__tagline">
+      <span class="pill pill--ondark">Preprint</span>
+    </div>
+    <!-- /SLOT:tagline -->
+
+    <h1 class="hero__title">
+      <span class="hero__name">Dream Rehearsal<span class="sr-only">:</span></span>
+      <span class="hero__sub">Video World Models Turn Any Source of Action<br class="hero__br"/>
+        into Robot Demonstrations</span>
+    </h1>
+
+    <p class="hero__summary">
+      A skeleton-conditioned video world model becomes a demonstration generator. Any teacher
+      rehearses inside it, a filter keeps only what works, and the surviving dreams train one
+      student policy that beats its teachers, dreams in rooms it never saw, and transfers to real
+      hardware from five real demonstrations.
+    </p>
+
+    <details class="hero__abstract">
+      <summary>Abstract</summary>
+      <p>
+        Dexterous manipulation is bottlenecked by demonstrations: every new scene, object set or
+        embodiment means teleoperating the robot again. Action-conditioned video world models could
+        supply that data, but existing uses are narrow &mdash; a policy is improved by resampling
+        its own rollouts, the rollouts stay in the scene the model was fit to, and the platform is
+        almost always a parallel-jaw gripper. We present <strong>DreamRehearse</strong>, which
+        treats such a model as a demonstration generator and lifts all three restrictions.
+        Conditioning on rendered <em>robot skeletons</em> rather than raw actions makes the model
+        embodiment-invariant, and predicts future video more accurately than action-conditioned
+        baselines. Any source of motion can rehearse inside it: a coding agent, a learned
+        specialist, a generalist VLA or a trajectory validated in simulation. A success classifier
+        keeps only the rollouts that work. On RoboTwin, pooled dreams lift
+        <code>&pi;<sub>0.5</sub></code> from 1.9% to 68.9%; on a bimanual dexterous hand, dreams in
+        unseen rooms raise out-of-distribution success from 10.4% to 61.1%; on real hardware,
+        simulated trajectories dreamed into real observations reach 83.3% on three dexterous tasks from five
+        real demonstrations each.
+      </p>
+    </details>
+
+    <!-- AUTHORS. This file is the ANONYMOUS source and is what you edit. The
+         named build does not exist as a second copy of this file: build_site.py
+         --variant named replaces the slot below from authors.json. Never paste
+         real names in here, or the anonymous build inherits them. -->
+    <!-- SLOT:authors -->
+<div class="hero__authors">
+          <p class="names">Hongyi Chen,
+        Liquan Wang,
+        Shuo Cheng,
+        Qiyang Yan,
+        Jeffrey Ichnowski,
+        Zackory Erickson,
+        Homanga Bharadhwaj,
+        Nur Muhammad Mahi Shafiullah</p>
+        </div>
+    <!-- /SLOT:authors -->
+
+    <div class="hero__actions">
+      <!-- SLOT:paper -->
+<a class="glass glass--btn" href="#" aria-disabled="true" title="Paper not released yet">
+        <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Paper
+      </a>
+    <!-- /SLOT:paper -->
+      <!-- SLOT:code -->
+<a class="glass glass--btn" href="#" aria-disabled="true" title="Code not released yet">
+        <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Code
+      </a>
+    <!-- /SLOT:code -->
+      <a class="glass glass--btn" href="#realrobot">
+        <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><polygon points="10 9 16 12 10 15" fill="currentColor" stroke="none"/></svg>
+        Real-robot videos
+      </a>
+      <a class="glass glass--btn" href="#robotwin">
+        <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Dreams
+      </a>
+      <a class="glass glass--btn" href="#bibtex">
+        <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5h5v6H7.5c0 2.4.9 3.9 3 4.5M13 5h5v6h-3.5c0 2.4.9 3.9 3 4.5"/></svg>
+        BibTeX
+      </a>
+    </div>
+  </div>
+
+  <div class="hero__bottom">
+    <a class="hero__cue" href="#method" aria-label="Scroll to the method">
+      <span aria-hidden="true"></span>
+    </a>
+    <div class="hero__now">
+      <span class="glass glass--tag">Real rollout &middot; 5 real demos + 40 dreams</span>
+      <button class="glass glass--btn hero__toggle" type="button" aria-controls="hero-video"
+              aria-label="Pause background video" hidden>
+        <svg class="i-pause" aria-hidden="true" width="14" height="14" viewBox="0 0 14 14"><rect x="2.4" y="1.6" width="3.2" height="10.8" rx="1" fill="currentColor"/><rect x="8.4" y="1.6" width="3.2" height="10.8" rx="1" fill="currentColor"/></svg>
+        <svg class="i-play" aria-hidden="true" width="14" height="14" viewBox="0 0 14 14"><path d="M3 1.6v10.8L12.2 7z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- =====================================================================
+     sticky nav
+     A separate element from the hero's own nav: it slides in only once the
+     hero is off screen, so it never sits on top of the title.
+     ===================================================================== -->
+<div class="topnav" id="topnav">
+  <div class="topnav__inner">
+    <a class="brand" href="#top" aria-label="DreamRehearse, back to top">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span class="brand__word">DreamRehearse</span>
+    </a>
+    <nav aria-label="Sections">
+      <a href="#method">Method</a>
+      <a href="#robotwin">RoboTwin</a>
+      <a href="#egobench">EgoBench</a>
+      <a href="#realrobot">Real robot</a>
+      <a href="#trex">T-Rex</a>
+      <a href="#bibtex">BibTeX</a>
+    </nav>
+  </div>
+</div>
+
+<!-- =====================================================================
+     Scoreboard
+     Every claim on the page as one number, each linking to the section that
+     earns it. This exists because the page is long and domain-major: a reader
+     who lands here should be able to see all four results in one screen and
+     then go straight to whichever one they doubt, rather than scrolling
+     through three embodiments to find out whether it is worth their time.
+     Nothing here is new data; each cell restates its section's result card.
+     ===================================================================== -->
+<section class="scoreboard" id="glance" aria-labelledby="score-h">
+  <div class="container">
+    <h2 class="scoreboard__eyebrow" id="score-h">Every result, one screen</h2>
+    <ol class="scoreboard__row">
+      <li class="score">
+        <a href="#method">
+          <span class="score__ix">C1</span>
+          <span class="score__big">21.47</span>
+          <span class="score__unit">PSNR</span>
+          <span class="score__what">One skeleton-conditioned model over four embodiments,
+            more accurate than action-conditioned baselines (20.56, 15.82).</span>
+        </a>
+      </li>
+      <li class="score" style="--score-accent:#f08200">
+        <a href="#robotwin-results">
+          <span class="score__ix">C2</span>
+          <span class="score__big">1.9 <span class="score__to">&rarr;</span> 70.6<span class="score__pct">%</span></span>
+          <span class="score__unit">RoboTwin, 7 tasks</span>
+          <span class="score__what">Dreams pooled from five teachers beat the best single
+            teacher (63.1%).</span>
+        </a>
+      </li>
+      <li class="score" style="--score-accent:#2a78d6">
+        <a href="#egobench-results">
+          <span class="score__ix">C3</span>
+          <span class="score__big">10.4 <span class="score__to">&rarr;</span> 61.1<span class="score__pct">%</span></span>
+          <span class="score__unit">rooms never trained in</span>
+          <span class="score__what">A bimanual dexterous hand, in three rooms the world model
+            never saw.</span>
+        </a>
+      </li>
+      <li class="score" style="--score-accent:#2fa85a">
+        <a href="#real-results-h">
+          <span class="score__ix">C4</span>
+          <span class="score__big">50<span class="score__to">/</span>60</span>
+          <span class="score__unit">real trials, 3 tasks</span>
+          <span class="score__what">On hardware, from five real demonstrations. The real-only
+            policy manages 10/60.</span>
+        </a>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ===================================================== method -->
+<section class="section" id="method">
+  <div class="container">
+    <h2 class="section__title reveal">Three steps turn a world model into a demonstration generator</h2>
+    <p class="section__kicker reveal">
+      Read down the left. The panel on the right is that step&rsquo;s part of the pipeline figure, and it
+      changes as you go: (a) &rarr; (b) &rarr; (c). Click it to open it full size.
+    </p>
+
+    <!-- =================================================================
+         One panel at a time, at full column width.
+         The earlier version stacked all three panels in a narrow rail, which
+         made each of them too small to read — a diagram you cannot read is
+         decoration. So only the step you are on is drawn, it gets the wider of
+         the two columns, and the other two are a rail of a/b/c marks. Clicking
+         the panel opens it at full resolution in the page's lightbox.
+         The prose column is the narrow one: it is the thing being read, and a
+         narrow measure is easier to read, so both columns win.
+         ================================================================= -->
+    <div class="method-grid">
+      <div class="method-steps">
+        <article class="step reveal" id="step-a" data-step="a">
+          <img class="step__fig" src="assets/pipeline_a.png" alt="" loading="lazy" decoding="async"/>
+          <h3><span class="fw-mark" aria-hidden="true">a</span>Skeleton-conditioned world model</h3>
+          <p class="step__claim">One world model, every embodiment.</p>
+          <p>
+            Raw action vectors are not comparable across robots &mdash; a given coordinate names a different joint on
+            each platform. A rendered skeleton is <em>one format</em> for all of them, and it is
+            <em>spatially grounded</em>: it occupies the same image coordinates as the robot it describes. Prediction
+            becomes a translation from drawn motion into photorealistic appearance, rather than a map from an abstract
+            vector onto an entire image. We LoRA-fine-tune an OSCAR-2B video diffusion transformer, with sparse
+            history frames to keep long rollouts anchored and failure episodes mixed in so the filter has something
+            to reject.
+          </p>
+        </article>
+
+        <article class="step reveal" id="step-b" data-step="b">
+          <img class="step__fig" src="assets/pipeline_b.png" alt="" loading="lazy" decoding="async"/>
+          <h3><span class="fw-mark" aria-hidden="true">b</span>Rehearse actions in the dream</h3>
+          <p class="step__claim">Who dreams is a free variable.</p>
+          <p>
+            Prior work resamples the student policy inside the model &mdash; which requires the policy to already
+            succeed often enough for anything to be kept. We decouple actor from student: a coding agent, a per-task
+            specialist, a generalist VLA, or a trajectory validated in simulation all rehearse inside the world model,
+            even in combination. The dreams happen in rooms, backgrounds and object placements the robot has never
+            entered, so the generated demonstrations cover conditions no recording session did.
+          </p>
+        </article>
+
+        <article class="step reveal" id="step-c" data-step="c">
+          <img class="step__fig" src="assets/pipeline_c.png" alt="" loading="lazy" decoding="async"/>
+          <h3><span class="fw-mark" aria-hidden="true">c</span>Filter, then distill</h3>
+          <p class="step__claim">Keep only the dreams that worked.</p>
+          <p>
+            Two things can go wrong in a dream: the actions may fail, or the world model may render the outcome
+            incorrectly. Both appear to a scorer as a task that was not completed. Every rollout is scored by
+            Robometer and kept only if its final success exceeds a threshold fit from real episodes. Surviving dreams
+            are consumed exactly like real demonstrations &mdash; no auxiliary loss, no importance weight &mdash; so
+            the pipeline drops into any imitation-learning recipe unchanged.
+          </p>
+        </article>
+      </div>
+
+      <div class="method-fig" id="method-fw">
+        <!-- The a / b / c rail. Buttons, so the panel can be changed without
+             scrolling, and the current one is marked with aria-current. -->
+        <div class="fw-rail" role="group" aria-label="Pipeline stage">
+          <button class="fw-mark fw-mark--btn" type="button" data-step="a"
+                  aria-label="Show stage a, skeleton-conditioned world model">a</button>
+          <span class="fw-rail__line" aria-hidden="true"></span>
+          <button class="fw-mark fw-mark--btn" type="button" data-step="b"
+                  aria-label="Show stage b, rehearse actions in the dream">b</button>
+          <span class="fw-rail__line" aria-hidden="true"></span>
+          <button class="fw-mark fw-mark--btn" type="button" data-step="c"
+                  aria-label="Show stage c, filter then distill">c</button>
+        </div>
+
+        <!-- All three panels are in the DOM and cross-fade, rather than one
+             <img> whose src is swapped: swapping the src shows a blank frame
+             while the new file decodes, every time you scroll past a boundary. -->
+        <figure class="fw-stage">
+          <img class="fw-panel" src="assets/pipeline_a.png" data-step="a"
+               alt="Stage a of the pipeline: an action vector is rendered as a robot skeleton, and skeleton-and-video pairs from three embodiments train the video world model."
+               decoding="async"/>
+          <img class="fw-panel" src="assets/pipeline_b.png" data-step="b"
+               alt="Stage b of the pipeline: a control agent, a VLA or a simulated trajectory supplies an action skeleton, and the world model dreams the next chunk autoregressively from an initial RGB observation, in rooms it never saw."
+               decoding="async"/>
+          <img class="fw-panel" src="assets/pipeline_c.png" data-step="c"
+               alt="Stage c of the pipeline: the Robometer filter keeps only the dreams that succeeded, those are pooled with the real data to train the student policy, and the student is deployed."
+               decoding="async"/>
+          <figcaption class="fw-stage__cap">
+            <span class="fw-stage__label" data-for="a">(a) one skeleton format, four embodiments</span>
+            <span class="fw-stage__label" data-for="b">(b) any teacher rehearses, in rooms it never saw</span>
+            <span class="fw-stage__label" data-for="c">(c) keep the successes, distill the student</span>
+            <button class="fw-zoom" type="button" aria-label="Open this panel at full size">
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
+              Full size
+            </button>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <details class="pipeline-full">
+      <summary>Show the full pipeline figure</summary>
+      <img src="assets/pipeline.png"
+           alt="Full pipeline figure: skeleton-conditioned world model, teachers rehearsing in it, success filter, student distillation."
+           loading="lazy" decoding="async"/>
+    </details>
+
+    <!-- C1 lives here rather than in a results section: it is a property of the
+         conditioning this section just described, not an outcome of a policy. -->
+    <ol class="results results--inline">
+      <li class="result reveal" aria-labelledby="c1-title">
+        <div class="result__badge">C1</div>
+        <div class="result__num">
+          <span class="result__big">21.47</span>
+          <span class="result__unit">PSNR</span>
+        </div>
+        <div class="result__body">
+          <h3 id="c1-title">Skeleton conditioning wins on every metric.</h3>
+          <p>
+            A single model covers four embodiments &mdash; two grippers and two dexterous hands &mdash; and predicts
+            future video more accurately than action-conditioned baselines
+            (RISE: 15.82 PSNR, Ctrl-World: 20.56; <strong>Ours: 21.47</strong>).
+            FVD drops to 154 from 361.
+          </p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ===================================================== robotwin -->
+<section class="section section--alt dom" id="robotwin" style="--dom-accent:#f08200">
+  <div class="container">
+    <h2 class="section__title reveal">
+      <span class="dom__dot" aria-hidden="true"></span>RoboTwin &middot; ALOHA-AgileX, two parallel-jaw grippers, simulation
+    </h2>
+    <p class="section__kicker reveal">Ten tasks in the simulator, clean and randomised scenes. Everything below is the same world model: first its rendering against the simulator's own ground truth, then where it dreams, then what a policy trained on those dreams achieves.</p>
+
+    <!-- The section's own contents, as a rail. Every domain asks the same
+         questions in the same order, so this doubles as a reminder of that
+         shape and as a way to skip to the one you care about. js/main.js marks
+         whichever is in view. -->
+    <nav class="domrail" aria-label="In this section: RoboTwin">
+      <ol>
+      <li><a href="#robotwin-dreamreal">Dream vs real</a></li>
+      <li><a href="#robotwin-generalize">New scenes</a></li>
+      <li><a href="#robotwin-results">Results</a></li>
+      </ol>
+    </nav>
+
+    <h3 class="dom__sub reveal" id="robotwin-dreamreal">The dream tracks the simulator’s own render</h3>
+    <!-- The column key, stated once per domain. The skeleton is what goes in and the dream
+         is the only thing that comes out; a reader who skips the prose should still not be
+         able to read the skeleton as a prediction, or the ground truth as a model output. -->
+    <ul class="sim-key" aria-label="What the columns in each row are">
+      <li class="sim-key__item sim-key__item--gt">
+        <span class="sim-key__swatch" aria-hidden="true"></span>
+        <span class="sim-key__name">Ground truth</span>
+        <span class="sim-key__role">the simulator's own render. Not generated.</span>
+      </li>
+      <li class="sim-key__item sim-key__item--dream">
+        <span class="sim-key__swatch" aria-hidden="true"></span>
+        <span class="sim-key__name">Dream</span>
+        <span class="sim-key__role">generated by the world model. The only generated video here.</span>
+      </li>
+      <li class="sim-key__item sim-key__item--skeleton">
+        <span class="sim-key__swatch" aria-hidden="true"></span>
+        <span class="sim-key__name">Skeleton</span>
+        <span class="sim-key__role">the conditioning input. Drawn, not predicted.</span>
+      </li>
+    </ul>
+
+    <div class="sim-block" id="rt-triplets">
+      <p class="gallery__loading">Loading fidelity comparisons&hellip;</p>
+    </div>
+
+    <p class="dom__more">More episodes, the simulator's rollout beside the dream of the same
+      action skeleton. Hover a pair to play both in sync; click to enlarge.</p>
+    <div id="rt-pairs">
+      <p class="gallery__loading">Loading comparisons&hellip;</p>
+    </div>
+
+    <h3 class="dom__sub reveal" id="robotwin-generalize">It dreams in scene randomisations no recording session covered</h3>
+    <p class="section__kicker reveal">Top strip: what it saw during training. Bottom strip, drifting: where it dreams.</p>
+    <div id="rt-generalize">
+      <p class="gallery__loading">Loading&hellip;</p>
+    </div>
+
+    <h3 class="dom__sub reveal" id="robotwin-results">Pooled dreams beat the best single teacher, 70.6% to 63.1%</h3>
+    <ol class="results">
+      <li class="result reveal" aria-labelledby="c2-title">
+        <div class="result__badge">C2</div>
+        <div class="result__num">
+          <span class="result__big">70.6<span class="result__pct">%</span></span>
+          <span class="result__unit">RoboTwin, 7 tasks</span>
+        </div>
+        <div class="result__body">
+          <h3 id="c2-title">Dreams distill a pool of teachers into one student.</h3>
+          <p>
+            Dreams pooled from five teachers &mdash; one CaP-X coding agent and four per-task ACT specialists &mdash;
+            lift <code>&pi;<sub>0.5</sub></code> from <strong>1.9%&nbsp;&rarr;&nbsp;70.6%</strong>, above the best
+            single teacher (63.1%) and within 97% of the same model trained on ground-truth simulator rollouts
+            (73.1%). Scaling the dreams gives 64.3% at 0.5k, 68.6% at 1k and 70.6% at 2k: the first doubling buys
+            4.3 points and the second 2.0, so the curve is close to saturating.
+          </p>
+        </div>
+      </li>
+    </ol>
+
+    <!-- The paper's own figure, rasterized from imgs/exp by
+         website_check/make_result_figs.py, so the site cannot drift from the
+         paper: regenerate rather than editing the PNG. -->
+    <figure class="resfig reveal">
+      <img src="assets/results/res_robotwin.png" width="1432" height="720" loading="lazy"
+           decoding="async"
+           alt="Per-task success rate on seven RoboTwin tasks. Grey bars are the stronger teacher per task, amber bars are the student trained on 0.5k, 1k and 2k dreams, and a black line marks the student trained on 1k real simulator rollouts. The student trained on 2k dreams reaches 70.6% on average, above the teachers."/>
+      <figcaption>
+        Success rate (%) per task, averaged over a clean and a randomized scene, 50 episodes each.
+        Grey: the stronger of the two teachers for that task, hatched where the ACT specialist is
+        the stronger one. Amber: the student on 0.5k, 1k and 2k dreams. Black line: the same
+        student trained on 1k rollouts of those teachers executed in the simulator, which is the
+        ceiling this is measured against.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ===================================================== egobench -->
+<section class="section dom" id="egobench" style="--dom-accent:#2a78d6">
+  <div class="container">
+    <h2 class="section__title reveal">
+      <span class="dom__dot" aria-hidden="true"></span>EgoBench &middot; Unitree H1 with two Inspire hands, Isaac Sim
+    </h2>
+    <p class="section__kicker reveal">Six tasks with a bimanual dexterous hand. Same three questions as above, asked of a different embodiment: how faithfully the model renders, where it can dream, and what the dreams buy a policy.</p>
+
+    <!-- The section's own contents, as a rail. Every domain asks the same
+         questions in the same order, so this doubles as a reminder of that
+         shape and as a way to skip to the one you care about. js/main.js marks
+         whichever is in view. -->
+    <nav class="domrail" aria-label="In this section: EgoBench">
+      <ol>
+      <li><a href="#egobench-dreamreal">Dream vs real</a></li>
+      <li><a href="#egobench-generalize">New scenes</a></li>
+      <li><a href="#egobench-results">Results</a></li>
+      </ol>
+    </nav>
+
+    <h3 class="dom__sub reveal" id="egobench-dreamreal">One model renders the gripper and the dexterous hand</h3>
+    <!-- The column key, stated once per domain. The skeleton is what goes in and the dream
+         is the only thing that comes out; a reader who skips the prose should still not be
+         able to read the skeleton as a prediction, or the ground truth as a model output. -->
+    <ul class="sim-key" aria-label="What the columns in each row are">
+      <li class="sim-key__item sim-key__item--gt">
+        <span class="sim-key__swatch" aria-hidden="true"></span>
+        <span class="sim-key__name">Ground truth</span>
+        <span class="sim-key__role">the simulator's own render. Not generated.</span>
+      </li>
+      <li class="sim-key__item sim-key__item--dream">
+        <span class="sim-key__swatch" aria-hidden="true"></span>
+        <span class="sim-key__name">Dream</span>
+        <span class="sim-key__role">generated by the world model. The only generated video here.</span>
+      </li>
+      <li class="sim-key__item sim-key__item--skeleton">
+        <span class="sim-key__swatch" aria-hidden="true"></span>
+        <span class="sim-key__name">Skeleton</span>
+        <span class="sim-key__role">the conditioning input. Drawn, not predicted.</span>
+      </li>
+    </ul>
+
+    <div class="sim-block" id="eb-triplets">
+      <p class="gallery__loading">Loading fidelity comparisons&hellip;</p>
+    </div>
+
+    <p class="dom__more">More episodes, the simulator's rollout beside the dream of the same
+      action skeleton. Hover a pair to play both in sync; click to enlarge.</p>
+    <div id="eb-pairs">
+      <p class="gallery__loading">Loading comparisons&hellip;</p>
+    </div>
+
+    <h3 class="dom__sub reveal" id="egobench-generalize">Dreams staged in rooms the model never trained in</h3>
+    <p class="section__kicker reveal">Top strip: the one room it trained in. Bottom strip: rooms with tables and backgrounds it never saw.</p>
+    <div id="eb-generalize">
+      <p class="gallery__loading">Loading&hellip;</p>
+    </div>
+
+    <h3 class="dom__sub reveal" id="egobench-results">Out-of-distribution success rises from 10.4% to 61.1%</h3>
+    <ol class="results">
+      <li class="result reveal" aria-labelledby="c3-title">
+        <div class="result__badge">C3</div>
+        <div class="result__num">
+          <span class="result__big">10.4<span class="result__pct">%</span> &rarr; 61.1<span class="result__pct">%</span></span>
+          <span class="result__unit">out-of-distribution rooms</span>
+        </div>
+        <div class="result__body">
+          <h3 id="c3-title">Dreams generalize beyond the recorded scene.</h3>
+          <p>
+            With a bimanual Inspire dexterous hand, the real-only student essentially fails in unseen rooms (0% on
+            three of five tasks). Co-training on real demos plus dreams staged in rooms the model never trained in
+            raises OOD success to <strong>61.1%</strong>, above the teacher that generated the dreams. The target
+            room improves too, 64.1%&nbsp;&rarr;&nbsp;83.5%, with no extra real data collected there.
+          </p>
+        </div>
+      </li>
+    </ol>
+
+    <!-- The per-task numbers, as a table rather than a picture of a table: it
+         reflows on a phone, is selectable, and is read correctly aloud. Tgt is
+         the one room the policy was trained in; Nov is three rooms with unseen
+         tables and backgrounds. -->
+    <div class="restable reveal">
+      <table>
+        <caption>
+          Success rate (%) per task. <strong>Tgt</strong>: the in-distribution target room.
+          <strong>Nov</strong>: three out-of-distribution novel rooms with unseen tables and
+          backgrounds. Real&nbsp;+&nbsp;dream adds 100 dreams per task, staged in the novel rooms.
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col" rowspan="2">Task</th>
+            <th scope="colgroup" colspan="2">Student, real only</th>
+            <th scope="colgroup" colspan="2">Teacher (EgoVLA)</th>
+            <th scope="colgroup" colspan="2" class="is-ours">Student, real + dream</th>
+          </tr>
+          <tr>
+            <th scope="col">Tgt</th><th scope="col">Nov</th>
+            <th scope="col">Tgt</th><th scope="col">Nov</th>
+            <th scope="col" class="is-ours">Tgt</th><th scope="col" class="is-ours">Nov</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Open Drawer</th>
+            <td>75.3</td><td>0.0</td><td>57.0</td><td>51.0</td>
+            <td class="is-ours"><strong>80.0</strong></td><td class="is-ours"><strong>67.3</strong></td></tr>
+          <tr><th scope="row">Stack Can</th>
+            <td>58.7</td><td>21.4</td><td>67.0</td><td>42.0</td>
+            <td class="is-ours"><strong>72.7</strong></td><td class="is-ours"><strong>55.3</strong></td></tr>
+          <tr><th scope="row">Unload Cans</th>
+            <td>88.0</td><td>0.7</td><td>20.0</td><td>24.3</td>
+            <td class="is-ours"><strong>88.0</strong></td><td class="is-ours"><strong>75.3</strong></td></tr>
+          <tr><th scope="row">Insert Can</th>
+            <td>72.7</td><td>0.0</td><td>42.2</td><td>30.0</td>
+            <td class="is-ours"><strong>90.0</strong></td><td class="is-ours"><strong>50.7</strong></td></tr>
+          <tr><th scope="row">Close Drawer</th>
+            <td>25.6</td><td>30.0</td><td><strong>100</strong></td><td><strong>100</strong></td>
+            <td class="is-ours">86.7</td><td class="is-ours">56.7</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><th scope="row">Average</th>
+            <td>64.1</td><td>10.4</td><td>57.2</td><td>49.5</td>
+            <td class="is-ours"><strong>83.5</strong></td><td class="is-ours"><strong>61.1</strong></td></tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="resfig-pair">
+      <figure class="resfig reveal">
+        <img src="assets/results/res_scaling.png" width="1800" height="662" loading="lazy"
+             decoding="async"
+             alt="Success rate against the number of dream demonstrations, for three EgoBench tasks. The novel-room curve rises steeply and saturates around 100 dreams per task; the target-room curve peaks early and then drifts down."/>
+        <figcaption>
+          Adding dreams from novel rooms. Out of distribution the curve rises and saturates around
+          100 dreams per task. In the target room it peaks early and then drifts down: the real
+          demonstrations already cover that room, so past a point the dreams only dilute them.
+          Bands are &plusmn;1 std over evaluation scene sets, 50 episodes each.
+        </figcaption>
+      </figure>
+
+      <figure class="resfig reveal">
+        <img src="assets/results/res_operators.png" width="640" height="249" loading="lazy"
+             decoding="async"
+             alt="For three EgoBench tasks, lines from target-room to novel-room success for eight ways of using the world model. Filter BC, ours, has the flattest fall; DAgger, PPO, GRPO, residual RL and two augmentations all fall further."/>
+        <figcaption>
+          What to spend imagined interaction on. Each line runs from target-room to novel-room
+          success for one way of using the model. Filtered behaviour cloning on dreams falls the
+          least; policy-improvement operators run inside the model and plain augmentation both
+          give up more.
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== real robot -->
+<!-- A gradient band rather than a hard edge into the dark section below: a
+     1px seam between a near-white page and a near-black one reads as a
+     rendering fault. Decorative, hence aria-hidden and no content. -->
+<div class="bleed bleed--todark" aria-hidden="true"></div>
+
+<!-- dom--dark: everything in this section is robot video, which reads better on
+     near-black than on white, and it gives the page a light/dark/light rhythm
+     instead of six near-identical white slabs. The modifier remaps the ink and
+     surface variables rather than restyling each card. -->
+<section class="section dom dom--dark" id="realrobot" style="--dom-accent:#4ade80">
+  <div class="container">
+    <h2 class="section__title reveal">
+      <span class="dom__dot" aria-hidden="true"></span>Real robot &middot; Tianji 7-DoF arm with a 22-DoF Sharpa hand
+    </h2>
+    <p class="section__kicker reveal">
+      Trajectories come from the simulator and the world model supplies the images, so the
+      student trains on dreams of its own workspace. Below: the dreams, then the policy
+      executing on hardware, then what happens when the scene or the object placement moves
+      out of distribution.
+    </p>
+
+    <!-- The section's own contents, as a rail. Every domain asks the same
+         questions in the same order, so this doubles as a reminder of that
+         shape and as a way to skip to the one you care about. js/main.js marks
+         whichever is in view. -->
+    <nav class="domrail" aria-label="In this section: real robot">
+      <ol>
+      <li><a href="#real-dreams-h">Dreams</a></li>
+      <li><a href="#real-exec-h">Execution</a></li>
+      <li><a href="#real-ood-h">Out of distribution</a></li>
+      <li><a href="#real-results-h">Results</a></li>
+      </ol>
+    </nav>
+
+    <h3 class="dom__sub reveal" id="real-dreams-h">Simulator trajectories, dreamed into the robot’s own camera view</h3>
+    <p class="section__kicker reveal">
+      One episode per row, every task at once, shown three ways: the
+      <strong>real recording</strong>, the <strong>rendered skeleton</strong> that conditions the
+      world model, and the <strong>dream</strong> the model generates from that skeleton. Shuffle
+      re-rolls which recorded episode each row is showing. The three clips in a row are the same
+      length and run off a single clock, so whatever differs between them is the model and not
+      three video players drifting apart.
+    </p>
+
+    <ul class="rwd-key" aria-label="What the three columns are">
+      <li class="rwd-key__item rwd-key__item--real">
+        <span class="rwd-key__swatch" aria-hidden="true"></span>
+        <span class="rwd-key__name">Real</span>
+        <span class="rwd-key__role">ground truth &mdash; recorded on the robot</span>
+      </li>
+      <li class="rwd-key__item rwd-key__item--skeleton">
+        <span class="rwd-key__swatch" aria-hidden="true"></span>
+        <span class="rwd-key__name">Skeleton</span>
+        <span class="rwd-key__role">input &mdash; drawn, not predicted</span>
+      </li>
+      <li class="rwd-key__item rwd-key__item--dream">
+        <span class="rwd-key__swatch" aria-hidden="true"></span>
+        <span class="rwd-key__name">Dream</span>
+        <span class="rwd-key__role">output &mdash; the only generated video here</span>
+      </li>
+    </ul>
+
+    <div id="real-dreams" class="rwd-rows">
+      <p class="gallery__loading">Loading real-world dreams&hellip;</p>
+    </div>
+
+    <p class="gallery__note">
+      Each row's <strong>conditioned on</strong> chip says where its skeleton came from, and that
+      decides what a mismatch means. Where the skeleton was fitted in simulation, the real clip
+      beside the dream is a <em>different</em> trajectory, so the two are not expected to line up
+      frame for frame. Only where the skeleton came from the real episode itself is a
+      frame-for-frame match the right thing to look for.
+    </p>
+
+    <h3 class="dom__sub reveal" id="real-exec-h">The real-only policy fails tasks the dream-trained one completes</h3>
+    <p class="section__kicker reveal">
+      Real-robot rollouts on three tasks. Both policies are the same ACT recipe on the same five real
+      demonstrations; <strong>ours</strong> additionally trains on forty demonstrations dreamed by the
+      world model, <strong>base</strong> does not. Each row plays the two rollouts side by side &mdash;
+      click either clip to enlarge it.
+    </p>
+
+    <div id="real-exec" class="rw-rows">
+      <p class="gallery__loading">Loading real-robot rollouts&hellip;</p>
+    </div>
+
+    <p class="gallery__note">
+      A clip's badge is the outcome of that one rollout: success, failure, or <em>unclear</em>
+      where the recording does not settle it. The success rates are in the results below.
+    </p>
+
+    <h3 class="dom__sub reveal" id="real-ood-h">A tablecloth and kitchen clutter neither policy was shown</h3>
+    <p class="section__kicker reveal">
+      Neither policy saw a <em>real</em> demonstration from this scene, but <strong>ours</strong>
+      trained on dreams of out-of-distribution scenes, so it is not novel to ours the way it is to
+      <strong>base</strong>. This vision shift is the only out-of-distribution condition with
+      real-robot rollouts: a position-OOD variant exists as dream data but was never rolled out on
+      the robot, so it is not shown here.
+    </p>
+    <p class="section__kicker reveal">
+      One rollout per policy at a time, and <strong>Shuffle</strong> re-rolls the two sides
+      <em>separately</em>: these are <strong>independent trials, not matched pairs</strong>, so
+      whichever two land on screen together the pairing is arbitrary. Each badge is the outcome of
+      that one rollout, not a rate.
+    </p>
+
+    <div id="real-ood" class="rw-rows">
+      <p class="gallery__loading">Loading out-of-distribution rollouts&hellip;</p>
+    </div>
+
+    <h3 class="dom__sub reveal" id="real-results-h">16/20, 17/20 and 17/20, from five real demonstrations</h3>
+    <ol class="results">
+      <li class="result reveal" aria-labelledby="c4-title">
+        <div class="result__badge">C4</div>
+        <div class="result__num">
+          <span class="result__big">0/20 &rarr; 16/20</span>
+          <span class="result__unit">Strike Peg, real Sharpa hand</span>
+        </div>
+        <div class="result__body">
+          <h3 id="c4-title">Dreams carry simulated trajectories onto real hardware.</h3>
+          <p>
+            Simulator trajectories dreamed into real workspace observations train a policy on a Tianji arm with a
+            22-DoF Sharpa hand, from only <strong>five real demonstrations</strong> plus dreams. Over 20 trials per
+            task the real-only policy reaches 0/20 on Strike Peg, 3/20 on Pour and 7/20 on Use Tongs; real&nbsp;+&nbsp;dream
+            reaches <strong>16/20, 17/20 and 17/20</strong>. DP3, trained in simulation on point clouds and
+            transferred, matches ours on Strike Peg (16/20) but collapses on Pour (2/20) and Use Tongs (0/20)
+            despite scoring 64% and 56% on those tasks inside the simulator.
+          </p>
+        </div>
+      </li>
+    </ol>
+
+    <!-- Table III of the paper. 20 trials per task per policy; DP3's simulator
+         percentages are in brackets and are a different quantity from its real
+         fractions, which the caption says so nobody reads them as comparable. -->
+    <div class="restable reveal">
+      <table>
+        <caption>
+          Real-robot success over <strong>20 trials per task per policy</strong>. DP3 is trained in
+          simulation on point clouds and transferred; its simulator success over 50 episodes is in
+          brackets, and is <em>not</em> comparable to the real fractions beside it &mdash; that gap
+          is the point of the row.
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Policy</th>
+            <th scope="col">Strike Peg</th>
+            <th scope="col">Pour</th>
+            <th scope="col">Use Tongs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">DP3, sim &rarr; real</th>
+            <td>16/20 <span class="restable__paren">(92% sim)</span></td>
+            <td>2/20 <span class="restable__paren">(64% sim)</span></td>
+            <td>0/20 <span class="restable__paren">(56% sim)</span></td></tr>
+          <tr><th scope="row">Student, real only</th>
+            <td>0/20</td><td>3/20</td><td>7/20</td></tr>
+          <tr class="is-ours"><th scope="row">Student, real + dream</th>
+            <td><strong>16/20</strong></td><td><strong>17/20</strong></td><td><strong>17/20</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure class="resfig resfig--narrow reveal">
+      <img src="assets/results/res_position.png" width="614" height="711" loading="lazy"
+           decoding="async"
+           alt="Two views of the workspace from the robot's camera. Top: green dots mark the nail placements that were demonstrated, inside a small green box, and orange squares mark the much wider spread of placements that were only dreamed. Bottom: green ticks and red crosses mark the policy outcome at the dreamed placements."/>
+      <figcaption>
+        The other out-of-distribution axis: <strong>where the object is</strong>, not what the scene
+        looks like. Top: the nail placements that were actually demonstrated (green) against the
+        placements that were only ever dreamed (orange). Bottom: the policy's outcome at those
+        dreamed placements. This axis has dream data and scored outcomes but no ours-vs-base
+        rollout videos, which is why it appears here as a figure and not above as video.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ===================================================== T-Rex -->
+<div class="bleed bleed--tolight" aria-hidden="true"></div>
+
+<section class="section dom" id="trex" style="--dom-accent:#00aa00">
+  <div class="container">
+    <h2 class="section__title reveal">
+      <span class="dom__dot" aria-hidden="true"></span>T-Rex &middot; Dexmate Vega-1 with a Sharpa Wave hand, real hardware
+    </h2>
+    <p class="section__kicker reveal">
+      The same conditioning carries a fourth embodiment: a simulator trajectory drawn as a
+      skeleton and painted into real T-Rex pixels.
+    </p>
+    <div id="trex-generalize">
+      <p class="gallery__loading">Loading&hellip;</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== bibtex -->
+<section class="section section--alt" id="bibtex">
+  <div class="container container--narrow">
+    <h2 class="section__title reveal">Citation</h2>
+    <p class="section__kicker reveal">BibTeX will be updated once de-anonymized.</p>
+    <div class="code">
+      <button class="code__copy" type="button" data-copy="#bib" aria-label="Copy BibTeX">Copy</button>
+<pre id="bib">@inproceedings{dreamrehearse2026,
+  title     = {Dream Rehearsal: Video World Models Turn Any Source of Action
+               into Robot Demonstrations},
+  author    = {Anonymous},
+  booktitle = {Under review},
+  year      = {2026}
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== footer -->
+<footer class="footer">
+  <div class="container">
+    <p>
+      DreamRehearse &middot; project page for an anonymous RA-L 2026 submission.
+      Teaser and pipeline figures are rendered from the paper source.
+    </p>
+  </div>
+</footer>
+
+<!-- ===================================================== lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lb-title" hidden>
+  <button class="lightbox__close" type="button" aria-label="Close">&times;</button>
+  <div class="lightbox__inner">
+    <h3 id="lb-title" class="lightbox__title">&nbsp;</h3>
+    <p id="lb-sub" class="lightbox__sub">&nbsp;</p>
+    <video id="lb-video" controls playsinline preload="metadata"></video>
+    <!-- The same dialog serves a still image, for the pipeline panels. Only one
+         of the two is ever shown; closeLightbox() resets both. -->
+    <img id="lb-image" alt="" hidden/>
+    <div class="lightbox__legend" id="lb-legend"></div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/dreams.js"></script>
+<script src="js/sim.js"></script>
+</body>
+</html>
