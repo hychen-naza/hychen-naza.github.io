@@ -785,16 +785,17 @@
       </table>
     </div>
 
-    <figure class="resfig resfig--narrow reveal">
-      <img src="assets/results/res_position.png" width="614" height="711" loading="lazy"
+    <figure class="resfig reveal">
+      <img src="assets/results/res_position.png" width="1852" height="550" loading="lazy"
            decoding="async"
-           alt="Two views of the workspace from the robot's camera. Top: green dots mark the nail placements that were demonstrated, inside a small green box, and orange squares mark the much wider spread of placements that were only dreamed. Bottom: green ticks and red crosses mark the policy outcome at the dreamed placements."/>
+           alt="Two views of the workspace from the robot's camera. Left: green dots mark the nail placements that were demonstrated, inside a small green box, and orange squares mark the much wider spread of placements that were only dreamed. Right: green ticks and red crosses mark the policy's outcome at those dreamed placements."/>
       <figcaption>
         The other out-of-distribution axis: <strong>where the object is</strong>, not what the scene
-        looks like. Top: the nail placements that were actually demonstrated (green) against the
-        placements that were only ever dreamed (orange). Bottom: the policy's outcome at those
-        dreamed placements. This axis has dream data and scored outcomes but no ours-vs-base
-        rollout videos, which is why it appears here as a figure and not above as video.
+        looks like. Left: the nail placements that were actually demonstrated (green, inside the
+        box) against the placements that were only ever dreamed (orange). Right: the policy's
+        outcome at those dreamed placements. This axis has dream data and scored outcomes but no
+        ours-vs-base rollout videos, which is why it appears here as a figure and not above as
+        video.
       </figcaption>
     </figure>
   </div>
