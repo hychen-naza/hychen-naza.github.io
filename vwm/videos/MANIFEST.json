@@ -1,828 +1,828 @@
 {
-  "_comment": "Source dream clips fetched from private HF datasets by download_videos.py --gallery. The `#videos` gallery that used to render these was removed; they are kept because three of them (videos/T-Rex/hammering_*_dream.mp4) are the `src` for generalize tiles, and because this is the only record of which HF paths the curated clips came from. `score` / the Robometer figure in `sublabel` are selection provenance and are not displayed anywhere.",
-  "accents": {
-    "RoboTwin": "#f08200",
-    "EgoBench": "#2a78d6",
-    "T-Rex": "#00aa00"
+ "_comment": "Source dream clips fetched from private HF datasets by download_videos.py --gallery. The `#videos` gallery that used to render these was removed; they are kept because three of them (videos/T-Rex/hammering_*_dream.mp4) are the `src` for generalize tiles, and because this is the only record of which HF paths the curated clips came from. `score` / the Robometer figure in `sublabel` are selection provenance and are not displayed anywhere.",
+ "accents": {
+  "RoboTwin": "#f08200",
+  "EgoBench": "#2a78d6",
+  "T-Rex": "#00aa00"
+ },
+ "clips": [
+  {
+   "embodiment": "RoboTwin",
+   "repo": "hchen657Naza/robotwin_dream_success_videos",
+   "task": "grab_roller",
+   "scene": "noisy",
+   "path_in_repo": "grab_roller/noisy/set1/s4300051_ep43/side_by_side.mp4",
+   "local_path": "RoboTwin/grab_roller_noisy_set1_s4300051_ep43_side_by_side.mp4",
+   "label": "Grab Roller",
+   "sublabel": "randomized scene \u00b7 Robometer 0.91",
+   "layout": "side_by_side",
+   "score": 0.914
   },
-  "clips": [
-    {
-      "embodiment": "RoboTwin",
-      "repo": "hchen657Naza/robotwin_dream_success_videos",
-      "task": "grab_roller",
-      "scene": "noisy",
-      "path_in_repo": "grab_roller/noisy/set1/s4300051_ep43/side_by_side.mp4",
-      "local_path": "RoboTwin/grab_roller_noisy_set1_s4300051_ep43_side_by_side.mp4",
-      "label": "Grab Roller",
-      "sublabel": "randomized scene · Robometer 0.91",
-      "layout": "side_by_side",
-      "score": 0.914
-    },
-    {
-      "embodiment": "RoboTwin",
-      "repo": "hchen657Naza/robotwin_dream_success_videos",
-      "task": "handover_mic",
-      "scene": "noisy",
-      "path_in_repo": "handover_mic/noisy/set1/episode_5/side_by_side.mp4",
-      "local_path": "RoboTwin/handover_mic_noisy_set1_episode_5_side_by_side.mp4",
-      "label": "Handover Mic",
-      "sublabel": "randomized scene · Robometer 0.89",
-      "layout": "side_by_side",
-      "score": 0.891
-    },
-    {
-      "embodiment": "RoboTwin",
-      "repo": "hchen657Naza/robotwin_dream_success_videos",
-      "task": "place_container_plate",
-      "scene": "noisy",
-      "path_in_repo": "place_container_plate/noisy/set2/episode_87/side_by_side.mp4",
-      "local_path": "RoboTwin/place_container_plate_noisy_set2_episode_87_side_by_side.mp4",
-      "label": "Place Container on Plate",
-      "sublabel": "randomized scene · Robometer 0.96",
-      "layout": "side_by_side",
-      "score": 0.965
-    },
-    {
-      "embodiment": "RoboTwin",
-      "repo": "hchen657Naza/robotwin_dream_success_videos",
-      "task": "shake_bottle",
-      "scene": "noisy",
-      "path_in_repo": "shake_bottle/noisy/set2/episode_4/side_by_side.mp4",
-      "local_path": "RoboTwin/shake_bottle_noisy_set2_episode_4_side_by_side.mp4",
-      "label": "Shake Bottle",
-      "sublabel": "randomized scene · Robometer 0.62",
-      "layout": "side_by_side",
-      "score": 0.621
-    },
-    {
-      "embodiment": "RoboTwin",
-      "repo": "hchen657Naza/robotwin_dream_success_videos",
-      "task": "stack_bowls_two",
-      "scene": "noisy",
-      "path_in_repo": "stack_bowls_two/noisy/set1/s967755_ep48/side_by_side.mp4",
-      "local_path": "RoboTwin/stack_bowls_two_noisy_set1_s967755_ep48_side_by_side.mp4",
-      "label": "Stack Bowls",
-      "sublabel": "randomized scene · Robometer 0.97",
-      "layout": "side_by_side",
-      "score": 0.973
-    },
-    {
-      "embodiment": "EgoBench",
-      "repo": "hchen657Naza/egovla_dream_success_videos",
-      "task": "stack_can",
-      "scene": "room 5",
-      "path_in_repo": "stack_can/r5t5/episode_60/side_by_side.mp4",
-      "local_path": "EgoBench/stack_can_r5t5_episode_60_side_by_side.mp4",
-      "label": "Stack Can",
-      "sublabel": "unseen room 5 · Robometer 0.97",
-      "layout": "side_by_side",
-      "score": 0.973
-    },
-    {
-      "embodiment": "EgoBench",
-      "repo": "hchen657Naza/egovla_dream_success_videos",
-      "task": "open_drawer",
-      "scene": "room 4",
-      "path_in_repo": "open_drawer/r4t4/episode_135/side_by_side.mp4",
-      "local_path": "EgoBench/open_drawer_r4t4_episode_135_side_by_side.mp4",
-      "label": "Open Drawer",
-      "sublabel": "unseen room 4 · Robometer 0.96",
-      "layout": "side_by_side",
-      "score": 0.957
-    },
-    {
-      "embodiment": "EgoBench",
-      "repo": "hchen657Naza/egovla_dream_success_videos",
-      "task": "insert_cans",
-      "scene": "room 5",
-      "path_in_repo": "insert_cans/r5t5/episode_36/side_by_side.mp4",
-      "local_path": "EgoBench/insert_cans_r5t5_episode_36_side_by_side.mp4",
-      "label": "Insert Cans",
-      "sublabel": "unseen room 5 · Robometer 0.96",
-      "layout": "side_by_side",
-      "score": 0.957
-    },
-    {
-      "embodiment": "EgoBench",
-      "repo": "hchen657Naza/egovla_dream_success_videos",
-      "task": "unload_cans",
-      "scene": "room 2",
-      "path_in_repo": "unload_cans/r2t2/episode_57/side_by_side.mp4",
-      "local_path": "EgoBench/unload_cans_r2t2_episode_57_side_by_side.mp4",
-      "label": "Unload Cans",
-      "sublabel": "unseen room 2 · Robometer 0.88",
-      "layout": "side_by_side",
-      "score": 0.883
-    },
-    {
-      "embodiment": "T-Rex",
-      "repo": "hchen657Naza/realworld_dream_demos",
-      "task": "hammering",
-      "scene": "real tabletop",
-      "path_in_repo": "hammering/dreams/demo_1/dream_rgb.mp4",
-      "local_path": "T-Rex/hammering_demo_1_dream.mp4",
-      "label": "Hammering, demo 1",
-      "sublabel": "real-world rollout",
-      "layout": "dream_only",
-      "score": null
-    },
-    {
-      "embodiment": "T-Rex",
-      "repo": "hchen657Naza/realworld_dream_demos",
-      "task": "hammering",
-      "scene": "real tabletop",
-      "path_in_repo": "hammering/dreams/demo_16/dream_rgb.mp4",
-      "local_path": "T-Rex/hammering_demo_16_dream.mp4",
-      "label": "Hammering, demo 16",
-      "sublabel": "real-world rollout",
-      "layout": "dream_only",
-      "score": null
-    },
-    {
-      "embodiment": "T-Rex",
-      "repo": "hchen657Naza/realworld_dream_demos",
-      "task": "hammering",
-      "scene": "real tabletop",
-      "path_in_repo": "hammering/dreams/demo_101/dream_rgb.mp4",
-      "local_path": "T-Rex/hammering_demo_101_dream.mp4",
-      "label": "Hammering, demo 101",
-      "sublabel": "real-world rollout",
-      "layout": "dream_only",
-      "score": null
-    }
-  ],
-  "comparisons": [
-    {
-      "embodiment": "RoboTwin",
-      "task": "grab_roller",
-      "variant": "clean",
-      "slug": "grab_roller_clean",
-      "label": "Grab Roller",
-      "sublabel": "clean scene",
-      "score": 0.8242,
-      "real_path": "videos/dreamvsreal/RoboTwin/grab_roller_clean/real.mp4",
-      "dream_path": "videos/dreamvsreal/RoboTwin/grab_roller_clean/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_grab_roller_clean_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_grab_roller_clean_dream.webp"
-    },
-    {
-      "embodiment": "RoboTwin",
-      "task": "grab_roller",
-      "variant": "noisy",
-      "slug": "grab_roller_noisy",
-      "label": "Grab Roller",
-      "sublabel": "randomized scene",
-      "score": 0.875,
-      "real_path": "videos/dreamvsreal/RoboTwin/grab_roller_noisy/real.mp4",
-      "dream_path": "videos/dreamvsreal/RoboTwin/grab_roller_noisy/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_grab_roller_noisy_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_grab_roller_noisy_dream.webp"
-    },
-    {
-      "embodiment": "RoboTwin",
-      "task": "handover_mic",
-      "variant": "clean",
-      "slug": "handover_mic_clean",
-      "label": "Handover Mic",
-      "sublabel": "clean scene",
-      "score": 0.8867,
-      "real_path": "videos/dreamvsreal/RoboTwin/handover_mic_clean/real.mp4",
-      "dream_path": "videos/dreamvsreal/RoboTwin/handover_mic_clean/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_handover_mic_clean_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_handover_mic_clean_dream.webp"
-    },
-    {
-      "embodiment": "RoboTwin",
-      "task": "handover_mic",
-      "variant": "noisy",
-      "slug": "handover_mic_noisy",
-      "label": "Handover Mic",
-      "sublabel": "randomized scene",
-      "score": 0.8906,
-      "real_path": "videos/dreamvsreal/RoboTwin/handover_mic_noisy/real.mp4",
-      "dream_path": "videos/dreamvsreal/RoboTwin/handover_mic_noisy/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_handover_mic_noisy_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_handover_mic_noisy_dream.webp"
-    },
-    {
-      "embodiment": "RoboTwin",
-      "task": "shake_bottle",
-      "variant": "noisy",
-      "slug": "shake_bottle_noisy",
-      "label": "Shake Bottle",
-      "sublabel": "randomized scene",
-      "score": 0.6055,
-      "real_path": "videos/dreamvsreal/RoboTwin/shake_bottle_noisy/real.mp4",
-      "dream_path": "videos/dreamvsreal/RoboTwin/shake_bottle_noisy/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_shake_bottle_noisy_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_shake_bottle_noisy_dream.webp"
-    },
-    {
-      "embodiment": "RoboTwin",
-      "task": "stack_bowls_two",
-      "variant": "clean",
-      "slug": "stack_bowls_two_clean",
-      "label": "Stack Bowls",
-      "sublabel": "clean scene",
-      "score": 0.9766,
-      "real_path": "videos/dreamvsreal/RoboTwin/stack_bowls_two_clean/real.mp4",
-      "dream_path": "videos/dreamvsreal/RoboTwin/stack_bowls_two_clean/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_stack_bowls_two_clean_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_stack_bowls_two_clean_dream.webp"
-    },
-    {
-      "embodiment": "RoboTwin",
-      "task": "stack_bowls_two",
-      "variant": "noisy",
-      "slug": "stack_bowls_two_noisy",
-      "label": "Stack Bowls",
-      "sublabel": "randomized scene",
-      "score": 0.9727,
-      "real_path": "videos/dreamvsreal/RoboTwin/stack_bowls_two_noisy/real.mp4",
-      "dream_path": "videos/dreamvsreal/RoboTwin/stack_bowls_two_noisy/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_stack_bowls_two_noisy_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_stack_bowls_two_noisy_dream.webp"
-    },
-    {
-      "embodiment": "RoboTwin",
-      "task": "dump_bin_bigbin",
-      "variant": "clean",
-      "slug": "dump_bin_bigbin_clean",
-      "label": "Dump Bin",
-      "sublabel": "clean scene",
-      "score": 0.8867,
-      "real_path": "videos/dreamvsreal/RoboTwin/dump_bin_bigbin_clean/real.mp4",
-      "dream_path": "videos/dreamvsreal/RoboTwin/dump_bin_bigbin_clean/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_dump_bin_bigbin_clean_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_dump_bin_bigbin_clean_dream.webp"
-    },
-    {
-      "embodiment": "RoboTwin",
-      "task": "dump_bin_bigbin",
-      "variant": "noisy",
-      "slug": "dump_bin_bigbin_noisy",
-      "label": "Dump Bin",
-      "sublabel": "randomized scene",
-      "score": 0.9258,
-      "real_path": "videos/dreamvsreal/RoboTwin/dump_bin_bigbin_noisy/real.mp4",
-      "dream_path": "videos/dreamvsreal/RoboTwin/dump_bin_bigbin_noisy/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_dump_bin_bigbin_noisy_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_dump_bin_bigbin_noisy_dream.webp"
-    },
-    {
-      "embodiment": "RoboTwin",
-      "task": "place_object_scale",
-      "variant": "noisy",
-      "slug": "place_object_scale_noisy",
-      "label": "Place-on-Scale",
-      "sublabel": "randomized scene",
-      "score": 0.9336,
-      "real_path": "videos/dreamvsreal/RoboTwin/place_object_scale_noisy/real.mp4",
-      "dream_path": "videos/dreamvsreal/RoboTwin/place_object_scale_noisy/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_place_object_scale_noisy_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_place_object_scale_noisy_dream.webp"
-    },
-    {
-      "embodiment": "EgoBench",
-      "task": "insert_cans",
-      "variant": "r2t2",
-      "slug": "insert_cans_r2t2",
-      "label": "Insert Cans",
-      "sublabel": "unseen room 2",
-      "score": 0.9375,
-      "real_path": "videos/dreamvsreal/EgoBench/insert_cans_r2t2/real.mp4",
-      "dream_path": "videos/dreamvsreal/EgoBench/insert_cans_r2t2/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_insert_cans_r2t2_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_insert_cans_r2t2_dream.webp"
-    },
-    {
-      "embodiment": "EgoBench",
-      "task": "insert_cans",
-      "variant": "r4t4",
-      "slug": "insert_cans_r4t4",
-      "label": "Insert Cans",
-      "sublabel": "unseen room 4",
-      "score": 0.9141,
-      "real_path": "videos/dreamvsreal/EgoBench/insert_cans_r4t4/real.mp4",
-      "dream_path": "videos/dreamvsreal/EgoBench/insert_cans_r4t4/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_insert_cans_r4t4_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_insert_cans_r4t4_dream.webp"
-    },
-    {
-      "embodiment": "EgoBench",
-      "task": "insert_cans",
-      "variant": "r5t5",
-      "slug": "insert_cans_r5t5",
-      "label": "Insert Cans",
-      "sublabel": "unseen room 5",
-      "score": 0.957,
-      "real_path": "videos/dreamvsreal/EgoBench/insert_cans_r5t5/real.mp4",
-      "dream_path": "videos/dreamvsreal/EgoBench/insert_cans_r5t5/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_insert_cans_r5t5_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_insert_cans_r5t5_dream.webp"
-    },
-    {
-      "embodiment": "EgoBench",
-      "task": "open_drawer",
-      "variant": "r2t2",
-      "slug": "open_drawer_r2t2",
-      "label": "Open Drawer",
-      "sublabel": "unseen room 2",
-      "score": 0.9531,
-      "real_path": "videos/dreamvsreal/EgoBench/open_drawer_r2t2/real.mp4",
-      "dream_path": "videos/dreamvsreal/EgoBench/open_drawer_r2t2/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_open_drawer_r2t2_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_open_drawer_r2t2_dream.webp"
-    },
-    {
-      "embodiment": "EgoBench",
-      "task": "open_drawer",
-      "variant": "r4t4",
-      "slug": "open_drawer_r4t4",
-      "label": "Open Drawer",
-      "sublabel": "unseen room 4",
-      "score": 0.957,
-      "real_path": "videos/dreamvsreal/EgoBench/open_drawer_r4t4/real.mp4",
-      "dream_path": "videos/dreamvsreal/EgoBench/open_drawer_r4t4/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_open_drawer_r4t4_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_open_drawer_r4t4_dream.webp"
-    },
-    {
-      "embodiment": "EgoBench",
-      "task": "open_drawer",
-      "variant": "r5t5",
-      "slug": "open_drawer_r5t5",
-      "label": "Open Drawer",
-      "sublabel": "unseen room 5",
-      "score": 0.9531,
-      "real_path": "videos/dreamvsreal/EgoBench/open_drawer_r5t5/real.mp4",
-      "dream_path": "videos/dreamvsreal/EgoBench/open_drawer_r5t5/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_open_drawer_r5t5_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_open_drawer_r5t5_dream.webp"
-    },
-    {
-      "embodiment": "EgoBench",
-      "task": "stack_can",
-      "variant": "r2t2",
-      "slug": "stack_can_r2t2",
-      "label": "Stack Can",
-      "sublabel": "unseen room 2",
-      "score": 0.9609,
-      "real_path": "videos/dreamvsreal/EgoBench/stack_can_r2t2/real.mp4",
-      "dream_path": "videos/dreamvsreal/EgoBench/stack_can_r2t2/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_stack_can_r2t2_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_stack_can_r2t2_dream.webp"
-    },
-    {
-      "embodiment": "EgoBench",
-      "task": "stack_can",
-      "variant": "r4t4",
-      "slug": "stack_can_r4t4",
-      "label": "Stack Can",
-      "sublabel": "unseen room 4",
-      "score": 0.9688,
-      "real_path": "videos/dreamvsreal/EgoBench/stack_can_r4t4/real.mp4",
-      "dream_path": "videos/dreamvsreal/EgoBench/stack_can_r4t4/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_stack_can_r4t4_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_stack_can_r4t4_dream.webp"
-    },
-    {
-      "embodiment": "EgoBench",
-      "task": "stack_can",
-      "variant": "r5t5",
-      "slug": "stack_can_r5t5",
-      "label": "Stack Can",
-      "sublabel": "unseen room 5",
-      "score": 0.9727,
-      "real_path": "videos/dreamvsreal/EgoBench/stack_can_r5t5/real.mp4",
-      "dream_path": "videos/dreamvsreal/EgoBench/stack_can_r5t5/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_stack_can_r5t5_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_stack_can_r5t5_dream.webp"
-    },
-    {
-      "embodiment": "EgoBench",
-      "task": "unload_cans",
-      "variant": "r2t2",
-      "slug": "unload_cans_r2t2",
-      "label": "Unload Cans",
-      "sublabel": "unseen room 2",
-      "score": 0.8828,
-      "real_path": "videos/dreamvsreal/EgoBench/unload_cans_r2t2/real.mp4",
-      "dream_path": "videos/dreamvsreal/EgoBench/unload_cans_r2t2/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_unload_cans_r2t2_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_unload_cans_r2t2_dream.webp"
-    },
-    {
-      "embodiment": "EgoBench",
-      "task": "unload_cans",
-      "variant": "r4t4",
-      "slug": "unload_cans_r4t4",
-      "label": "Unload Cans",
-      "sublabel": "unseen room 4",
-      "score": 0.8789,
-      "real_path": "videos/dreamvsreal/EgoBench/unload_cans_r4t4/real.mp4",
-      "dream_path": "videos/dreamvsreal/EgoBench/unload_cans_r4t4/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_unload_cans_r4t4_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_unload_cans_r4t4_dream.webp"
-    },
-    {
-      "embodiment": "EgoBench",
-      "task": "unload_cans",
-      "variant": "r5t5",
-      "slug": "unload_cans_r5t5",
-      "label": "Unload Cans",
-      "sublabel": "unseen room 5",
-      "score": 0.6953,
-      "real_path": "videos/dreamvsreal/EgoBench/unload_cans_r5t5/real.mp4",
-      "dream_path": "videos/dreamvsreal/EgoBench/unload_cans_r5t5/dream.mp4",
-      "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_unload_cans_r5t5_real.webp",
-      "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_unload_cans_r5t5_dream.webp"
-    }
-  ],
-  "training": {
-    "_comment": "World-model training data. Every entry is an (rgb, skeleton) pair from hchen657Naza/wm_multiembodiment_data; download_videos.py composites the pair into one small marquee tile (rgb with the conditioning skeleton as a picture-in-picture).",
-    "stats": {
-      "embodiments": 4,
-      "tasks": 43,
-      "episodes": 3386,
-      "hours": 13.1
-    },
-    "tracks": [
-      {
-        "key": "robotwin_capx10",
-        "embodiment": "RoboTwin",
-        "robot": "ALOHA-AgileX, two parallel-jaw grippers",
-        "domain": "simulation",
-        "tasks": 10,
-        "episodes": 625,
-        "hours": 1.62,
-        "accent": "#f08200",
-        "clips": [
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/robotwin_capx10/adjust_bottle/success/robotwin_wm_data_success_s0_ep14/rgb.mp4",
-            "skeleton_in_repo": "train/robotwin_capx10/adjust_bottle/success/robotwin_wm_data_success_s0_ep14/skeleton.mp4",
-            "local_path": "training/robotwin_capx10/adjust_bottle.mp4",
-            "label": "Adjust bottle"
-          },
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/robotwin_capx10/handover_mic/success/act_noisy_episode_6/rgb.mp4",
-            "skeleton_in_repo": "train/robotwin_capx10/handover_mic/success/act_noisy_episode_6/skeleton.mp4",
-            "local_path": "training/robotwin_capx10/handover_mic.mp4",
-            "label": "Handover mic"
-          },
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/robotwin_capx10/move_playingcard_away/success/robotwin_wm_data_success_ep6/rgb.mp4",
-            "skeleton_in_repo": "train/robotwin_capx10/move_playingcard_away/success/robotwin_wm_data_success_ep6/skeleton.mp4",
-            "local_path": "training/robotwin_capx10/move_playingcard_away.mp4",
-            "label": "Move playingcard away"
-          },
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/robotwin_capx10/place_container_plate/success/act_rollouts_4new_success_s1_ep14/rgb.mp4",
-            "skeleton_in_repo": "train/robotwin_capx10/place_container_plate/success/act_rollouts_4new_success_s1_ep14/skeleton.mp4",
-            "local_path": "training/robotwin_capx10/place_container_plate.mp4",
-            "label": "Place container plate"
-          },
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/robotwin_capx10/shake_bottle/success/capx_clean_episode_31/rgb.mp4",
-            "skeleton_in_repo": "train/robotwin_capx10/shake_bottle/success/capx_clean_episode_31/skeleton.mp4",
-            "local_path": "training/robotwin_capx10/shake_bottle.mp4",
-            "label": "Shake bottle"
-          }
-        ]
-      },
-      {
-        "key": "egovla_isaacsim",
-        "embodiment": "EgoBench",
-        "robot": "Unitree H1, two Inspire hands",
-        "domain": "Isaac Sim",
-        "tasks": 6,
-        "episodes": 462,
-        "hours": 1.88,
-        "accent": "#2a78d6",
-        "clips": [
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/egovla_isaacsim/Open-Drawer/success/ACTe10000_ep025/rgb.mp4",
-            "skeleton_in_repo": "train/egovla_isaacsim/Open-Drawer/success/ACTe10000_ep025/skeleton.mp4",
-            "local_path": "training/egovla_isaacsim/Open-Drawer.mp4",
-            "label": "Open Drawer"
-          },
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/egovla_isaacsim/Open-Laptop/success/ACTe4000_ep025/rgb.mp4",
-            "skeleton_in_repo": "train/egovla_isaacsim/Open-Laptop/success/ACTe4000_ep025/skeleton.mp4",
-            "local_path": "training/egovla_isaacsim/Open-Laptop.mp4",
-            "label": "Open Laptop"
-          },
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/egovla_isaacsim/Pour-Balls/success/ACTe7000_ep028/rgb.mp4",
-            "skeleton_in_repo": "train/egovla_isaacsim/Pour-Balls/success/ACTe7000_ep028/skeleton.mp4",
-            "local_path": "training/egovla_isaacsim/Pour-Balls.mp4",
-            "label": "Pour Balls"
-          },
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/egovla_isaacsim/Push-Box/success/ACTe7000_ep019/rgb.mp4",
-            "skeleton_in_repo": "train/egovla_isaacsim/Push-Box/success/ACTe7000_ep019/skeleton.mp4",
-            "local_path": "training/egovla_isaacsim/Push-Box.mp4",
-            "label": "Push Box"
-          },
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/egovla_isaacsim/Stack-Can/success/ACTstack_o1000_ep013/rgb.mp4",
-            "skeleton_in_repo": "train/egovla_isaacsim/Stack-Can/success/ACTstack_o1000_ep013/skeleton.mp4",
-            "local_path": "training/egovla_isaacsim/Stack-Can.mp4",
-            "label": "Stack Can"
-          }
-        ]
-      },
-      {
-        "key": "trex",
-        "embodiment": "T-Rex",
-        "robot": "Dexmate Vega-1, Sharpa Wave hand",
-        "domain": "real world",
-        "tasks": 22,
-        "episodes": 2096,
-        "hours": 5.12,
-        "accent": "#00aa00",
-        "clips": [
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/trex/assemble/success/episode-002271-seg5/rgb.mp4",
-            "skeleton_in_repo": "train/trex/assemble/success/episode-002271-seg5/skeleton.mp4",
-            "local_path": "training/trex/assemble.mp4",
-            "label": "Assemble"
-          },
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/trex/disassemble/success/episode-003861-seg2/rgb.mp4",
-            "skeleton_in_repo": "train/trex/disassemble/success/episode-003861-seg2/skeleton.mp4",
-            "local_path": "training/trex/disassemble.mp4",
-            "label": "Disassemble"
-          },
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/trex/fold/success/episode-003079-seg4/rgb.mp4",
-            "skeleton_in_repo": "train/trex/fold/success/episode-003079-seg4/skeleton.mp4",
-            "local_path": "training/trex/fold.mp4",
-            "label": "Fold"
-          },
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/trex/lift_and_place/success/episode-003039-seg0/rgb.mp4",
-            "skeleton_in_repo": "train/trex/lift_and_place/success/episode-003039-seg0/skeleton.mp4",
-            "local_path": "training/trex/lift_and_place.mp4",
-            "label": "Lift and place"
-          },
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/trex/pour/success/episode-000356-seg1/rgb.mp4",
-            "skeleton_in_repo": "train/trex/pour/success/episode-000356-seg1/skeleton.mp4",
-            "local_path": "training/trex/pour.mp4",
-            "label": "Pour"
-          },
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/trex/screw/success/episode-004053-seg3/rgb.mp4",
-            "skeleton_in_repo": "train/trex/screw/success/episode-004053-seg3/skeleton.mp4",
-            "local_path": "training/trex/screw.mp4",
-            "label": "Screw"
-          },
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/trex/twist/success/episode-001366-seg7/rgb.mp4",
-            "skeleton_in_repo": "train/trex/twist/success/episode-001366-seg7/skeleton.mp4",
-            "local_path": "training/trex/twist.mp4",
-            "label": "Twist"
-          }
-        ]
-      },
-      {
-        "key": "abc",
-        "embodiment": "ABC",
-        "robot": "YAM bimanual grippers",
-        "domain": "real world",
-        "tasks": 5,
-        "episodes": 203,
-        "hours": 4.49,
-        "accent": "#8257d6",
-        "clips": [
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/abc/fold_and_stack_the_shorts/success/episode_02280006-d76e-4d24-a58c-8172fb68cd51_seg4/rgb.mp4",
-            "skeleton_in_repo": "train/abc/fold_and_stack_the_shorts/success/episode_02280006-d76e-4d24-a58c-8172fb68cd51_seg4/skeleton.mp4",
-            "local_path": "training/abc/fold_and_stack_the_shorts.mp4",
-            "label": "Fold & stack the shorts"
-          },
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/abc/fold_and_stack_the_trousers/success/episode_454a1485-125e-4be4-bd66-aae6bbdbfa01_seg3/rgb.mp4",
-            "skeleton_in_repo": "train/abc/fold_and_stack_the_trousers/success/episode_454a1485-125e-4be4-bd66-aae6bbdbfa01_seg3/skeleton.mp4",
-            "local_path": "training/abc/fold_and_stack_the_trousers.mp4",
-            "label": "Fold & stack the trousers"
-          },
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/abc/place_the_trousers_on_the_hanger/success/episode_61ec4da1-acfe-471b-b0d3-052d094d4616_seg2/rgb.mp4",
-            "skeleton_in_repo": "train/abc/place_the_trousers_on_the_hanger/success/episode_61ec4da1-acfe-471b-b0d3-052d094d4616_seg2/skeleton.mp4",
-            "local_path": "training/abc/place_the_trousers_on_the_hanger.mp4",
-            "label": "Place the trousers on the hanger"
-          },
-          {
-            "repo": "hchen657Naza/wm_multiembodiment_data",
-            "rgb_in_repo": "train/abc/put_the_pillow_into_the_pillowcase/success/episode_48971738-a89a-4bbb-836d-774d36f3bb03_seg4/rgb.mp4",
-            "skeleton_in_repo": "train/abc/put_the_pillow_into_the_pillowcase/success/episode_48971738-a89a-4bbb-836d-774d36f3bb03_seg4/skeleton.mp4",
-            "local_path": "training/abc/put_the_pillow_into_the_pillowcase.mp4",
-            "label": "Put the pillow into the pillowcase"
-          }
-        ]
-      }
-    ]
+  {
+   "embodiment": "RoboTwin",
+   "repo": "hchen657Naza/robotwin_dream_success_videos",
+   "task": "handover_mic",
+   "scene": "noisy",
+   "path_in_repo": "handover_mic/noisy/set1/episode_5/side_by_side.mp4",
+   "local_path": "RoboTwin/handover_mic_noisy_set1_episode_5_side_by_side.mp4",
+   "label": "Handover Mic",
+   "sublabel": "randomized scene \u00b7 Robometer 0.89",
+   "layout": "side_by_side",
+   "score": 0.891
   },
-  "generalize": {
-    "_comment": "Mirrors Fig. `dream_videos` in the paper: what the world model was trained on, next to the scenes it dreams in. `src` is a path relative to website/; `crop` pulls one pane out of a 1920x480 GT|Dream|Skeleton strip. download_videos.py transcodes these into videos/generalize/.",
-    "rows": [
-      {
-        "embodiment": "RoboTwin",
-        "accent": "#f08200",
-        "robot": "ALOHA-AgileX · parallel-jaw · simulation",
-        "axis": "scene randomization",
-        "trained_on": {
-          "label": "Clean tabletop",
-          "note": "80% of the world model's RoboTwin episodes are the default clean scene.",
-          "clips": [
-            {
-              "src": "../hf_figure_plot/dream_videos_plot/src/robotwin/stack_bowls_two_clean_set1_s910301_ep1_side_by_side.mp4",
-              "local_path": "generalize/RoboTwin/trained_stack_bowls_clean.mp4",
-              "label": "Stack bowls · clean",
-              "crop": "640:480:0:0"
-            },
-            {
-              "src": "videos/dreamvsreal/RoboTwin/grab_roller_clean/real.mp4",
-              "local_path": "generalize/RoboTwin/trained_grab_roller_clean.mp4",
-              "label": "Grab roller · clean"
-            },
-            {
-              "src": "videos/dreamvsreal/RoboTwin/handover_mic_clean/real.mp4",
-              "local_path": "generalize/RoboTwin/trained_handover_mic_clean.mp4",
-              "label": "Handover mic · clean"
-            }
-          ]
-        },
-        "dreams_in": {
-          "label": "Unseen randomized scenes",
-          "note": "New textures, clutter and lighting the model was never fit to — and five different teachers acting in them.",
-          "clips": [
-            {
-              "src": "../hf_figure_plot/dream_videos_plot/src/robotwin/stack_bowls_two_noisy_set1_s921705_ep5_dream.mp4",
-              "local_path": "generalize/RoboTwin/dream_stack_bowls.mp4",
-              "label": "Stack bowls"
-            },
-            {
-              "src": "../hf_figure_plot/dream_videos_plot/src/robotwin/handover_mic_noisy_set4_episode_20_dream.mp4",
-              "local_path": "generalize/RoboTwin/dream_handover_mic.mp4",
-              "label": "Handover mic"
-            },
-            {
-              "src": "videos/dreamvsreal/RoboTwin/grab_roller_noisy/dream.mp4",
-              "local_path": "generalize/RoboTwin/dream_grab_roller.mp4",
-              "label": "Grab roller"
-            },
-            {
-              "src": "videos/dreamvsreal/RoboTwin/shake_bottle_noisy/dream.mp4",
-              "local_path": "generalize/RoboTwin/dream_shake_bottle.mp4",
-              "label": "Shake bottle"
-            },
-            {
-              "src": "videos/dreamvsreal/RoboTwin/place_object_scale_noisy/dream.mp4",
-              "local_path": "generalize/RoboTwin/dream_place_object_scale.mp4",
-              "label": "Place object on scale"
-            },
-            {
-              "src": "videos/dreamvsreal/RoboTwin/dump_bin_bigbin_noisy/dream.mp4",
-              "local_path": "generalize/RoboTwin/dream_dump_bin.mp4",
-              "label": "Dump bin"
-            }
-          ]
-        }
-      },
-      {
-        "embodiment": "EgoBench",
-        "accent": "#2a78d6",
-        "robot": "Unitree H1 + Inspire hands · Isaac Sim",
-        "axis": "unseen rooms",
-        "trained_on": {
-          "label": "Target room only",
-          "note": "Every world-model episode is room 1 / table 1 — one wall colour, one sofa, one shelf.",
-          "clips": [
-            {
-              "src": "../hf_figure_plot/dream_videos_plot/src/egovla/open_drawer_r1t1_episode_0_sim.mp4",
-              "local_path": "generalize/EgoBench/trained_open_drawer_r1t1.mp4",
-              "label": "Open drawer · room 1"
-            },
-            {
-              "src": "../hf_figure_plot/dream_videos_plot/src/egovla/insert_cans_r1t1_episode_0_sim.mp4",
-              "local_path": "generalize/EgoBench/trained_insert_cans_r1t1.mp4",
-              "label": "Insert cans · room 1"
-            }
-          ]
-        },
-        "dreams_in": {
-          "label": "Three rooms it never saw",
-          "note": "New tables, floors and backgrounds. The real-only student scores 10.4% here; co-training on these dreams reaches 61.1%.",
-          "clips": [
-            {
-              "src": "../hf_figure_plot/dream_videos_plot/src/egovla/open_drawer_r4t4_episode_107_dream.mp4",
-              "local_path": "generalize/EgoBench/dream_open_drawer_r4t4.mp4",
-              "label": "Open drawer · room 4"
-            },
-            {
-              "src": "../hf_figure_plot/dream_videos_plot/src/egovla/insert_cans_r2t2_episode_1000_dream.mp4",
-              "local_path": "generalize/EgoBench/dream_insert_cans_r2t2.mp4",
-              "label": "Insert cans · room 2"
-            },
-            {
-              "src": "videos/dreamvsreal/EgoBench/stack_can_r5t5/dream.mp4",
-              "local_path": "generalize/EgoBench/dream_stack_can_r5t5.mp4",
-              "label": "Stack can · room 5"
-            },
-            {
-              "src": "videos/dreamvsreal/EgoBench/unload_cans_r2t2/dream.mp4",
-              "local_path": "generalize/EgoBench/dream_unload_cans_r2t2.mp4",
-              "label": "Unload cans · room 2"
-            },
-            {
-              "src": "videos/dreamvsreal/EgoBench/open_drawer_r5t5/dream.mp4",
-              "local_path": "generalize/EgoBench/dream_open_drawer_r5t5.mp4",
-              "label": "Open drawer · room 5"
-            },
-            {
-              "src": "videos/dreamvsreal/EgoBench/insert_cans_r4t4/dream.mp4",
-              "local_path": "generalize/EgoBench/dream_insert_cans_r4t4.mp4",
-              "label": "Insert cans · room 4"
-            }
-          ]
-        }
-      },
-      {
-        "embodiment": "T-Rex real",
-        "accent": "#00aa00",
-        "robot": "Tianji arm + 22-DoF Sharpa hand · real hardware",
-        "axis": "sim trajectory → real pixels",
-        "trained_on": {
-          "label": "Clean tabletop, one layout",
-          "note": "67 real episodes of two tasks on an uncluttered bench.",
-          "clips": [
-            {
-              "src": "../hf_figure_plot/dream_videos_plot/src/realworld/hammer_demo_77_real_cam1_rgb.mp4",
-              "local_path": "generalize/T-Rex/trained_hammer_real.mp4",
-              "label": "Strike peg · real demo"
-            },
-            {
-              "src": "../hf_figure_plot/dream_videos_plot/src/realworld/tongs_demo_1_real_cam1_rgb.mp4",
-              "local_path": "generalize/T-Rex/trained_tongs_real.mp4",
-              "label": "Use tongs · real demo"
-            }
-          ]
-        },
-        "dreams_in": {
-          "label": "Cluttered benches, new object positions",
-          "note": "Trajectories validated in the simulator, dreamed into real observations. Five real demos plus these dreams reach ~85% across four tasks.",
-          "clips": [
-            {
-              "src": "../hf_figure_plot/dream_videos_plot/src/realworld/hammer_blue_newinit_demo1skel_dream.mp4",
-              "local_path": "generalize/T-Rex/dream_hammer_newinit.mp4",
-              "label": "Strike peg · new init"
-            },
-            {
-              "src": "../hf_figure_plot/dream_videos_plot/src/realworld/tongs_demo_1_dream.mp4",
-              "local_path": "generalize/T-Rex/dream_tongs.mp4",
-              "label": "Use tongs"
-            },
-            {
-              "src": "videos/T-Rex/hammering_demo_1_dream.mp4",
-              "local_path": "generalize/T-Rex/dream_hammer_1.mp4",
-              "label": "Strike peg · demo 1"
-            },
-            {
-              "src": "videos/T-Rex/hammering_demo_16_dream.mp4",
-              "local_path": "generalize/T-Rex/dream_hammer_16.mp4",
-              "label": "Strike peg · demo 16"
-            },
-            {
-              "src": "videos/T-Rex/hammering_demo_101_dream.mp4",
-              "local_path": "generalize/T-Rex/dream_hammer_101.mp4",
-              "label": "Strike peg · demo 101"
-            }
-          ]
-        }
-      }
-    ]
+  {
+   "embodiment": "RoboTwin",
+   "repo": "hchen657Naza/robotwin_dream_success_videos",
+   "task": "place_container_plate",
+   "scene": "noisy",
+   "path_in_repo": "place_container_plate/noisy/set2/episode_87/side_by_side.mp4",
+   "local_path": "RoboTwin/place_container_plate_noisy_set2_episode_87_side_by_side.mp4",
+   "label": "Place Container on Plate",
+   "sublabel": "randomized scene \u00b7 Robometer 0.96",
+   "layout": "side_by_side",
+   "score": 0.965
+  },
+  {
+   "embodiment": "RoboTwin",
+   "repo": "hchen657Naza/robotwin_dream_success_videos",
+   "task": "shake_bottle",
+   "scene": "noisy",
+   "path_in_repo": "shake_bottle/noisy/set2/episode_4/side_by_side.mp4",
+   "local_path": "RoboTwin/shake_bottle_noisy_set2_episode_4_side_by_side.mp4",
+   "label": "Shake Bottle",
+   "sublabel": "randomized scene \u00b7 Robometer 0.62",
+   "layout": "side_by_side",
+   "score": 0.621
+  },
+  {
+   "embodiment": "RoboTwin",
+   "repo": "hchen657Naza/robotwin_dream_success_videos",
+   "task": "stack_bowls_two",
+   "scene": "noisy",
+   "path_in_repo": "stack_bowls_two/noisy/set1/s967755_ep48/side_by_side.mp4",
+   "local_path": "RoboTwin/stack_bowls_two_noisy_set1_s967755_ep48_side_by_side.mp4",
+   "label": "Stack Bowls",
+   "sublabel": "randomized scene \u00b7 Robometer 0.97",
+   "layout": "side_by_side",
+   "score": 0.973
+  },
+  {
+   "embodiment": "EgoBench",
+   "repo": "hchen657Naza/egovla_dream_success_videos",
+   "task": "stack_can",
+   "scene": "room 5",
+   "path_in_repo": "stack_can/r5t5/episode_60/side_by_side.mp4",
+   "local_path": "EgoBench/stack_can_r5t5_episode_60_side_by_side.mp4",
+   "label": "Stack Can",
+   "sublabel": "unseen room 5 \u00b7 Robometer 0.97",
+   "layout": "side_by_side",
+   "score": 0.973
+  },
+  {
+   "embodiment": "EgoBench",
+   "repo": "hchen657Naza/egovla_dream_success_videos",
+   "task": "open_drawer",
+   "scene": "room 4",
+   "path_in_repo": "open_drawer/r4t4/episode_135/side_by_side.mp4",
+   "local_path": "EgoBench/open_drawer_r4t4_episode_135_side_by_side.mp4",
+   "label": "Open Drawer",
+   "sublabel": "unseen room 4 \u00b7 Robometer 0.96",
+   "layout": "side_by_side",
+   "score": 0.957
+  },
+  {
+   "embodiment": "EgoBench",
+   "repo": "hchen657Naza/egovla_dream_success_videos",
+   "task": "insert_cans",
+   "scene": "room 5",
+   "path_in_repo": "insert_cans/r5t5/episode_36/side_by_side.mp4",
+   "local_path": "EgoBench/insert_cans_r5t5_episode_36_side_by_side.mp4",
+   "label": "Insert Cans",
+   "sublabel": "unseen room 5 \u00b7 Robometer 0.96",
+   "layout": "side_by_side",
+   "score": 0.957
+  },
+  {
+   "embodiment": "EgoBench",
+   "repo": "hchen657Naza/egovla_dream_success_videos",
+   "task": "unload_cans",
+   "scene": "room 2",
+   "path_in_repo": "unload_cans/r2t2/episode_57/side_by_side.mp4",
+   "local_path": "EgoBench/unload_cans_r2t2_episode_57_side_by_side.mp4",
+   "label": "Unload Cans",
+   "sublabel": "unseen room 2 \u00b7 Robometer 0.88",
+   "layout": "side_by_side",
+   "score": 0.883
+  },
+  {
+   "embodiment": "T-Rex",
+   "repo": "hchen657Naza/realworld_dream_demos",
+   "task": "hammering",
+   "scene": "real tabletop",
+   "path_in_repo": "hammering/dreams/demo_1/dream_rgb.mp4",
+   "local_path": "T-Rex/hammering_demo_1_dream.mp4",
+   "label": "Hammering, demo 1",
+   "sublabel": "real-world rollout",
+   "layout": "dream_only",
+   "score": null
+  },
+  {
+   "embodiment": "T-Rex",
+   "repo": "hchen657Naza/realworld_dream_demos",
+   "task": "hammering",
+   "scene": "real tabletop",
+   "path_in_repo": "hammering/dreams/demo_16/dream_rgb.mp4",
+   "local_path": "T-Rex/hammering_demo_16_dream.mp4",
+   "label": "Hammering, demo 16",
+   "sublabel": "real-world rollout",
+   "layout": "dream_only",
+   "score": null
+  },
+  {
+   "embodiment": "T-Rex",
+   "repo": "hchen657Naza/realworld_dream_demos",
+   "task": "hammering",
+   "scene": "real tabletop",
+   "path_in_repo": "hammering/dreams/demo_101/dream_rgb.mp4",
+   "local_path": "T-Rex/hammering_demo_101_dream.mp4",
+   "label": "Hammering, demo 101",
+   "sublabel": "real-world rollout",
+   "layout": "dream_only",
+   "score": null
   }
+ ],
+ "comparisons": [
+  {
+   "embodiment": "RoboTwin",
+   "task": "grab_roller",
+   "variant": "clean",
+   "slug": "grab_roller_clean",
+   "label": "Grab Roller",
+   "sublabel": "clean scene",
+   "score": 0.8242,
+   "real_path": "videos/dreamvsreal/RoboTwin/grab_roller_clean/real.mp4",
+   "dream_path": "videos/dreamvsreal/RoboTwin/grab_roller_clean/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_grab_roller_clean_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_grab_roller_clean_dream.webp"
+  },
+  {
+   "embodiment": "RoboTwin",
+   "task": "grab_roller",
+   "variant": "noisy",
+   "slug": "grab_roller_noisy",
+   "label": "Grab Roller",
+   "sublabel": "randomized scene",
+   "score": 0.875,
+   "real_path": "videos/dreamvsreal/RoboTwin/grab_roller_noisy/real.mp4",
+   "dream_path": "videos/dreamvsreal/RoboTwin/grab_roller_noisy/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_grab_roller_noisy_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_grab_roller_noisy_dream.webp"
+  },
+  {
+   "embodiment": "RoboTwin",
+   "task": "handover_mic",
+   "variant": "clean",
+   "slug": "handover_mic_clean",
+   "label": "Handover Mic",
+   "sublabel": "clean scene",
+   "score": 0.8867,
+   "real_path": "videos/dreamvsreal/RoboTwin/handover_mic_clean/real.mp4",
+   "dream_path": "videos/dreamvsreal/RoboTwin/handover_mic_clean/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_handover_mic_clean_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_handover_mic_clean_dream.webp"
+  },
+  {
+   "embodiment": "RoboTwin",
+   "task": "handover_mic",
+   "variant": "noisy",
+   "slug": "handover_mic_noisy",
+   "label": "Handover Mic",
+   "sublabel": "randomized scene",
+   "score": 0.8906,
+   "real_path": "videos/dreamvsreal/RoboTwin/handover_mic_noisy/real.mp4",
+   "dream_path": "videos/dreamvsreal/RoboTwin/handover_mic_noisy/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_handover_mic_noisy_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_handover_mic_noisy_dream.webp"
+  },
+  {
+   "embodiment": "RoboTwin",
+   "task": "shake_bottle",
+   "variant": "noisy",
+   "slug": "shake_bottle_noisy",
+   "label": "Shake Bottle",
+   "sublabel": "randomized scene",
+   "score": 0.6055,
+   "real_path": "videos/dreamvsreal/RoboTwin/shake_bottle_noisy/real.mp4",
+   "dream_path": "videos/dreamvsreal/RoboTwin/shake_bottle_noisy/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_shake_bottle_noisy_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_shake_bottle_noisy_dream.webp"
+  },
+  {
+   "embodiment": "RoboTwin",
+   "task": "stack_bowls_two",
+   "variant": "clean",
+   "slug": "stack_bowls_two_clean",
+   "label": "Stack Bowls",
+   "sublabel": "clean scene",
+   "score": 0.9766,
+   "real_path": "videos/dreamvsreal/RoboTwin/stack_bowls_two_clean/real.mp4",
+   "dream_path": "videos/dreamvsreal/RoboTwin/stack_bowls_two_clean/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_stack_bowls_two_clean_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_stack_bowls_two_clean_dream.webp"
+  },
+  {
+   "embodiment": "RoboTwin",
+   "task": "stack_bowls_two",
+   "variant": "noisy",
+   "slug": "stack_bowls_two_noisy",
+   "label": "Stack Bowls",
+   "sublabel": "randomized scene",
+   "score": 0.9727,
+   "real_path": "videos/dreamvsreal/RoboTwin/stack_bowls_two_noisy/real.mp4",
+   "dream_path": "videos/dreamvsreal/RoboTwin/stack_bowls_two_noisy/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_stack_bowls_two_noisy_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_stack_bowls_two_noisy_dream.webp"
+  },
+  {
+   "embodiment": "RoboTwin",
+   "task": "dump_bin_bigbin",
+   "variant": "clean",
+   "slug": "dump_bin_bigbin_clean",
+   "label": "Dump Bin",
+   "sublabel": "clean scene",
+   "score": 0.8867,
+   "real_path": "videos/dreamvsreal/RoboTwin/dump_bin_bigbin_clean/real.mp4",
+   "dream_path": "videos/dreamvsreal/RoboTwin/dump_bin_bigbin_clean/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_dump_bin_bigbin_clean_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_dump_bin_bigbin_clean_dream.webp"
+  },
+  {
+   "embodiment": "RoboTwin",
+   "task": "dump_bin_bigbin",
+   "variant": "noisy",
+   "slug": "dump_bin_bigbin_noisy",
+   "label": "Dump Bin",
+   "sublabel": "randomized scene",
+   "score": 0.9258,
+   "real_path": "videos/dreamvsreal/RoboTwin/dump_bin_bigbin_noisy/real.mp4",
+   "dream_path": "videos/dreamvsreal/RoboTwin/dump_bin_bigbin_noisy/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_dump_bin_bigbin_noisy_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_dump_bin_bigbin_noisy_dream.webp"
+  },
+  {
+   "embodiment": "RoboTwin",
+   "task": "place_object_scale",
+   "variant": "noisy",
+   "slug": "place_object_scale_noisy",
+   "label": "Place-on-Scale",
+   "sublabel": "randomized scene",
+   "score": 0.9336,
+   "real_path": "videos/dreamvsreal/RoboTwin/place_object_scale_noisy/real.mp4",
+   "dream_path": "videos/dreamvsreal/RoboTwin/place_object_scale_noisy/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/RoboTwin_place_object_scale_noisy_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/RoboTwin_place_object_scale_noisy_dream.webp"
+  },
+  {
+   "embodiment": "EgoBench",
+   "task": "insert_cans",
+   "variant": "r2t2",
+   "slug": "insert_cans_r2t2",
+   "label": "Insert Cans",
+   "sublabel": "unseen room 2",
+   "score": 0.9375,
+   "real_path": "videos/dreamvsreal/EgoBench/insert_cans_r2t2/real.mp4",
+   "dream_path": "videos/dreamvsreal/EgoBench/insert_cans_r2t2/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_insert_cans_r2t2_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_insert_cans_r2t2_dream.webp"
+  },
+  {
+   "embodiment": "EgoBench",
+   "task": "insert_cans",
+   "variant": "r4t4",
+   "slug": "insert_cans_r4t4",
+   "label": "Insert Cans",
+   "sublabel": "unseen room 4",
+   "score": 0.9141,
+   "real_path": "videos/dreamvsreal/EgoBench/insert_cans_r4t4/real.mp4",
+   "dream_path": "videos/dreamvsreal/EgoBench/insert_cans_r4t4/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_insert_cans_r4t4_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_insert_cans_r4t4_dream.webp"
+  },
+  {
+   "embodiment": "EgoBench",
+   "task": "insert_cans",
+   "variant": "r5t5",
+   "slug": "insert_cans_r5t5",
+   "label": "Insert Cans",
+   "sublabel": "unseen room 5",
+   "score": 0.957,
+   "real_path": "videos/dreamvsreal/EgoBench/insert_cans_r5t5/real.mp4",
+   "dream_path": "videos/dreamvsreal/EgoBench/insert_cans_r5t5/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_insert_cans_r5t5_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_insert_cans_r5t5_dream.webp"
+  },
+  {
+   "embodiment": "EgoBench",
+   "task": "open_drawer",
+   "variant": "r2t2",
+   "slug": "open_drawer_r2t2",
+   "label": "Open Drawer",
+   "sublabel": "unseen room 2",
+   "score": 0.9531,
+   "real_path": "videos/dreamvsreal/EgoBench/open_drawer_r2t2/real.mp4",
+   "dream_path": "videos/dreamvsreal/EgoBench/open_drawer_r2t2/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_open_drawer_r2t2_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_open_drawer_r2t2_dream.webp"
+  },
+  {
+   "embodiment": "EgoBench",
+   "task": "open_drawer",
+   "variant": "r4t4",
+   "slug": "open_drawer_r4t4",
+   "label": "Open Drawer",
+   "sublabel": "unseen room 4",
+   "score": 0.957,
+   "real_path": "videos/dreamvsreal/EgoBench/open_drawer_r4t4/real.mp4",
+   "dream_path": "videos/dreamvsreal/EgoBench/open_drawer_r4t4/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_open_drawer_r4t4_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_open_drawer_r4t4_dream.webp"
+  },
+  {
+   "embodiment": "EgoBench",
+   "task": "open_drawer",
+   "variant": "r5t5",
+   "slug": "open_drawer_r5t5",
+   "label": "Open Drawer",
+   "sublabel": "unseen room 5",
+   "score": 0.9531,
+   "real_path": "videos/dreamvsreal/EgoBench/open_drawer_r5t5/real.mp4",
+   "dream_path": "videos/dreamvsreal/EgoBench/open_drawer_r5t5/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_open_drawer_r5t5_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_open_drawer_r5t5_dream.webp"
+  },
+  {
+   "embodiment": "EgoBench",
+   "task": "stack_can",
+   "variant": "r2t2",
+   "slug": "stack_can_r2t2",
+   "label": "Stack Can",
+   "sublabel": "unseen room 2",
+   "score": 0.9609,
+   "real_path": "videos/dreamvsreal/EgoBench/stack_can_r2t2/real.mp4",
+   "dream_path": "videos/dreamvsreal/EgoBench/stack_can_r2t2/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_stack_can_r2t2_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_stack_can_r2t2_dream.webp"
+  },
+  {
+   "embodiment": "EgoBench",
+   "task": "stack_can",
+   "variant": "r4t4",
+   "slug": "stack_can_r4t4",
+   "label": "Stack Can",
+   "sublabel": "unseen room 4",
+   "score": 0.9688,
+   "real_path": "videos/dreamvsreal/EgoBench/stack_can_r4t4/real.mp4",
+   "dream_path": "videos/dreamvsreal/EgoBench/stack_can_r4t4/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_stack_can_r4t4_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_stack_can_r4t4_dream.webp"
+  },
+  {
+   "embodiment": "EgoBench",
+   "task": "stack_can",
+   "variant": "r5t5",
+   "slug": "stack_can_r5t5",
+   "label": "Stack Can",
+   "sublabel": "unseen room 5",
+   "score": 0.9727,
+   "real_path": "videos/dreamvsreal/EgoBench/stack_can_r5t5/real.mp4",
+   "dream_path": "videos/dreamvsreal/EgoBench/stack_can_r5t5/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_stack_can_r5t5_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_stack_can_r5t5_dream.webp"
+  },
+  {
+   "embodiment": "EgoBench",
+   "task": "unload_cans",
+   "variant": "r2t2",
+   "slug": "unload_cans_r2t2",
+   "label": "Unload Cans",
+   "sublabel": "unseen room 2",
+   "score": 0.8828,
+   "real_path": "videos/dreamvsreal/EgoBench/unload_cans_r2t2/real.mp4",
+   "dream_path": "videos/dreamvsreal/EgoBench/unload_cans_r2t2/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_unload_cans_r2t2_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_unload_cans_r2t2_dream.webp"
+  },
+  {
+   "embodiment": "EgoBench",
+   "task": "unload_cans",
+   "variant": "r4t4",
+   "slug": "unload_cans_r4t4",
+   "label": "Unload Cans",
+   "sublabel": "unseen room 4",
+   "score": 0.8789,
+   "real_path": "videos/dreamvsreal/EgoBench/unload_cans_r4t4/real.mp4",
+   "dream_path": "videos/dreamvsreal/EgoBench/unload_cans_r4t4/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_unload_cans_r4t4_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_unload_cans_r4t4_dream.webp"
+  },
+  {
+   "embodiment": "EgoBench",
+   "task": "unload_cans",
+   "variant": "r5t5",
+   "slug": "unload_cans_r5t5",
+   "label": "Unload Cans",
+   "sublabel": "unseen room 5",
+   "score": 0.6953,
+   "real_path": "videos/dreamvsreal/EgoBench/unload_cans_r5t5/real.mp4",
+   "dream_path": "videos/dreamvsreal/EgoBench/unload_cans_r5t5/dream.mp4",
+   "real_thumb": "videos/dreamvsreal/thumbs/EgoBench_unload_cans_r5t5_real.webp",
+   "dream_thumb": "videos/dreamvsreal/thumbs/EgoBench_unload_cans_r5t5_dream.webp"
+  }
+ ],
+ "training": {
+  "_comment": "World-model training data. Every entry is an (rgb, skeleton) pair from hchen657Naza/wm_multiembodiment_data; download_videos.py composites the pair into one small marquee tile (rgb with the conditioning skeleton as a picture-in-picture).",
+  "stats": {
+   "embodiments": 4,
+   "tasks": 43,
+   "episodes": 3386,
+   "hours": 13.1
+  },
+  "tracks": [
+   {
+    "key": "robotwin_capx10",
+    "embodiment": "RoboTwin",
+    "robot": "ALOHA-AgileX, two parallel-jaw grippers",
+    "domain": "simulation",
+    "tasks": 10,
+    "episodes": 625,
+    "hours": 1.62,
+    "accent": "#f08200",
+    "clips": [
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/robotwin_capx10/adjust_bottle/success/robotwin_wm_data_success_s0_ep14/rgb.mp4",
+      "skeleton_in_repo": "train/robotwin_capx10/adjust_bottle/success/robotwin_wm_data_success_s0_ep14/skeleton.mp4",
+      "local_path": "training/robotwin_capx10/adjust_bottle.mp4",
+      "label": "Adjust bottle"
+     },
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/robotwin_capx10/handover_mic/success/act_noisy_episode_6/rgb.mp4",
+      "skeleton_in_repo": "train/robotwin_capx10/handover_mic/success/act_noisy_episode_6/skeleton.mp4",
+      "local_path": "training/robotwin_capx10/handover_mic.mp4",
+      "label": "Handover mic"
+     },
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/robotwin_capx10/move_playingcard_away/success/robotwin_wm_data_success_ep6/rgb.mp4",
+      "skeleton_in_repo": "train/robotwin_capx10/move_playingcard_away/success/robotwin_wm_data_success_ep6/skeleton.mp4",
+      "local_path": "training/robotwin_capx10/move_playingcard_away.mp4",
+      "label": "Move playingcard away"
+     },
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/robotwin_capx10/place_container_plate/success/act_rollouts_4new_success_s1_ep14/rgb.mp4",
+      "skeleton_in_repo": "train/robotwin_capx10/place_container_plate/success/act_rollouts_4new_success_s1_ep14/skeleton.mp4",
+      "local_path": "training/robotwin_capx10/place_container_plate.mp4",
+      "label": "Place container plate"
+     },
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/robotwin_capx10/shake_bottle/success/capx_clean_episode_31/rgb.mp4",
+      "skeleton_in_repo": "train/robotwin_capx10/shake_bottle/success/capx_clean_episode_31/skeleton.mp4",
+      "local_path": "training/robotwin_capx10/shake_bottle.mp4",
+      "label": "Shake bottle"
+     }
+    ]
+   },
+   {
+    "key": "egovla_isaacsim",
+    "embodiment": "EgoBench",
+    "robot": "Unitree H1, two Inspire hands",
+    "domain": "Isaac Sim",
+    "tasks": 6,
+    "episodes": 462,
+    "hours": 1.88,
+    "accent": "#2a78d6",
+    "clips": [
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/egovla_isaacsim/Open-Drawer/success/ACTe10000_ep025/rgb.mp4",
+      "skeleton_in_repo": "train/egovla_isaacsim/Open-Drawer/success/ACTe10000_ep025/skeleton.mp4",
+      "local_path": "training/egovla_isaacsim/Open-Drawer.mp4",
+      "label": "Open Drawer"
+     },
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/egovla_isaacsim/Open-Laptop/success/ACTe4000_ep025/rgb.mp4",
+      "skeleton_in_repo": "train/egovla_isaacsim/Open-Laptop/success/ACTe4000_ep025/skeleton.mp4",
+      "local_path": "training/egovla_isaacsim/Open-Laptop.mp4",
+      "label": "Open Laptop"
+     },
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/egovla_isaacsim/Pour-Balls/success/ACTe7000_ep028/rgb.mp4",
+      "skeleton_in_repo": "train/egovla_isaacsim/Pour-Balls/success/ACTe7000_ep028/skeleton.mp4",
+      "local_path": "training/egovla_isaacsim/Pour-Balls.mp4",
+      "label": "Pour Balls"
+     },
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/egovla_isaacsim/Push-Box/success/ACTe7000_ep019/rgb.mp4",
+      "skeleton_in_repo": "train/egovla_isaacsim/Push-Box/success/ACTe7000_ep019/skeleton.mp4",
+      "local_path": "training/egovla_isaacsim/Push-Box.mp4",
+      "label": "Push Box"
+     },
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/egovla_isaacsim/Stack-Can/success/ACTstack_o1000_ep013/rgb.mp4",
+      "skeleton_in_repo": "train/egovla_isaacsim/Stack-Can/success/ACTstack_o1000_ep013/skeleton.mp4",
+      "local_path": "training/egovla_isaacsim/Stack-Can.mp4",
+      "label": "Stack Can"
+     }
+    ]
+   },
+   {
+    "key": "trex",
+    "embodiment": "T-Rex",
+    "robot": "Dexmate Vega-1, Sharpa Wave hand",
+    "domain": "real world",
+    "tasks": 22,
+    "episodes": 2096,
+    "hours": 5.12,
+    "accent": "#00aa00",
+    "clips": [
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/trex/assemble/success/episode-002271-seg5/rgb.mp4",
+      "skeleton_in_repo": "train/trex/assemble/success/episode-002271-seg5/skeleton.mp4",
+      "local_path": "training/trex/assemble.mp4",
+      "label": "Assemble"
+     },
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/trex/disassemble/success/episode-003861-seg2/rgb.mp4",
+      "skeleton_in_repo": "train/trex/disassemble/success/episode-003861-seg2/skeleton.mp4",
+      "local_path": "training/trex/disassemble.mp4",
+      "label": "Disassemble"
+     },
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/trex/fold/success/episode-003079-seg4/rgb.mp4",
+      "skeleton_in_repo": "train/trex/fold/success/episode-003079-seg4/skeleton.mp4",
+      "local_path": "training/trex/fold.mp4",
+      "label": "Fold"
+     },
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/trex/lift_and_place/success/episode-003039-seg0/rgb.mp4",
+      "skeleton_in_repo": "train/trex/lift_and_place/success/episode-003039-seg0/skeleton.mp4",
+      "local_path": "training/trex/lift_and_place.mp4",
+      "label": "Lift and place"
+     },
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/trex/pour/success/episode-000356-seg1/rgb.mp4",
+      "skeleton_in_repo": "train/trex/pour/success/episode-000356-seg1/skeleton.mp4",
+      "local_path": "training/trex/pour.mp4",
+      "label": "Pour"
+     },
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/trex/screw/success/episode-004053-seg3/rgb.mp4",
+      "skeleton_in_repo": "train/trex/screw/success/episode-004053-seg3/skeleton.mp4",
+      "local_path": "training/trex/screw.mp4",
+      "label": "Screw"
+     },
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/trex/twist/success/episode-001366-seg7/rgb.mp4",
+      "skeleton_in_repo": "train/trex/twist/success/episode-001366-seg7/skeleton.mp4",
+      "local_path": "training/trex/twist.mp4",
+      "label": "Twist"
+     }
+    ]
+   },
+   {
+    "key": "abc",
+    "embodiment": "ABC",
+    "robot": "YAM bimanual grippers",
+    "domain": "real world",
+    "tasks": 5,
+    "episodes": 203,
+    "hours": 4.49,
+    "accent": "#8257d6",
+    "clips": [
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/abc/fold_and_stack_the_shorts/success/episode_02280006-d76e-4d24-a58c-8172fb68cd51_seg4/rgb.mp4",
+      "skeleton_in_repo": "train/abc/fold_and_stack_the_shorts/success/episode_02280006-d76e-4d24-a58c-8172fb68cd51_seg4/skeleton.mp4",
+      "local_path": "training/abc/fold_and_stack_the_shorts.mp4",
+      "label": "Fold & stack the shorts"
+     },
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/abc/fold_and_stack_the_trousers/success/episode_454a1485-125e-4be4-bd66-aae6bbdbfa01_seg3/rgb.mp4",
+      "skeleton_in_repo": "train/abc/fold_and_stack_the_trousers/success/episode_454a1485-125e-4be4-bd66-aae6bbdbfa01_seg3/skeleton.mp4",
+      "local_path": "training/abc/fold_and_stack_the_trousers.mp4",
+      "label": "Fold & stack the trousers"
+     },
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/abc/place_the_trousers_on_the_hanger/success/episode_61ec4da1-acfe-471b-b0d3-052d094d4616_seg2/rgb.mp4",
+      "skeleton_in_repo": "train/abc/place_the_trousers_on_the_hanger/success/episode_61ec4da1-acfe-471b-b0d3-052d094d4616_seg2/skeleton.mp4",
+      "local_path": "training/abc/place_the_trousers_on_the_hanger.mp4",
+      "label": "Place the trousers on the hanger"
+     },
+     {
+      "repo": "hchen657Naza/wm_multiembodiment_data",
+      "rgb_in_repo": "train/abc/put_the_pillow_into_the_pillowcase/success/episode_48971738-a89a-4bbb-836d-774d36f3bb03_seg4/rgb.mp4",
+      "skeleton_in_repo": "train/abc/put_the_pillow_into_the_pillowcase/success/episode_48971738-a89a-4bbb-836d-774d36f3bb03_seg4/skeleton.mp4",
+      "local_path": "training/abc/put_the_pillow_into_the_pillowcase.mp4",
+      "label": "Put the pillow into the pillowcase"
+     }
+    ]
+   }
+  ]
+ },
+ "generalize": {
+  "_comment": "Mirrors Fig. `dream_videos` in the paper: what the world model was trained on, next to the scenes it dreams in. `src` is a path relative to website/; `crop` pulls one pane out of a 1920x480 GT|Dream|Skeleton strip. download_videos.py transcodes these into videos/generalize/.",
+  "rows": [
+   {
+    "embodiment": "RoboTwin",
+    "accent": "#f08200",
+    "robot": "ALOHA-AgileX \u00b7 parallel-jaw \u00b7 simulation",
+    "axis": "scene randomization",
+    "trained_on": {
+     "label": "Clean tabletop",
+     "note": "80% of the world model's RoboTwin episodes are the default clean scene.",
+     "clips": [
+      {
+       "src": "../hf_figure_plot/dream_videos_plot/src/robotwin/stack_bowls_two_clean_set1_s910301_ep1_side_by_side.mp4",
+       "local_path": "generalize/RoboTwin/trained_stack_bowls_clean.mp4",
+       "label": "Stack bowls \u00b7 clean",
+       "crop": "640:480:0:0"
+      },
+      {
+       "src": "videos/dreamvsreal/RoboTwin/grab_roller_clean/real.mp4",
+       "local_path": "generalize/RoboTwin/trained_grab_roller_clean.mp4",
+       "label": "Grab roller \u00b7 clean"
+      },
+      {
+       "src": "videos/dreamvsreal/RoboTwin/handover_mic_clean/real.mp4",
+       "local_path": "generalize/RoboTwin/trained_handover_mic_clean.mp4",
+       "label": "Handover mic \u00b7 clean"
+      }
+     ]
+    },
+    "dreams_in": {
+     "label": "Unseen randomized scenes",
+     "note": "New textures, clutter and lighting the model was never fit to \u2014 and five different teachers acting in them.",
+     "clips": [
+      {
+       "local_path": "generalize/RoboTwin/gen_dump_bin_bigbin_noisy_dream.mp4",
+       "real_path": "generalize/RoboTwin/gen_dump_bin_bigbin_noisy_real.mp4",
+       "label": "Dump bin bigbin randomised"
+      },
+      {
+       "local_path": "generalize/RoboTwin/gen_grab_roller_noisy_dream.mp4",
+       "real_path": "generalize/RoboTwin/gen_grab_roller_noisy_real.mp4",
+       "label": "Grab roller randomised"
+      },
+      {
+       "local_path": "generalize/RoboTwin/gen_handover_mic_noisy_dream.mp4",
+       "real_path": "generalize/RoboTwin/gen_handover_mic_noisy_real.mp4",
+       "label": "Handover mic randomised"
+      },
+      {
+       "local_path": "generalize/RoboTwin/gen_place_object_scale_noisy_dream.mp4",
+       "real_path": "generalize/RoboTwin/gen_place_object_scale_noisy_real.mp4",
+       "label": "Place object scale randomised"
+      },
+      {
+       "local_path": "generalize/RoboTwin/gen_shake_bottle_noisy_dream.mp4",
+       "real_path": "generalize/RoboTwin/gen_shake_bottle_noisy_real.mp4",
+       "label": "Shake bottle randomised"
+      },
+      {
+       "local_path": "generalize/RoboTwin/gen_stack_bowls_two_noisy_dream.mp4",
+       "real_path": "generalize/RoboTwin/gen_stack_bowls_two_noisy_real.mp4",
+       "label": "Stack bowls two randomised"
+      }
+     ]
+    }
+   },
+   {
+    "embodiment": "EgoBench",
+    "accent": "#2a78d6",
+    "robot": "Unitree H1 + Inspire hands \u00b7 Isaac Sim",
+    "axis": "unseen rooms",
+    "trained_on": {
+     "label": "Target room only",
+     "note": "Every world-model episode is room 1 / table 1 \u2014 one wall colour, one sofa, one shelf.",
+     "clips": [
+      {
+       "src": "../hf_figure_plot/dream_videos_plot/src/egovla/open_drawer_r1t1_episode_0_sim.mp4",
+       "local_path": "generalize/EgoBench/trained_open_drawer_r1t1.mp4",
+       "label": "Open drawer \u00b7 room 1"
+      },
+      {
+       "src": "../hf_figure_plot/dream_videos_plot/src/egovla/insert_cans_r1t1_episode_0_sim.mp4",
+       "local_path": "generalize/EgoBench/trained_insert_cans_r1t1.mp4",
+       "label": "Insert cans \u00b7 room 1"
+      }
+     ]
+    },
+    "dreams_in": {
+     "label": "Three rooms it never saw",
+     "note": "New tables, floors and backgrounds. The real-only student scores 10.4% here; co-training on these dreams reaches 61.1%.",
+     "clips": [
+      {
+       "local_path": "generalize/EgoBench/gen_insert_cans_r2t2_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_insert_cans_r2t2_real.mp4",
+       "label": "Insert cans room 2"
+      },
+      {
+       "local_path": "generalize/EgoBench/gen_insert_cans_r4t4_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_insert_cans_r4t4_real.mp4",
+       "label": "Insert cans room 4"
+      },
+      {
+       "local_path": "generalize/EgoBench/gen_insert_cans_r5t5_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_insert_cans_r5t5_real.mp4",
+       "label": "Insert cans room 5"
+      },
+      {
+       "local_path": "generalize/EgoBench/gen_open_drawer_r2t2_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_open_drawer_r2t2_real.mp4",
+       "label": "Open drawer room 2"
+      },
+      {
+       "local_path": "generalize/EgoBench/gen_open_drawer_r4t4_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_open_drawer_r4t4_real.mp4",
+       "label": "Open drawer room 4"
+      },
+      {
+       "local_path": "generalize/EgoBench/gen_open_drawer_r5t5_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_open_drawer_r5t5_real.mp4",
+       "label": "Open drawer room 5"
+      }
+     ]
+    }
+   },
+   {
+    "embodiment": "T-Rex real",
+    "accent": "#00aa00",
+    "robot": "Tianji arm + 22-DoF Sharpa hand \u00b7 real hardware",
+    "axis": "sim trajectory \u2192 real pixels",
+    "trained_on": {
+     "label": "Clean tabletop, one layout",
+     "note": "67 real episodes of two tasks on an uncluttered bench.",
+     "clips": [
+      {
+       "src": "../hf_figure_plot/dream_videos_plot/src/realworld/hammer_demo_77_real_cam1_rgb.mp4",
+       "local_path": "generalize/T-Rex/trained_hammer_real.mp4",
+       "label": "Strike peg \u00b7 real demo"
+      },
+      {
+       "src": "../hf_figure_plot/dream_videos_plot/src/realworld/tongs_demo_1_real_cam1_rgb.mp4",
+       "local_path": "generalize/T-Rex/trained_tongs_real.mp4",
+       "label": "Use tongs \u00b7 real demo"
+      }
+     ]
+    },
+    "dreams_in": {
+     "label": "Cluttered benches, new object positions",
+     "note": "Trajectories validated in the simulator, dreamed into real observations. Five real demos plus these dreams reach ~85% across four tasks.",
+     "clips": [
+      {
+       "src": "../hf_figure_plot/dream_videos_plot/src/realworld/hammer_blue_newinit_demo1skel_dream.mp4",
+       "local_path": "generalize/T-Rex/dream_hammer_newinit.mp4",
+       "label": "Strike peg \u00b7 new init"
+      },
+      {
+       "src": "../hf_figure_plot/dream_videos_plot/src/realworld/tongs_demo_1_dream.mp4",
+       "local_path": "generalize/T-Rex/dream_tongs.mp4",
+       "label": "Use tongs"
+      },
+      {
+       "src": "videos/T-Rex/hammering_demo_1_dream.mp4",
+       "local_path": "generalize/T-Rex/dream_hammer_1.mp4",
+       "label": "Strike peg \u00b7 demo 1"
+      },
+      {
+       "src": "videos/T-Rex/hammering_demo_16_dream.mp4",
+       "local_path": "generalize/T-Rex/dream_hammer_16.mp4",
+       "label": "Strike peg \u00b7 demo 16"
+      },
+      {
+       "src": "videos/T-Rex/hammering_demo_101_dream.mp4",
+       "local_path": "generalize/T-Rex/dream_hammer_101.mp4",
+       "label": "Strike peg \u00b7 demo 101"
+      }
+     ]
+    }
+   }
+  ]
+ }
 }

@@ -78,7 +78,7 @@
   // single place where "is this allowed to be playing right now" is decided.
   const autoplayers = [];
 
-  function makeTile(src, { label, badge, accent, aspect } = {}) {
+  function makeTile(src, { label, badge, accent, aspect, realSrc } = {}) {
     const fig = document.createElement("figure");
     fig.className = "tile";
     if (accent) fig.style.setProperty("--tile-accent", accent);
@@ -101,6 +101,54 @@
     video.setAttribute("aria-label", label || "world model clip");
     video.addEventListener("error", () => frame.classList.add("tile__frame--missing"));
     frame.appendChild(video);
+
+    // An optional second clip, the simulator's own render of the SAME episode,
+    // revealed on hover or focus. Two stacked <video> elements cross-faded
+    // rather than one element whose src is swapped: swapping src tears down the
+    // decoder and shows a blank frame every time the pointer crosses a tile.
+    // It stays preload="none" until first hover, so a strip of twelve tiles
+    // does not fetch twenty-four files to show twelve.
+    let realVideo = null;
+    if (realSrc) {
+      realVideo = document.createElement("video");
+      realVideo.src = realSrc;
+      realVideo.muted = true;
+      realVideo.loop = true;
+      realVideo.playsInline = true;
+      realVideo.preload = "none";
+      realVideo.tabIndex = -1;
+      realVideo.className = "tile__real";
+      realVideo.setAttribute("aria-hidden", "true");
+      frame.appendChild(realVideo);
+
+      const tag = document.createElement("span");
+      tag.className = "tile__swap";
+      tag.textContent = "hover: real";
+      frame.appendChild(tag);
+
+      let armed = false;
+      const show = () => {
+        if (!armed) { realVideo.preload = "auto"; realVideo.load(); armed = true; }
+        // start the real clip from where the dream is, so the two are comparable
+        // at the moment of the swap rather than at an arbitrary offset
+        try { realVideo.currentTime = video.currentTime % (realVideo.duration || 1e9); }
+        catch (_e) {}
+        realVideo.play().catch(() => {});
+        frame.classList.add("tile__frame--real");
+        tag.textContent = "real";
+      };
+      const hide = () => {
+        frame.classList.remove("tile__frame--real");
+        tag.textContent = "hover: real";
+        try { realVideo.pause(); } catch (_e) {}
+      };
+      frame.addEventListener("pointerenter", show);
+      frame.addEventListener("pointerleave", hide);
+      // keyboard parity: the tile is focusable so this is reachable without a mouse
+      fig.tabIndex = 0;
+      fig.addEventListener("focus", show);
+      fig.addEventListener("blur", hide);
+    }
 
     if (badge) {
       const b = document.createElement("span");
@@ -167,6 +215,7 @@
           badge: badge,
           accent: item.accent || accent,
           aspect,
+          realSrc: item.realSrc,
         });
         // The duplicate pass is decorative: the first pass already carries the
         // caption text, so hide the copy from assistive tech.
@@ -265,7 +314,13 @@
       }
 
       const dreams = buildMarquee(
-        row.dreams_in.clips.map(c => ({ src: VIDEOS_BASE + c.local_path, label: c.label })),
+        row.dreams_in.clips.map(c => ({
+          src: VIDEOS_BASE + c.local_path,
+          label: c.label,
+          // present only where the simulator rendered the same episode; the
+          // real-hardware row has no counterpart and simply omits it
+          realSrc: c.real_path ? VIDEOS_BASE + c.real_path : undefined,
+        })),
         { direction: "left", accent: "var(--accent)", aspect: "4 / 3" }
       );
 
