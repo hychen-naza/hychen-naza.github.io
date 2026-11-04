@@ -680,9 +680,37 @@
      "note": "New textures, clutter and lighting the model was never fit to \u2014 and five different teachers acting in them.",
      "clips": [
       {
+       "local_path": "generalize/RoboTwin/gen_robotwin_handover_mic_noisy_set1_ep5_dream.mp4",
+       "real_path": "generalize/RoboTwin/gen_robotwin_handover_mic_noisy_set1_ep5_real.mp4",
+       "skeleton_path": "generalize/RoboTwin/gen_robotwin_handover_mic_noisy_set1_ep5_skeleton.mp4",
+       "label": "Handover mic randomised"
+      },
+      {
+       "local_path": "generalize/RoboTwin/gen_robotwin_place_object_scale_noisy_set4_ep1_dream.mp4",
+       "real_path": "generalize/RoboTwin/gen_robotwin_place_object_scale_noisy_set4_ep1_real.mp4",
+       "skeleton_path": "generalize/RoboTwin/gen_robotwin_place_object_scale_noisy_set4_ep1_skeleton.mp4",
+       "label": "Place object scale randomised"
+      },
+      {
+       "local_path": "generalize/RoboTwin/gen_robotwin_stack_bowls_two_noisy_set1_ep48_dream.mp4",
+       "real_path": "generalize/RoboTwin/gen_robotwin_stack_bowls_two_noisy_set1_ep48_real.mp4",
+       "skeleton_path": "generalize/RoboTwin/gen_robotwin_stack_bowls_two_noisy_set1_ep48_skeleton.mp4",
+       "label": "Stack bowls two randomised"
+      },
+      {
+       "local_path": "generalize/RoboTwin/gen_dump_bin_bigbin_clean_dream.mp4",
+       "real_path": "generalize/RoboTwin/gen_dump_bin_bigbin_clean_real.mp4",
+       "label": "Dump bin bigbin clean scene"
+      },
+      {
        "local_path": "generalize/RoboTwin/gen_dump_bin_bigbin_noisy_dream.mp4",
        "real_path": "generalize/RoboTwin/gen_dump_bin_bigbin_noisy_real.mp4",
        "label": "Dump bin bigbin randomised"
+      },
+      {
+       "local_path": "generalize/RoboTwin/gen_grab_roller_clean_dream.mp4",
+       "real_path": "generalize/RoboTwin/gen_grab_roller_clean_real.mp4",
+       "label": "Grab roller clean scene"
       },
       {
        "local_path": "generalize/RoboTwin/gen_grab_roller_noisy_dream.mp4",
@@ -690,9 +718,24 @@
        "label": "Grab roller randomised"
       },
       {
+       "local_path": "generalize/RoboTwin/gen_handover_mic_dream.mp4",
+       "real_path": "generalize/RoboTwin/gen_handover_mic_real.mp4",
+       "label": "Handover mic"
+      },
+      {
+       "local_path": "generalize/RoboTwin/gen_handover_mic_clean_dream.mp4",
+       "real_path": "generalize/RoboTwin/gen_handover_mic_clean_real.mp4",
+       "label": "Handover mic clean scene"
+      },
+      {
        "local_path": "generalize/RoboTwin/gen_handover_mic_noisy_dream.mp4",
        "real_path": "generalize/RoboTwin/gen_handover_mic_noisy_real.mp4",
        "label": "Handover mic randomised"
+      },
+      {
+       "local_path": "generalize/RoboTwin/gen_place_bread_basket_dream.mp4",
+       "real_path": "generalize/RoboTwin/gen_place_bread_basket_real.mp4",
+       "label": "Place bread basket"
       },
       {
        "local_path": "generalize/RoboTwin/gen_place_object_scale_noisy_dream.mp4",
@@ -703,6 +746,16 @@
        "local_path": "generalize/RoboTwin/gen_shake_bottle_noisy_dream.mp4",
        "real_path": "generalize/RoboTwin/gen_shake_bottle_noisy_real.mp4",
        "label": "Shake bottle randomised"
+      },
+      {
+       "local_path": "generalize/RoboTwin/gen_stack_bowls_two_dream.mp4",
+       "real_path": "generalize/RoboTwin/gen_stack_bowls_two_real.mp4",
+       "label": "Stack bowls two"
+      },
+      {
+       "local_path": "generalize/RoboTwin/gen_stack_bowls_two_clean_dream.mp4",
+       "real_path": "generalize/RoboTwin/gen_stack_bowls_two_clean_real.mp4",
+       "label": "Stack bowls two clean scene"
       },
       {
        "local_path": "generalize/RoboTwin/gen_stack_bowls_two_noisy_dream.mp4",
@@ -738,6 +791,36 @@
      "note": "New tables, floors and backgrounds. The real-only student scores 10.4% here; co-training on these dreams reaches 61.1%.",
      "clips": [
       {
+       "local_path": "generalize/EgoBench/gen_egovla_insert_cans_r2t2_ep16_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_egovla_insert_cans_r2t2_ep16_real.mp4",
+       "skeleton_path": "generalize/EgoBench/gen_egovla_insert_cans_r2t2_ep16_skeleton.mp4",
+       "label": "Insert cans room 2"
+      },
+      {
+       "local_path": "generalize/EgoBench/gen_egovla_insert_cans_r5t5_ep36_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_egovla_insert_cans_r5t5_ep36_real.mp4",
+       "skeleton_path": "generalize/EgoBench/gen_egovla_insert_cans_r5t5_ep36_skeleton.mp4",
+       "label": "Insert cans room 5"
+      },
+      {
+       "local_path": "generalize/EgoBench/gen_egovla_open_drawer_r2t2_ep34_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_egovla_open_drawer_r2t2_ep34_real.mp4",
+       "skeleton_path": "generalize/EgoBench/gen_egovla_open_drawer_r2t2_ep34_skeleton.mp4",
+       "label": "Open drawer room 2"
+      },
+      {
+       "local_path": "generalize/EgoBench/gen_egovla_stack_can_r4t4_ep60_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_egovla_stack_can_r4t4_ep60_real.mp4",
+       "skeleton_path": "generalize/EgoBench/gen_egovla_stack_can_r4t4_ep60_skeleton.mp4",
+       "label": "Stack can room 4"
+      },
+      {
+       "local_path": "generalize/EgoBench/gen_egovla_unload_cans_r4t4_ep15_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_egovla_unload_cans_r4t4_ep15_real.mp4",
+       "skeleton_path": "generalize/EgoBench/gen_egovla_unload_cans_r4t4_ep15_skeleton.mp4",
+       "label": "Unload cans room 4"
+      },
+      {
        "local_path": "generalize/EgoBench/gen_insert_cans_r2t2_dream.mp4",
        "real_path": "generalize/EgoBench/gen_insert_cans_r2t2_real.mp4",
        "label": "Insert cans room 2"
@@ -753,6 +836,11 @@
        "label": "Insert cans room 5"
       },
       {
+       "local_path": "generalize/EgoBench/gen_open_drawer_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_open_drawer_real.mp4",
+       "label": "Open drawer"
+      },
+      {
        "local_path": "generalize/EgoBench/gen_open_drawer_r2t2_dream.mp4",
        "real_path": "generalize/EgoBench/gen_open_drawer_r2t2_real.mp4",
        "label": "Open drawer room 2"
@@ -766,6 +854,46 @@
        "local_path": "generalize/EgoBench/gen_open_drawer_r5t5_dream.mp4",
        "real_path": "generalize/EgoBench/gen_open_drawer_r5t5_real.mp4",
        "label": "Open drawer room 5"
+      },
+      {
+       "local_path": "generalize/EgoBench/gen_stack_can_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_stack_can_real.mp4",
+       "label": "Stack can"
+      },
+      {
+       "local_path": "generalize/EgoBench/gen_stack_can_r2t2_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_stack_can_r2t2_real.mp4",
+       "label": "Stack can room 2"
+      },
+      {
+       "local_path": "generalize/EgoBench/gen_stack_can_r4t4_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_stack_can_r4t4_real.mp4",
+       "label": "Stack can room 4"
+      },
+      {
+       "local_path": "generalize/EgoBench/gen_stack_can_r5t5_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_stack_can_r5t5_real.mp4",
+       "label": "Stack can room 5"
+      },
+      {
+       "local_path": "generalize/EgoBench/gen_unload_cans_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_unload_cans_real.mp4",
+       "label": "Unload cans"
+      },
+      {
+       "local_path": "generalize/EgoBench/gen_unload_cans_r2t2_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_unload_cans_r2t2_real.mp4",
+       "label": "Unload cans room 2"
+      },
+      {
+       "local_path": "generalize/EgoBench/gen_unload_cans_r4t4_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_unload_cans_r4t4_real.mp4",
+       "label": "Unload cans room 4"
+      },
+      {
+       "local_path": "generalize/EgoBench/gen_unload_cans_r5t5_dream.mp4",
+       "real_path": "generalize/EgoBench/gen_unload_cans_r5t5_real.mp4",
+       "label": "Unload cans room 5"
       }
      ]
     }

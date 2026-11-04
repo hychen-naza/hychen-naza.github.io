@@ -78,7 +78,7 @@
   // single place where "is this allowed to be playing right now" is decided.
   const autoplayers = [];
 
-  function makeTile(src, { label, badge, accent, aspect, realSrc } = {}) {
+  function makeTile(src, { label, badge, accent, aspect, realSrc, skeletonSrc } = {}) {
     const fig = document.createElement("figure");
     fig.className = "tile";
     if (accent) fig.style.setProperty("--tile-accent", accent);
@@ -102,52 +102,143 @@
     video.addEventListener("error", () => frame.classList.add("tile__frame--missing"));
     frame.appendChild(video);
 
-    // An optional second clip, the simulator's own render of the SAME episode,
-    // revealed on hover or focus. Two stacked <video> elements cross-faded
-    // rather than one element whose src is swapped: swapping src tears down the
-    // decoder and shows a blank frame every time the pointer crosses a tile.
-    // It stays preload="none" until first hover, so a strip of twelve tiles
-    // does not fetch twenty-four files to show twelve.
-    let realVideo = null;
-    if (realSrc) {
-      realVideo = document.createElement("video");
-      realVideo.src = realSrc;
-      realVideo.muted = true;
-      realVideo.loop = true;
-      realVideo.playsInline = true;
-      realVideo.preload = "none";
-      realVideo.tabIndex = -1;
-      realVideo.className = "tile__real";
-      realVideo.setAttribute("aria-hidden", "true");
-      frame.appendChild(realVideo);
-
+    // Hovering a dream tile expands a panel showing the same episode three
+    // ways: the simulator's own render, the skeleton that conditioned the
+    // model, and the dream. Side by side rather than cross-faded in place,
+    // because the claim being made is a comparison — and the skeleton is the
+    // part that makes it legible, since it shows the only input was a drawing.
+    //
+    // The panel is built once on first hover and then reused. Building it up
+    // front would put three more <video> elements per tile on the page, and
+    // the strip has twelve tiles duplicated for the scroll, so that is 72
+    // elements for a thing nobody may hover.
+    let panel = null;
+    if (realSrc || skeletonSrc) {
       const tag = document.createElement("span");
       tag.className = "tile__swap";
-      tag.textContent = "hover: real";
+      tag.textContent = skeletonSrc ? "hover: compare 3" : "hover: compare";
       frame.appendChild(tag);
 
-      let armed = false;
-      const show = () => {
-        if (!armed) { realVideo.preload = "auto"; realVideo.load(); armed = true; }
-        // start the real clip from where the dream is, so the two are comparable
-        // at the moment of the swap rather than at an arbitrary offset
-        try { realVideo.currentTime = video.currentTime % (realVideo.duration || 1e9); }
-        catch (_e) {}
-        realVideo.play().catch(() => {});
-        frame.classList.add("tile__frame--real");
-        tag.textContent = "real";
+      const panes = [
+        { src: realSrc, eyebrow: "Ground truth", role: "simulator render", kind: "gt" },
+        { src: skeletonSrc, eyebrow: "Skeleton", role: "conditioning input", kind: "skel" },
+        { src: src, eyebrow: "Dream", role: "generated", kind: "dream" },
+      ].filter(x => x.src);
+
+      const build = () => {
+        panel = document.createElement("div");
+        panel.className = "tilex";
+        panel.style.setProperty("--tilex-cols", String(panes.length));
+        for (const pane of panes) {
+          const cell = document.createElement("figure");
+          cell.className = `tilex__cell tilex__cell--${pane.kind}`;
+          const v = document.createElement("video");
+          v.src = pane.src;
+          v.muted = true; v.loop = true; v.playsInline = true;
+          v.preload = "auto"; v.tabIndex = -1;
+          const head = document.createElement("figcaption");
+          head.className = "tilex__cap";
+          head.innerHTML = `<span class="tilex__eyebrow">${escapeHTML(pane.eyebrow)}</span>` +
+                           `<span class="tilex__role">${escapeHTML(pane.role)}</span>`;
+          cell.append(v, head);
+          panel.appendChild(cell);
+        }
+        const foot = document.createElement("p");
+        foot.className = "tilex__foot";
+        foot.textContent = label
+          ? `${label} — one episode, the same actions, rendered three ways.`
+          : "One episode, the same actions, rendered three ways.";
+        if (panes.length === 2) {
+          foot.textContent = label
+            ? `${label} — the simulator's render beside the dream of the same actions.`
+            : "The simulator's render beside the dream of the same actions.";
+        }
+        panel.appendChild(foot);
+        // Appended to <body>, not to the tile. The marquee clips with
+        // overflow:hidden AND a mask-image, and its track animates with
+        // transform — which makes it the containing block even for
+        // position:fixed. A panel parented inside the tile is therefore
+        // invisible no matter its z-index. So it is portalled out and
+        // positioned from the tile's measured rect instead.
+        document.body.appendChild(panel);
+        return panel;
       };
-      const hide = () => {
-        frame.classList.remove("tile__frame--real");
-        tag.textContent = "hover: real";
-        try { realVideo.pause(); } catch (_e) {}
+
+      // Place the portalled panel over the tile: above it if there is room,
+      // below if the tile is near the top of the viewport, and clamped
+      // horizontally so a tile at either end of the strip does not open a
+      // panel off screen.
+      const place = () => {
+        const r = frame.getBoundingClientRect();
+        const pw = panel.offsetWidth || 900;
+        const ph = panel.offsetHeight || 300;
+        const pad = 12;
+        let left = r.left + r.width / 2 - pw / 2;
+        left = Math.max(pad, Math.min(left, window.innerWidth - pw - pad));
+        const above = r.top - ph - 10;
+        const top = above >= pad ? above : Math.min(r.bottom + 10,
+                                                    window.innerHeight - ph - pad);
+        panel.style.left = `${Math.round(left)}px`;
+        panel.style.top = `${Math.round(top)}px`;
       };
-      frame.addEventListener("pointerenter", show);
-      frame.addEventListener("pointerleave", hide);
-      // keyboard parity: the tile is focusable so this is reachable without a mouse
+
+      // One clock for all panes, so the three stay frame-aligned. Without it
+      // they drift and a reader attributes the difference to the model.
+      let raf = null;
+      const sync = () => {
+        const vs = panel ? [...panel.querySelectorAll("video")] : [];
+        if (vs.length) {
+          const lead = vs[0];
+          for (const v of vs.slice(1)) {
+            const d = v.duration || 0;
+            if (d && Math.abs(v.currentTime - (lead.currentTime % d)) > 0.12) {
+              try { v.currentTime = lead.currentTime % d; } catch (_e) {}
+            }
+          }
+        }
+        raf = requestAnimationFrame(sync);
+      };
+
+      // The panel is position:fixed at coordinates measured once, so it would
+      // detach from its tile if the page scrolled underneath it. Reposition
+      // while open, and only while open.
+      let track = null;
+      const follow = () => {
+        place();
+        track = requestAnimationFrame(follow);
+      };
+
+      const open = () => {
+        if (!panel) build();
+        panel.classList.add("tilex--on");
+        // Two frames: one for the panel to be laid out so offsetWidth is real
+        // rather than the fallback, one for any in-flight scroll to settle.
+        place();
+        requestAnimationFrame(() => requestAnimationFrame(place));
+        if (track === null) track = requestAnimationFrame(follow);
+        fig.classList.add("tile--open");
+        for (const v of panel.querySelectorAll("video")) {
+          try { v.currentTime = 0; } catch (_e) {}
+          v.play().catch(() => {});
+        }
+        if (raf === null) raf = requestAnimationFrame(sync);
+      };
+      const close = () => {
+        if (panel) panel.classList.remove("tilex--on");
+        fig.classList.remove("tile--open");
+        if (track !== null) { cancelAnimationFrame(track); track = null; }
+        if (raf !== null) { cancelAnimationFrame(raf); raf = null; }
+        if (panel) for (const v of panel.querySelectorAll("video")) {
+          try { v.pause(); } catch (_e) {}
+        }
+      };
+      fig.addEventListener("pointerenter", open);
+      fig.addEventListener("pointerleave", close);
+      // keyboard parity, and Escape to dismiss
       fig.tabIndex = 0;
-      fig.addEventListener("focus", show);
-      fig.addEventListener("blur", hide);
+      fig.addEventListener("focus", open);
+      fig.addEventListener("blur", close);
+      fig.addEventListener("keydown", e => { if (e.key === "Escape") { close(); fig.blur(); } });
     }
 
     if (badge) {
@@ -216,6 +307,7 @@
           accent: item.accent || accent,
           aspect,
           realSrc: item.realSrc,
+          skeletonSrc: item.skeletonSrc,
         });
         // The duplicate pass is decorative: the first pass already carries the
         // caption text, so hide the copy from assistive tech.
@@ -313,16 +405,33 @@
         }));
       }
 
-      const dreams = buildMarquee(
-        row.dreams_in.clips.map(c => ({
-          src: VIDEOS_BASE + c.local_path,
-          label: c.label,
-          // present only where the simulator rendered the same episode; the
-          // real-hardware row has no counterpart and simply omits it
-          realSrc: c.real_path ? VIDEOS_BASE + c.real_path : undefined,
-        })),
-        { direction: "left", accent: "var(--accent)", aspect: "4 / 3" }
-      );
+      const asItem = c => ({
+        src: VIDEOS_BASE + c.local_path,
+        label: c.label,
+        // present only where the simulator rendered the same episode; the
+        // real-hardware row has no counterpart and simply omits it
+        realSrc: c.real_path ? VIDEOS_BASE + c.real_path : undefined,
+        skeletonSrc: c.skeleton_path ? VIDEOS_BASE + c.skeleton_path : undefined,
+      });
+      const all = row.dreams_in.clips.map(asItem);
+      // Two stripes once there are enough episodes to fill them. Both drift the
+      // same way, so the pair reads as one wide band rather than two things
+      // moving against each other. The episodes that expand to three panes are
+      // front-loaded by the asset builder, so dealing alternately puts some in
+      // each stripe instead of stacking them all in the first.
+      const dreams = document.createElement("div");
+      dreams.className = "gen-stripes";
+      if (all.length >= 8) {
+        const a = all.filter((_x, i) => i % 2 === 0);
+        const b = all.filter((_x, i) => i % 2 === 1);
+        for (const half of [a, b]) {
+          dreams.appendChild(buildMarquee(half,
+            { direction: "left", accent: "var(--accent)", aspect: "4 / 3" }));
+        }
+      } else {
+        dreams.appendChild(buildMarquee(all,
+          { direction: "left", accent: "var(--accent)", aspect: "4 / 3" }));
+      }
 
       const arrow = document.createElement("div");
       arrow.className = "gen-arrow";

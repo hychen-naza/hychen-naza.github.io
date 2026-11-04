@@ -2426,28 +2426,97 @@ button.rw-frame:hover {
 /* Two cards should not stretch to a three-column track and leave a gap. */
 .dsets:has(> .dset:nth-child(2):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
+
+
 /* =========================================================================
-   Hover-to-real, on the "unseen scenes" dream tiles
+   Hover-expand comparison, on the "unseen scenes" dream tiles
    -------------------------------------------------------------------------
-   The second <video> sits on top of the dream and is faded in, rather than
-   the dream's src being swapped. Swapping src tears down the decoder, so a
-   pointer crossing a strip of tiles would flash a blank frame on each one.
-   Both elements stay mounted; only opacity changes, which the compositor can
-   do without touching the decoders.
+   Hovering a dream tile opens a panel showing the same episode three ways:
+   the simulator's render, the conditioning skeleton, and the dream. The
+   skeleton is the pane that carries the argument — it shows the only input
+   was a drawing — so it sits in the middle, between cause and effect.
+
+   The panel is positioned relative to the tile and lifted above the marquee.
+   The marquee already pauses on hover (its own rule), which is what makes a
+   panel anchored to a moving element viable at all.
    ========================================================================= */
-.tile__real {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.tile { position: relative; }
+.tilex {
+  /* fixed, and parented to <body>: see the comment in makeTile. left/top are
+     set from JS against the tile's measured rect. */
+  position: fixed;
+  z-index: 60;
+  transform: translateY(6px) scale(.98);
+  transform-origin: center;
+  /* Wide enough that three panes are legible rather than three thumbnails.
+     Clamped to the viewport so a tile at the edge of the strip does not open
+     a panel half off screen. */
+  width: min(92vw, calc(var(--tilex-cols) * 19rem));
+  display: grid;
+  grid-template-columns: repeat(var(--tilex-cols, 3), minmax(0, 1fr));
+  gap: 6px;
+  padding: 10px 10px 4px;
+  border-radius: var(--radius);
+  background: #0e0e11;
+  box-shadow: 0 18px 50px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.1);
   opacity: 0;
-  transition: opacity .22s ease;
-  pointer-events: none;
+  visibility: hidden;
+  pointer-events: none;      /* the tile owns the hover, not the panel */
+  transition: opacity .18s ease, transform .18s ease, visibility 0s .18s;
 }
-.tile__frame--real .tile__real { opacity: 1; }
-/* A label, so nobody mistakes the real render for another dream. It names the
-   state you are looking at, not the action — "real" while the real clip is up. */
+.tilex--on {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity .18s ease, transform .18s ease, visibility 0s;
+}
+
+.tilex__cell { margin: 0; min-width: 0; }
+/* `.tile video` absolutely positions every video inside a tile so it fills the
+   tile frame. These panes live inside the same .tile but must be in normal
+   flow, or they are pulled out of it and the panel collapses to its captions.
+   Hence the explicit `position: static` — not redundant. */
+.tilex__cell video {
+  position: static;
+  inset: auto;
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #000;
+  box-shadow: inset 0 0 0 2px var(--cell-accent, transparent);
+}
+/* One colour per role, matching the key used in the simulation sections, so a
+   reader who has seen that key does not have to learn a second one. */
+.tilex__cell--gt    { --cell-accent: #2a78d6; }
+.tilex__cell--skel  { --cell-accent: #8a8f98; }
+.tilex__cell--dream { --cell-accent: #f08200; }
+.tilex__cap {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 6px 2px 0;
+  font-family: var(--sans);
+}
+.tilex__eyebrow {
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--cell-accent, #fff);
+}
+.tilex__role { font-size: 0.64rem; color: rgba(255,255,255,.52); }
+.tilex__foot {
+  grid-column: 1 / -1;
+  margin: 2px 0 6px;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  line-height: 1.45;
+  color: rgba(255,255,255,.58);
+}
+
 .tile__swap {
   position: absolute;
   left: 6px; bottom: 6px;
@@ -2463,14 +2532,23 @@ button.rw-frame:hover {
   background: rgba(10,10,12,.72);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  transition: background .22s ease;
   pointer-events: none;
+  transition: background .18s ease;
 }
-.tile__frame--real .tile__swap { background: var(--real, #2a78d6); }
+.tile--open .tile__swap { background: var(--accent); }
 .tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-/* A tile with a counterpart is interactive, so say so. */
-.tile__frame:has(.tile__real) { cursor: crosshair; }
+.tile:has(.tilex) .tile__frame { cursor: zoom-in; }
+
 @media (hover: none) {
-  /* No pointer to hover with: the label would promise something unreachable. */
-  .tile__swap { display: none; }
+  /* No pointer: the panel is unreachable, so do not advertise it. */
+  .tile__swap, .tilex { display: none; }
 }
+@media (prefers-reduced-motion: reduce) {
+  .tilex, .tilex--on { transition: opacity .18s ease, visibility 0s; transform: none; }
+}
+
+/* Two dream stripes in a generalization row. A small gap and no reversal: the
+   pair should read as one wide band. The second stripe gets a different
+   duration so the two do not march in lockstep, which looks mechanical. */
+.gen-stripes { display: grid; gap: 8px; }
+.gen-stripes .marquee:nth-child(2) .marquee__track { --marquee-duration: 74s; }
