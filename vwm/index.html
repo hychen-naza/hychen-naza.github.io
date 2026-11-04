@@ -51,6 +51,7 @@
       <a href="#egobench">EgoBench</a>
       <a href="#realrobot">Real robot</a>
       <a href="#trex">T-Rex</a>
+      <a href="#datasets">Dataset</a>
       <a href="#bibtex">BibTeX</a>
     </div>
   </nav>
@@ -136,6 +137,11 @@
              stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         Dreams
       </a>
+      <a class="glass glass--btn" href="#datasets">
+        <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></svg>
+        Dataset
+      </a>
       <a class="glass glass--btn" href="#bibtex">
         <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5h5v6H7.5c0 2.4.9 3.9 3 4.5M13 5h5v6h-3.5c0 2.4.9 3.9 3 4.5"/></svg>
@@ -176,6 +182,7 @@
       <a href="#egobench">EgoBench</a>
       <a href="#realrobot">Real robot</a>
       <a href="#trex">T-Rex</a>
+      <a href="#datasets">Dataset</a>
       <a href="#bibtex">BibTeX</a>
     </nav>
   </div>
@@ -816,6 +823,154 @@
     <div id="trex-generalize">
       <p class="gallery__loading">Loading&hellip;</p>
     </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     Datasets
+     Two groups, and the split is load-bearing: the training sets are what the
+     world model SAW, the dream sets are what it PRODUCED. Listing them
+     together without that distinction would invite exactly the confusion this
+     paper exists to avoid — a reader taking generated video for ground truth.
+     Sizes and counts are stated because someone deciding whether to pull
+     18 GB deserves to know before clicking.
+     ===================================================================== -->
+<section class="section section--alt" id="datasets">
+  <div class="container">
+    <h2 class="section__title reveal">Data, released</h2>
+    <p class="section__kicker reveal">
+      Two kinds, kept apart on purpose. <strong>Training sets</strong> are what the world model
+      was fitted to. <strong>Dream sets</strong> are what it then generated, filtered to the
+      rollouts a success classifier kept &mdash; that filtering is what makes them usable as
+      demonstrations rather than as video.
+    </p>
+
+    <h3 class="dsets__group reveal">What the world model trained on</h3>
+    <ol class="dsets reveal">
+      <li class="dset" style="--dset-accent:#f08200">
+        <div class="dset__hd">
+          <h3>RoboTwin training set</h3>
+          <p class="dset__robot">ALOHA-AgileX, two parallel-jaw grippers &middot; simulation</p>
+        </div>
+        <dl class="dset__facts">
+          <div><dt>Size</dt><dd>0.56 GB</dd></div>
+          <div><dt>Tasks</dt><dd>8</dd></div>
+          <div><dt>Episodes</dt><dd>490</dd></div>
+        </dl>
+        <p class="dset__what">
+          Paired <code>_rgb.mp4</code> and <code>_skeleton.mp4</code> per episode: the video the
+          model predicts, and the rendered skeleton that conditions it. Split into
+          <code>success/</code> and <code>failed/</code> &mdash; the failures are deliberate, so the
+          downstream filter has something to reject.
+        </p>
+        <a class="dset__link"
+           href="https://huggingface.co/datasets/hchen657Naza/wm_8tasks_training_dataset">
+          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Hugging Face
+        </a>
+      </li>
+
+      <li class="dset" style="--dset-accent:#2a78d6">
+        <div class="dset__hd">
+          <h3>EgoBench training set</h3>
+          <p class="dset__robot">Unitree H1, two Inspire hands &middot; Isaac Sim</p>
+        </div>
+        <dl class="dset__facts">
+          <div><dt>Size</dt><dd>1.1 GB</dd></div>
+          <div><dt>Tasks</dt><dd>4</dd></div>
+          <div><dt>Files</dt><dd>493</dd></div>
+        </dl>
+        <p class="dset__what">
+          Recordings from the single target room, which is all the world model ever saw of this
+          embodiment. Everything it later dreams in an unseen room is extrapolated from this.
+          Also split <code>success/</code> and <code>failed/</code>.
+        </p>
+        <a class="dset__link"
+           href="https://huggingface.co/datasets/hchen657Naza/egovla_wm_data">
+          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Hugging Face
+        </a>
+      </li>
+    </ol>
+
+    <h3 class="dsets__group reveal">What it generated</h3>
+    <ol class="dsets reveal">
+      <li class="dset" style="--dset-accent:#f08200">
+        <div class="dset__hd">
+          <h3>RoboTwin dreams</h3>
+          <p class="dset__robot">ALOHA-AgileX, two parallel-jaw grippers &middot; simulation</p>
+        </div>
+        <dl class="dset__facts">
+          <div><dt>Size</dt><dd>3.3 GB</dd></div>
+          <div><dt>Tasks</dt><dd>7</dd></div>
+          <div><dt>Clips</dt><dd>8,400</dd></div>
+        </dl>
+        <p class="dset__what">
+          The seven tasks the paper evaluates. Task folders hold every dream that passed the
+          success filter; <code>selected_top300/</code> holds the 300 highest-scoring per task,
+          which is the subset the student actually trains on.
+        </p>
+        <a class="dset__link"
+           href="https://huggingface.co/datasets/hchen657Naza/robotwin_dreams">
+          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Hugging Face
+        </a>
+      </li>
+
+      <li class="dset" style="--dset-accent:#2a78d6">
+        <div class="dset__hd">
+          <h3>EgoBench dreams</h3>
+          <p class="dset__robot">Unitree H1, two Inspire hands &middot; Isaac Sim</p>
+        </div>
+        <dl class="dset__facts">
+          <div><dt>Size</dt><dd>18.1 GB</dd></div>
+          <div><dt>Tasks</dt><dd>4</dd></div>
+          <div><dt>Clips</dt><dd>6,055</dd></div>
+        </dl>
+        <p class="dset__what">
+          Dreams staged in rooms the model never trained in, for <code>insert_cans</code>,
+          <code>unload_cans</code>, <code>open_drawer</code> and <code>stack_can</code>. The data
+          behind the 10.4%&nbsp;&rarr;&nbsp;61.1% out-of-distribution result.
+        </p>
+        <a class="dset__link"
+           href="https://huggingface.co/datasets/hchen657Naza/egovla_dream_success_videos">
+          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Hugging Face
+        </a>
+      </li>
+
+      <li class="dset" style="--dset-accent:#2fa85a">
+        <div class="dset__hd">
+          <h3>Real-robot dreams and recordings</h3>
+          <p class="dset__robot">Tianji 7-DoF arm, 22-DoF Sharpa hand &middot; real hardware</p>
+        </div>
+        <dl class="dset__facts">
+          <div><dt>Size</dt><dd>2.7 GB</dd></div>
+          <div><dt>Tasks</dt><dd>3</dd></div>
+          <div><dt>Episodes</dt><dd>121</dd></div>
+        </dl>
+        <p class="dset__what">
+          Strike Peg, Pour and Use Tongs. Each task carries the <strong>real recordings</strong>,
+          the <strong>rendered skeletons</strong>, and the <strong>dreams</strong> generated from
+          them &mdash; the three columns shown in the real-robot section above, as files.
+        </p>
+        <a class="dset__link"
+           href="https://huggingface.co/datasets/hchen657Naza/realworld_vwm_all">
+          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Hugging Face
+        </a>
+      </li>
+    </ol>
+
+    <p class="gallery__note reveal">
+      Trained policy checkpoints and the system-identification results are not in these sets
+      &mdash; they are not data, and are kept separately. Code release is pending.
+    </p>
   </div>
 </section>
 

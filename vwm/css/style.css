@@ -2291,3 +2291,135 @@ button.rw-frame:hover {
   .domrail ol { flex-wrap: nowrap; }
   .domrail a { white-space: nowrap; }
 }
+
+/* =========================================================================
+   Dataset cards
+   -------------------------------------------------------------------------
+   Three cards, one per embodiment, each carrying the facts someone needs
+   before deciding to download: size, task count, clip count. The size is
+   given prominence because it is the one number that changes whether a reader
+   clicks, and burying it in prose would be the unhelpful choice.
+
+   Each card takes the accent of the domain section it corresponds to, so the
+   colour coding established by the scoreboard holds here too.
+   ========================================================================= */
+.dsets {
+  list-style: none;
+  margin: 32px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* subgrid so the three cards' facts rows and links align across columns
+     even when one card's prose runs a line longer */
+  grid-template-rows: auto auto auto 1fr auto;
+  gap: 18px;
+}
+.dset {
+  --dset-accent: var(--accent);
+  display: grid;
+  grid-row: span 5;
+  grid-template-rows: subgrid;
+  gap: 0;
+  padding: 20px 22px 22px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  /* the domain's colour as a top edge, which is the lightest way to tie a card
+     to its section without colouring the whole surface */
+  border-top: 3px solid var(--dset-accent);
+}
+.dset__hd h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.12rem;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+}
+.dset__robot {
+  margin: 5px 0 0;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.dset__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 22px;
+  margin: 15px 0 0;
+  padding: 13px 0 0;
+  border-top: 1px solid var(--rule);
+  font-family: var(--sans);
+}
+.dset__facts dt {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.dset__facts dd {
+  margin: 2px 0 0;
+  font-size: 1.02rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.dset__what {
+  margin: 14px 0 16px;
+  font-family: var(--serif);
+  font-size: 0.92rem;
+  line-height: 1.58;
+  color: var(--ink-soft);
+}
+.dset__what code {
+  font-size: 0.86em;
+  background: var(--bg-panel);
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+.dset__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  align-self: end;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--dset-accent);
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--dset-accent) 72%, #000 28%);
+  transition: background .18s, color .18s;
+}
+.dset__link:hover {
+  text-decoration: none;
+  background: var(--dset-accent);
+  color: #fff;
+}
+.dset__link:focus-visible { outline: 2px solid var(--dset-accent); outline-offset: 2px; }
+
+@media (max-width: 980px) {
+  .dsets { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .dset { grid-row: auto; grid-template-rows: none; }
+}
+
+/* A heading over each dataset group. The two groups are "what went in" and
+   "what came out", which is the distinction the whole page rests on, so it
+   gets a real heading rather than being implied by order. */
+.dsets__group {
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 34px 0 0;
+}
+.dsets__group + .dsets { margin-top: 14px; }
+/* Two cards should not stretch to a three-column track and leave a gap. */
+.dsets:has(> .dset:nth-child(2):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
