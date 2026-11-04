@@ -2128,7 +2128,9 @@ button.rw-frame:hover {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  /* Auto-fit, not a hard 4: the scoreboard carries one cell per claim, and that
+     count changes. A fixed track left an empty column when C1 came out. */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
   gap: 1px;                 /* hairline dividers, drawn by the cells' own rule */
   background: var(--rule);
   border: 1px solid var(--rule);

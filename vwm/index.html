@@ -155,7 +155,6 @@
       <span aria-hidden="true"></span>
     </a>
     <div class="hero__now">
-      <span class="glass glass--tag">Real rollout &middot; 5 real demos + 40 dreams</span>
       <button class="glass glass--btn hero__toggle" type="button" aria-controls="hero-video"
               aria-label="Pause background video" hidden>
         <svg class="i-pause" aria-hidden="true" width="14" height="14" viewBox="0 0 14 14"><rect x="2.4" y="1.6" width="3.2" height="10.8" rx="1" fill="currentColor"/><rect x="8.4" y="1.6" width="3.2" height="10.8" rx="1" fill="currentColor"/></svg>
@@ -201,15 +200,6 @@
   <div class="container">
     <h2 class="scoreboard__eyebrow" id="score-h">Every result, one screen</h2>
     <ol class="scoreboard__row">
-      <li class="score">
-        <a href="#method">
-          <span class="score__ix">C1</span>
-          <span class="score__big">21.47</span>
-          <span class="score__unit">PSNR</span>
-          <span class="score__what">One skeleton-conditioned model over four embodiments,
-            more accurate than action-conditioned baselines (20.56, 15.82).</span>
-        </a>
-      </li>
       <li class="score" style="--score-accent:#f08200">
         <a href="#robotwin-results">
           <span class="score__ix">C2</span>
@@ -231,10 +221,10 @@
       <li class="score" style="--score-accent:#2fa85a">
         <a href="#real-results-h">
           <span class="score__ix">C4</span>
-          <span class="score__big">50<span class="score__to">/</span>60</span>
-          <span class="score__unit">real trials, 3 tasks</span>
+          <span class="score__big">83.3<span class="score__pct">%</span></span>
+          <span class="score__unit">50 of 60 real trials</span>
           <span class="score__what">On hardware, from five real demonstrations. The real-only
-            policy manages 10/60.</span>
+            policy manages 10 of 60.</span>
         </a>
       </li>
     </ol>
@@ -352,26 +342,6 @@
            loading="lazy" decoding="async"/>
     </details>
 
-    <!-- C1 lives here rather than in a results section: it is a property of the
-         conditioning this section just described, not an outcome of a policy. -->
-    <ol class="results results--inline">
-      <li class="result reveal" aria-labelledby="c1-title">
-        <div class="result__badge">C1</div>
-        <div class="result__num">
-          <span class="result__big">21.47</span>
-          <span class="result__unit">PSNR</span>
-        </div>
-        <div class="result__body">
-          <h3 id="c1-title">Skeleton conditioning wins on every metric.</h3>
-          <p>
-            A single model covers four embodiments &mdash; two grippers and two dexterous hands &mdash; and predicts
-            future video more accurately than action-conditioned baselines
-            (RISE: 15.82 PSNR, Ctrl-World: 20.56; <strong>Ours: 21.47</strong>).
-            FVD drops to 154 from 361.
-          </p>
-        </div>
-      </li>
-    </ol>
   </div>
 </section>
 
@@ -389,11 +359,17 @@
          whichever is in view. -->
     <nav class="domrail" aria-label="In this section: RoboTwin">
       <ol>
-      <li><a href="#robotwin-dreamreal">Dream vs real</a></li>
       <li><a href="#robotwin-generalize">New scenes</a></li>
+      <li><a href="#robotwin-dreamreal">Dream vs real</a></li>
       <li><a href="#robotwin-results">Results</a></li>
       </ol>
     </nav>
+
+    <h3 class="dom__sub reveal" id="robotwin-generalize">It dreams in scene randomisations no recording session covered</h3>
+    <p class="section__kicker reveal">Top strip: what it saw during training. Bottom strip, drifting: where it dreams.</p>
+    <div id="rt-generalize">
+      <p class="gallery__loading">Loading&hellip;</p>
+    </div>
 
     <h3 class="dom__sub reveal" id="robotwin-dreamreal">The dream tracks the simulator’s own render</h3>
     <!-- The column key, stated once per domain. The skeleton is what goes in and the dream
@@ -425,12 +401,6 @@
       action skeleton. Hover a pair to play both in sync; click to enlarge.</p>
     <div id="rt-pairs">
       <p class="gallery__loading">Loading comparisons&hellip;</p>
-    </div>
-
-    <h3 class="dom__sub reveal" id="robotwin-generalize">It dreams in scene randomisations no recording session covered</h3>
-    <p class="section__kicker reveal">Top strip: what it saw during training. Bottom strip, drifting: where it dreams.</p>
-    <div id="rt-generalize">
-      <p class="gallery__loading">Loading&hellip;</p>
     </div>
 
     <h3 class="dom__sub reveal" id="robotwin-results">Pooled dreams beat the best single teacher, 70.6% to 63.1%</h3>
@@ -743,8 +713,8 @@
       <li class="result reveal" aria-labelledby="c4-title">
         <div class="result__badge">C4</div>
         <div class="result__num">
-          <span class="result__big">0/20 &rarr; 16/20</span>
-          <span class="result__unit">Strike Peg, real Sharpa hand</span>
+          <span class="result__big">83.3<span class="result__pct">%</span></span>
+          <span class="result__unit">3 tasks, 20 trials each</span>
         </div>
         <div class="result__body">
           <h3 id="c4-title">Dreams carry simulated trajectories onto real hardware.</h3>
