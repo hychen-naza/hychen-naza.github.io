@@ -115,6 +115,16 @@
   // belong to a different group than the video under it.
   let groups = [];
 
+  // Selector state. `active` is an index into groups, or -1 before the first
+  // activate(); the other three are null until buildSelector() runs, which it
+  // does not when there is only one group to show.
+  let active = -1;
+  let selList = null;
+  let selStage = null;
+  let selBtns = [];
+  let pickerHint = null;
+  let pickerBtn = null;
+
   // ---------------------------------------------------------- fetch + render
   fetch(DREAMS_URL, { cache: "no-store" })
     .then(r => {
@@ -178,18 +188,96 @@
     host.innerHTML = "";
     host.appendChild(buildPicker());
 
-    const stage = document.createElement("div");
-    stage.className = "rwd-stage";
     groups.forEach((g, i) => {
       g.titleId = `dreams-${g.block.key}-${slugify(g.entry[g.block.idKey] || g.name) || i}`;
       g.el = buildGroup(g);
-      stage.appendChild(g.el);
     });
-    host.appendChild(stage);
 
-    // every row starts on its group's first episode; shuffling is the only
-    // thing that moves it
-    for (const g of groups) showEpisode(g, 0);
+    // One group on screen, chosen from a column beside it, rather than all four
+    // stacked. Four three-up rows is four screens of scrolling for a comparison
+    // a reader makes one task at a time, and only the visible group decodes
+    // video — which matters here, where every row drives three clips off one clock.
+    if (groups.length > 1) {
+      host.appendChild(buildSelector());
+      activate(0);
+    } else {
+      const stage = document.createElement("div");
+      stage.className = "rwd-stage";
+      stage.appendChild(groups[0].el);
+      host.appendChild(stage);
+      showEpisode(groups[0], 0);
+    }
+  }
+
+  // ---------------------------------------------------------- task selector
+  function buildSelector() {
+    const wrap = document.createElement("div");
+    wrap.className = "sel";
+
+    selList = document.createElement("div");
+    selList.className = "sel__list";
+    selList.setAttribute("role", "tablist");
+    selList.setAttribute("aria-orientation", "vertical");
+    selList.setAttribute("aria-label", "Choose a task");
+
+    selStage = document.createElement("div");
+    selStage.className = "sel__stage rwd-stage";
+
+    selBtns = groups.map((g, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = `sel__btn sel__btn--${g.block.key}`;
+      b.setAttribute("role", "tab");
+      const n = g.episodes.length;
+      const sim = (g.entry.sim && g.entry.sim.clips || []).length;
+      b.innerHTML =
+        `<span class="sel__n" aria-hidden="true">${i + 1}</span>` +
+        `<span class="sel__text">` +
+          `<span class="sel__name">${esc(g.name)}</span>` +
+          `<span class="sel__meta">${n} episode${n === 1 ? "" : "s"}` +
+          (sim ? ` &middot; ${sim} sim rollout${sim === 1 ? "" : "s"}` : "") +
+          `</span></span>`;
+      b.addEventListener("click", () => activate(i));
+      b.addEventListener("keydown", e => {
+        const d = (e.key === "ArrowDown" || e.key === "ArrowRight") ? 1
+                : (e.key === "ArrowUp" || e.key === "ArrowLeft") ? -1 : 0;
+        if (!d) return;
+        e.preventDefault();
+        const j = (i + d + groups.length) % groups.length;
+        activate(j);
+        selBtns[j].focus();
+      });
+      selList.appendChild(b);
+      return b;
+    });
+
+    wrap.append(selList, selStage);
+    return wrap;
+  }
+
+  // Swap which group is on screen. The outgoing group's row is destroyed and
+  // detached, not parked: leaving it inside its own (detached) group element
+  // would mean the next activate() appends a second row beside it, and its
+  // clock's rAF loop would keep running for a group nobody can see.
+  function activate(i) {
+    if (i === active) return;
+    const prev = groups[active];
+    if (prev) {
+      teardownRow(prev.row);
+      if (prev.row) prev.row.remove();
+      prev.row = null;
+      prev.cur = -1;
+    }
+    active = i;
+    const g = groups[i];
+    selStage.innerHTML = "";
+    selStage.appendChild(g.el);
+    selBtns.forEach((b, n) => {
+      b.setAttribute("aria-selected", String(n === i));
+      b.tabIndex = n === i ? 0 : -1;
+    });
+    showEpisode(g, 0);
+    refreshPickerHint();
   }
 
   function entriesOf(data, block) {
@@ -217,27 +305,42 @@
 
     const hint = document.createElement("p");
     hint.className = "rwd-shuffle__hint";
-    // counted off the index rather than written down: how many rows one click
-    // re-rolls, and how big the pool it draws from is
-    const pool = groups.reduce((n, g) => n + g.episodes.length, 0);
-    const eps = `${pool} recorded ${pool === 1 ? "episode" : "episodes"}`;
-    hint.textContent = groups.length > 1
-      ? `one click re-rolls all ${groups.length} rows, drawing from ${eps}`
-      : `one click re-rolls this row, drawing from ${eps}`;
 
-    // nothing to re-roll if no group has a second episode; a button that
-    // cannot change anything says so rather than looking broken
-    btn.disabled = !groups.some(g => g.episodes.length > 1);
-
+    pickerBtn = btn;
+    pickerHint = hint;
     strip.append(btn, hint);
+    refreshPickerHint();
     return strip;
   }
 
-  // One click, every row: each group draws independently from its own episodes
-  // and never lands on the one it is already showing, so a shuffle is always
-  // visibly a shuffle.
+  // The hint has to be recomputed on every task switch, not written once: with
+  // one group on screen, Shuffle re-rolls that group only, and its pool is the
+  // selected task's episode count. A fixed "re-rolls all 4 rows" line would be
+  // describing behaviour the selector removed.
+  function refreshPickerHint() {
+    if (!pickerHint) return;
+    const g = groups[active];
+    if (g) {
+      const n = g.episodes.length;
+      pickerHint.textContent = n > 1
+        ? `one click re-rolls the ${g.name} row, drawing from its ${n} recorded episodes`
+        : `${g.name} has only one recorded episode, so there is nothing to re-roll`;
+      if (pickerBtn) pickerBtn.disabled = n < 2;
+      return;
+    }
+    const pool = groups.reduce((n, x) => n + x.episodes.length, 0);
+    pickerHint.textContent =
+      `one click re-rolls this row, drawing from ${pool} recorded ` +
+      `${pool === 1 ? "episode" : "episodes"}`;
+    if (pickerBtn) pickerBtn.disabled = !groups.some(x => x.episodes.length > 1);
+  }
+
+  // Re-roll whichever group is on screen. Groups that are not displayed have no
+  // row to re-roll — their row was destroyed when they were switched away from,
+  // and they rebuild on episode 0 when selected again.
   function shuffleAll() {
     for (const g of groups) {
+      if (active >= 0 && g !== groups[active]) continue;
       const j = pickOther(g);
       if (j !== g.cur) showEpisode(g, j);
     }
@@ -273,7 +376,59 @@
       ${block.note ? `<p class="rwd-group__note">${esc(squash(block.note))}</p>` : ""}
       ${caveat.group ? `<p class="rwd-group__note">${esc(squash(caveat.group))}</p>` : ""}`;
     group.appendChild(hdr);
+
+    const sim = buildSimBand(entry);
+    if (sim) group.appendChild(sim);
+
     return group;
+  }
+
+  // The simulator rollouts this task's skeletons were fitted to, replayed
+  // through the real camera's calibrated pose. Deliberately a band of its own
+  // rather than a fourth column in the row below: the row slaves its clips to
+  // one clock because they are the same episode at the same instant, and these
+  // are a different trajectory of a different length. Dropping them into that
+  // row would put three aligned clips and one unaligned one under one clock and
+  // invite the reader to compare frames that do not correspond.
+  function buildSimBand(entry) {
+    const clips = (entry.sim && Array.isArray(entry.sim.clips))
+      ? entry.sim.clips.filter(c => c && c.src) : [];
+    if (!clips.length) return null;
+
+    const band = document.createElement("div");
+    band.className = "rwd-sim";
+
+    const head = document.createElement("div");
+    head.className = "rwd-sim__head";
+    head.innerHTML =
+      `<p class="rwd-sim__eyebrow">Source trajectory</p>` +
+      `<p class="rwd-sim__label">${esc(entry.sim.label || "Simulator rollout")}</p>` +
+      (entry.sim.note ? `<p class="rwd-sim__note">${esc(squash(entry.sim.note))}</p>` : "");
+
+    const strip = document.createElement("div");
+    strip.className = "rwd-sim__clips";
+    for (const c of clips) {
+      const fig = document.createElement("figure");
+      fig.className = "rwd-sim__clip";
+      const v = document.createElement("video");
+      v.src = c.src;
+      v.muted = true;
+      v.loop = true;
+      v.playsInline = true;
+      v.preload = "metadata";
+      v.setAttribute("aria-label", c.label ? `Simulator rollout, ${c.label}` : "Simulator rollout");
+      // poster path is derived the same way main.js derives its own
+      v.poster = "videos/thumbs/" + String(c.src).replace(/^videos\//, "")
+        .replace(/\.mp4$/i, ".webp");
+      if (!DR_REDUCED) v.autoplay = true;
+      const cap = document.createElement("figcaption");
+      cap.textContent = c.label || "";
+      fig.append(v, cap);
+      strip.appendChild(fig);
+    }
+
+    band.append(head, strip);
+    return band;
   }
 
   // Swap in one of this group's episodes: build the new row first, then tear

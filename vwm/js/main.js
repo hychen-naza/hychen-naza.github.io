@@ -399,10 +399,24 @@
 
       const seen = document.createElement("div");
       seen.className = "gen-band__clips";
+      // Clips that share a `group` are one comparison — the same task in the
+      // clean and the randomised scene — so they go in a wrapper that wraps as
+      // a unit. Without it, fourteen loose tiles reflow into rows of five and
+      // a task's two scenes end up on different lines, which is precisely the
+      // pairing the band exists to show. Ungrouped clips stay loose tiles.
+      let pen = null, penKey = null;
       for (const c of row.trained_on.clips) {
-        seen.appendChild(makeTile(VIDEOS_BASE + c.local_path, {
+        const tile = makeTile(VIDEOS_BASE + c.local_path, {
           label: c.label, aspect: "4 / 3", accent: "var(--anchor)",
-        }));
+        });
+        if (!c.group) { seen.appendChild(tile); pen = penKey = null; continue; }
+        if (c.group !== penKey) {
+          pen = document.createElement("div");
+          pen.className = "gen-pair";
+          penKey = c.group;
+          seen.appendChild(pen);
+        }
+        pen.appendChild(tile);
       }
 
       const asItem = c => ({
@@ -847,9 +861,14 @@
     // comparison a reader makes one task at a time anyway, and it buries the
     // results card below it. One row on screen, chips to switch.
     if (rows.length > 1 && section.selector) {
+      // Buttons in a column beside the stage, not a strip above it. A row of
+      // chips has to stay short to fit the width, which caps how much each one
+      // can say; a column is as tall as it likes, so the task name and its
+      // score both get room and the video keeps the full width beside them.
       const strip = document.createElement("div");
-      strip.className = "rw-tabs";
+      strip.className = "rw-tabs sel__list";
       strip.setAttribute("role", "tablist");
+      strip.setAttribute("aria-orientation", "vertical");
       strip.setAttribute("aria-label", `Choose a ${section.noun}`);
 
       const stage = document.createElement("div");
@@ -864,12 +883,19 @@
         // The outcome rides on the chip, so the selector doubles as the result
         // table: a reader sees all three scores without clicking through.
         const score = row.score || (row.ours && row.ours.score) || "";
-        b.innerHTML = `<span class="rw-tab__name">${escapeHTML(row.label || "")}</span>` +
-                      (score ? `<span class="rw-tab__score">${escapeHTML(score)}</span>` : "");
+        b.innerHTML =
+          `<span class="sel__n" aria-hidden="true">${i + 1}</span>` +
+          `<span class="sel__text">` +
+            `<span class="rw-tab__name">${escapeHTML(row.label || "")}</span>` +
+            (score ? `<span class="rw-tab__score">${escapeHTML(score)}</span>` : "") +
+          `</span>`;
         b.addEventListener("click", () => show(i));
         // arrow keys move between tabs, which is what a tablist owes a keyboard user
         b.addEventListener("keydown", e => {
-          const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+          // vertical tablist, so Up/Down are the primary keys; Left/Right are
+          // kept because a reader who learned them on the old strip still has them
+          const d = (e.key === "ArrowDown" || e.key === "ArrowRight") ? 1
+                  : (e.key === "ArrowUp" || e.key === "ArrowLeft") ? -1 : 0;
           if (!d) return;
           e.preventDefault();
           const n = (i + d + rows.length) % rows.length;
@@ -898,7 +924,10 @@
         observeRealworldRows(stage);
       }
 
-      host.append(strip, stage);
+      const wrap = document.createElement("div");
+      wrap.className = "sel";
+      wrap.append(strip, stage);
+      host.appendChild(wrap);
       show(0);
       return;
     }

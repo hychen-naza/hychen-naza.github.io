@@ -366,24 +366,78 @@
     "robot": "ALOHA-AgileX \u00b7 parallel-jaw \u00b7 simulation",
     "axis": "scene randomization",
     "trained_on": {
-     "label": "Clean tabletop",
-     "note": "80% of the world model's RoboTwin episodes are the default clean scene.",
+     "label": "Clean and randomised tabletop",
+     "note": "All seven tasks, both scene settings. The world model's RoboTwin training mix is 72% default clean scene and 28% randomised, so most of what it saw was the tidy tabletop.",
      "clips": [
       {
-       "src": "../hf_figure_plot/dream_videos_plot/src/robotwin/stack_bowls_two_clean_set1_s910301_ep1_side_by_side.mp4",
-       "local_path": "generalize/RoboTwin/trained_stack_bowls_clean.mp4",
-       "label": "Stack bowls \u00b7 clean",
-       "crop": "640:480:0:0"
+       "local_path": "generalize/RoboTwin/trained_click_bell_clean.mp4",
+       "label": "Click bell \u00b7 clean",
+       "group": "click_bell"
       },
       {
-       "src": "videos/dreamvsreal/RoboTwin/grab_roller_clean/real.mp4",
+       "local_path": "generalize/RoboTwin/trained_click_bell_rand.mp4",
+       "label": "Click bell \u00b7 randomised scene",
+       "group": "click_bell"
+      },
+      {
+       "local_path": "generalize/RoboTwin/trained_dump_bin_bigbin_clean.mp4",
+       "label": "Dump bin \u00b7 clean",
+       "group": "dump_bin_bigbin"
+      },
+      {
+       "local_path": "generalize/RoboTwin/trained_dump_bin_bigbin_rand.mp4",
+       "label": "Dump bin \u00b7 randomised scene",
+       "group": "dump_bin_bigbin"
+      },
+      {
        "local_path": "generalize/RoboTwin/trained_grab_roller_clean.mp4",
-       "label": "Grab roller \u00b7 clean"
+       "label": "Grab roller \u00b7 clean",
+       "group": "grab_roller"
       },
       {
-       "src": "videos/dreamvsreal/RoboTwin/handover_mic_clean/real.mp4",
+       "local_path": "generalize/RoboTwin/trained_grab_roller_rand.mp4",
+       "label": "Grab roller \u00b7 randomised scene",
+       "group": "grab_roller"
+      },
+      {
        "local_path": "generalize/RoboTwin/trained_handover_mic_clean.mp4",
-       "label": "Handover mic \u00b7 clean"
+       "label": "Handover mic \u00b7 clean",
+       "group": "handover_mic"
+      },
+      {
+       "local_path": "generalize/RoboTwin/trained_handover_mic_rand.mp4",
+       "label": "Handover mic \u00b7 randomised scene",
+       "group": "handover_mic"
+      },
+      {
+       "local_path": "generalize/RoboTwin/trained_place_container_plate_clean.mp4",
+       "label": "Place container \u00b7 clean",
+       "group": "place_container_plate"
+      },
+      {
+       "local_path": "generalize/RoboTwin/trained_place_container_plate_rand.mp4",
+       "label": "Place container \u00b7 randomised scene",
+       "group": "place_container_plate"
+      },
+      {
+       "local_path": "generalize/RoboTwin/trained_shake_bottle_clean.mp4",
+       "label": "Shake bottle \u00b7 clean",
+       "group": "shake_bottle"
+      },
+      {
+       "local_path": "generalize/RoboTwin/trained_shake_bottle_rand.mp4",
+       "label": "Shake bottle \u00b7 randomised scene",
+       "group": "shake_bottle"
+      },
+      {
+       "local_path": "generalize/RoboTwin/trained_stack_bowls_two_clean.mp4",
+       "label": "Stack bowls \u00b7 clean",
+       "group": "stack_bowls_two"
+      },
+      {
+       "local_path": "generalize/RoboTwin/trained_stack_bowls_two_rand.mp4",
+       "label": "Stack bowls \u00b7 randomised scene",
+       "group": "stack_bowls_two"
       }
      ]
     },

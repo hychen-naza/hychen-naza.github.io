@@ -1417,6 +1417,16 @@ code {
   gap: 12px;
 }
 .gen-band__clips .tile { width: clamp(150px, 17vw, 210px); flex: none; }
+/* one task's two scenes, kept on the same line and visibly one unit */
+.gen-pair {
+  display: flex;
+  gap: 6px;
+  flex: none;
+  padding: 6px;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+}
+.gen-pair .tile { width: clamp(132px, 13vw, 184px); }
 
 /* The dreams strip runs edge to edge of the card; bleed it past the padding so
    clips really do leave the frame rather than stopping short of it. */
@@ -2565,11 +2575,111 @@ button.rw-frame:hover {
    reader sees all three outcomes without clicking through, which a plain tab
    strip would hide.
    ========================================================================= */
+/* ---------------------------------------------------------------- selector
+   A task list in a column beside the thing it selects, shared by the
+   real-robot rows and the real-world dream rows. Two reasons it is a column
+   and not a strip: a row of buttons has to stay short to fit the width, which
+   caps what each button can say, and a 16:9 video wants the width more than
+   the buttons do. `align-items: start` so the column does not stretch to the
+   height of a tall stage and leave the buttons floating in the middle.
+
+   Below 900px it folds back to a row above the stage, because at phone width a
+   fixed sidebar would leave the video about 60% of a narrow screen. */
+.sel {
+  display: grid;
+  grid-template-columns: minmax(13rem, 17rem) minmax(0, 1fr);
+  gap: clamp(16px, 2.2vw, 30px);
+  align-items: start;
+}
+.sel__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  position: sticky;
+  /* a tall stage scrolls past; the list stays reachable beside it */
+  top: 84px;
+}
+.sel__stage { min-width: 0; }
+
+.sel__btn {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--rule-strong);
+  background: var(--bg);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .18s, background .18s, transform .08s;
+}
+.sel__btn:hover { border-color: var(--dom-accent, var(--accent)); }
+.sel__btn:active { transform: translateY(1px); }
+.sel__btn:focus-visible {
+  outline: 2px solid var(--dom-accent, var(--accent));
+  outline-offset: 2px;
+}
+.sel__n {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  flex: 0 0 auto;
+}
+.sel__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sel__name {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.sel__meta {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.sel__btn[aria-selected="true"] {
+  background: var(--dom-accent, var(--accent));
+  border-color: var(--dom-accent, var(--accent));
+}
+.sel__btn[aria-selected="true"] .sel__name { color: #08130c; }
+.sel__btn[aria-selected="true"] .sel__meta,
+.sel__btn[aria-selected="true"] .sel__n { color: rgba(8,19,12,.72); }
+
+@media (max-width: 900px) {
+  .sel { grid-template-columns: minmax(0, 1fr); }
+  .sel__list { flex-direction: row; flex-wrap: wrap; position: static; }
+  .sel__list > .sel__btn, .sel__list > .rw-tab { width: auto; }
+}
+
 .rw-tabs {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin: 0 0 16px;
+}
+/* in the sidebar the chips are the column, so they fill it and stack */
+.sel > .rw-tabs {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  margin: 0;
+  position: sticky;
+  top: 84px;
+}
+.sel > .rw-tabs > .rw-tab {
+  width: 100%;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 10px;
+  text-align: left;
+  padding: 11px 14px;
+}
+@media (max-width: 900px) {
+  .sel > .rw-tabs { flex-direction: row; flex-wrap: wrap; position: static; }
+  .sel > .rw-tabs > .rw-tab { width: auto; }
 }
 .rw-tab {
   display: flex;
@@ -2604,5 +2714,64 @@ button.rw-frame:hover {
   border-color: var(--dom-accent, var(--accent));
 }
 .rw-tab[aria-selected="true"] .rw-tab__name { color: #08130c; }
-.rw-tab[aria-selected="true"] .rw-tab__score { color: rgba(8,19,12,.72); }
+.rw-tab[aria-selected="true"] .rw-tab__score,
+.rw-tab[aria-selected="true"] .sel__n { color: rgba(8,19,12,.72); }
 .rw-stage > .rw-row { margin: 0; }
+
+/* ------------------------------------------------- simulator source band
+   The rollouts a task's skeletons were fitted to. Set apart from the
+   real/skeleton/dream row below it because it is NOT the same episode: it is
+   where the trajectory came from, at its own length and its own instant. */
+.rwd-sim {
+  margin: 0 0 clamp(16px, 2vw, 26px);
+  padding: clamp(12px, 1.4vw, 18px);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--dom-accent, var(--accent));
+  border-radius: 12px;
+  background: var(--bg-soft, rgba(127,127,127,.05));
+}
+.rwd-sim__head { margin: 0 0 12px; }
+.rwd-sim__eyebrow {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--dom-accent, var(--accent));
+}
+.rwd-sim__label {
+  margin: 2px 0 0;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.rwd-sim__note {
+  margin: 5px 0 0;
+  max-width: 62ch;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.rwd-sim__clips {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: 12px;
+}
+.rwd-sim__clip { margin: 0; min-width: 0; }
+.rwd-sim__clip video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 9px;
+  background: #0d0f12;
+}
+.rwd-sim__clip figcaption {
+  margin-top: 5px;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
