@@ -566,19 +566,24 @@
 
     <h3 class="dom__sub reveal" id="real-dreams-h">Simulator trajectories, dreamed into the robot’s own camera view</h3>
     <p class="section__kicker reveal">
-      Pick a task on the left. Each one opens with the <strong>simulator rollouts</strong> its
-      skeletons were fitted to &mdash; replayed through the real camera's own calibrated pose, so
-      the viewpoint is the robot's even though the scene is the simulator's &mdash; and then one
-      recorded episode shown three ways: the <strong>real recording</strong>, the
-      <strong>rendered skeleton</strong> that conditions the world model, and the
-      <strong>dream</strong> the model generates from that skeleton. Shuffle re-rolls which
-      recorded episode is on screen. The three clips in that row are the same length and run off a
+      Pick a task on the left. Four clips, read across then down: the
+      <strong>simulator rollout</strong> the trajectory came from &mdash; replayed through the real
+      camera's own calibrated pose, so the viewpoint is the robot's even though the scene is the
+      simulator's &mdash; the <strong>rendered skeleton</strong> drawn from it, the
+      <strong>dream</strong> the world model generates from that skeleton, and the
+      <strong>real recording</strong> of the task on hardware. Shuffle re-rolls which recorded
+      episode is on screen. The skeleton, dream and real clips are the same episode and run off a
       single clock, so whatever differs between them is the model and not three video players
-      drifting apart; the simulator rollouts above are a different trajectory and keep their own
-      band for that reason.
+      drifting apart; the simulator rollout is a different trajectory of a different length, so it
+      keeps its own position and is marked with a dotted edge.
     </p>
 
-    <ul class="rwd-key" aria-label="What the three columns are">
+    <ul class="rwd-key" aria-label="What the four cells are">
+      <li class="rwd-key__item rwd-key__item--sim">
+        <span class="rwd-key__swatch" aria-hidden="true"></span>
+        <span class="rwd-key__name">Simulator rollout</span>
+        <span class="rwd-key__role">source trajectory &mdash; a different episode</span>
+      </li>
       <li class="rwd-key__item rwd-key__item--real">
         <span class="rwd-key__swatch" aria-hidden="true"></span>
         <span class="rwd-key__name">Real</span>

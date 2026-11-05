@@ -46,12 +46,18 @@
   // the first column and shares its accent. This table is structure, not data:
   // every label, caption, id, count and path comes from DREAMS.json.
   const ROLES = {
+    sim:      { eyebrow: "Simulator rollout", role: "source trajectory", legend: "rwd-sim" },
     real:     { eyebrow: "Real",             role: "ground truth", legend: "rwd-real" },
     anchor:   { eyebrow: "Real start frame", role: "ground truth", legend: "rwd-real" },
     skeleton: { eyebrow: "Skeleton",         role: "conditioning input", legend: "rwd-skel" },
     dream:    { eyebrow: "Dream",            role: "generated", legend: "rwd-dream" },
   };
-  const COLUMNS = ["real", "skeleton", "dream"];
+  // Two by two, reading across then down: where the motion came from and what
+  // was drawn from it on the top row, what the model made of that and what the
+  // robot actually did on the bottom. `sim` is the only cell that does not come
+  // from the episode — it is the task's source rollout, a different trajectory
+  // of a different length, so it is never slaved to the row's clock.
+  const COLUMNS = ["sim", "skeleton", "dream", "real"];
 
   // The two blocks of the file, in the order they appear on the page. Each
   // names the key its entries are identified by and the standing caveat that
@@ -377,58 +383,7 @@
       ${caveat.group ? `<p class="rwd-group__note">${esc(squash(caveat.group))}</p>` : ""}`;
     group.appendChild(hdr);
 
-    const sim = buildSimBand(entry);
-    if (sim) group.appendChild(sim);
-
     return group;
-  }
-
-  // The simulator rollouts this task's skeletons were fitted to, replayed
-  // through the real camera's calibrated pose. Deliberately a band of its own
-  // rather than a fourth column in the row below: the row slaves its clips to
-  // one clock because they are the same episode at the same instant, and these
-  // are a different trajectory of a different length. Dropping them into that
-  // row would put three aligned clips and one unaligned one under one clock and
-  // invite the reader to compare frames that do not correspond.
-  function buildSimBand(entry) {
-    const clips = (entry.sim && Array.isArray(entry.sim.clips))
-      ? entry.sim.clips.filter(c => c && c.src) : [];
-    if (!clips.length) return null;
-
-    const band = document.createElement("div");
-    band.className = "rwd-sim";
-
-    const head = document.createElement("div");
-    head.className = "rwd-sim__head";
-    head.innerHTML =
-      `<p class="rwd-sim__eyebrow">Source trajectory</p>` +
-      `<p class="rwd-sim__label">${esc(entry.sim.label || "Simulator rollout")}</p>` +
-      (entry.sim.note ? `<p class="rwd-sim__note">${esc(squash(entry.sim.note))}</p>` : "");
-
-    const strip = document.createElement("div");
-    strip.className = "rwd-sim__clips";
-    for (const c of clips) {
-      const fig = document.createElement("figure");
-      fig.className = "rwd-sim__clip";
-      const v = document.createElement("video");
-      v.src = c.src;
-      v.muted = true;
-      v.loop = true;
-      v.playsInline = true;
-      v.preload = "metadata";
-      v.setAttribute("aria-label", c.label ? `Simulator rollout, ${c.label}` : "Simulator rollout");
-      // poster path is derived the same way main.js derives its own
-      v.poster = "videos/thumbs/" + String(c.src).replace(/^videos\//, "")
-        .replace(/\.mp4$/i, ".webp");
-      if (!DR_REDUCED) v.autoplay = true;
-      const cap = document.createElement("figcaption");
-      cap.textContent = c.label || "";
-      fig.append(v, cap);
-      strip.appendChild(fig);
-    }
-
-    band.append(head, strip);
-    return band;
   }
 
   // Swap in one of this group's episodes: build the new row first, then tear
@@ -533,17 +488,20 @@
     hdr.appendChild(ctrls);
     art.appendChild(hdr);
 
-    // ---- real (or its still) | skeleton | dream, always in that order so the
-    // eye can run down a column across rows
-    const trio = document.createElement("div");
-    trio.className = "rwd-trio";
+    // ---- sim | skeleton over dream | real, always in that order so the eye
+    // can run down a column across rows
+    const quad = document.createElement("div");
+    quad.className = "rwd-quad";
     for (const col of COLUMNS) {
       // An OOD episode has no `real` video, only an `anchor` still. Fall back
-      // to it for the first column rather than rendering an empty cell.
+      // to it for that cell rather than rendering an empty one.
       const kind = (col === "real" && !asset(ep.real) && asset(ep.anchor)) ? "anchor" : col;
-      trio.appendChild(buildCell(kind, ep, name, caveat, clock));
+      // A task with no sim rollout published simply has no such cell; the grid
+      // reflows to what is there instead of leaving a labelled hole.
+      if (kind === "sim" && !simSrc(entry)) continue;
+      quad.appendChild(buildCell(kind, ep, name, caveat, clock, entry));
     }
-    art.appendChild(trio);
+    art.appendChild(quad);
 
     clock.setPaused(DR_REDUCED);
     applyPaused();
@@ -551,9 +509,15 @@
     return art;
   }
 
-  function buildCell(kind, ep, name, caveat, clock) {
+  // The one clip whose source is the task, not the episode on screen.
+  function simSrc(entry) {
+    const c = entry && entry.sim && Array.isArray(entry.sim.clips) ? entry.sim.clips[0] : null;
+    return c && c.src ? c.src : "";
+  }
+
+  function buildCell(kind, ep, name, caveat, clock, entry) {
     const role = ROLES[kind];
-    const src = asset(ep[kind]);
+    const src = kind === "sim" ? simSrc(entry) : asset(ep[kind]);
     const isStill = kind === "anchor";
 
     const fig = document.createElement("figure");
@@ -612,8 +576,13 @@
         frame.disabled = true;
       });
       frame.appendChild(v);
-      clock.add(v);
-      frame.addEventListener("click", () => openInLightbox(frame, kind, ep, name));
+      // The three episode clips are steered onto one clock because they are the
+      // same instant of the same episode. The sim rollout is not: it is another
+      // trajectory at another length, so it follows the row's play/pause and
+      // on-screen state but keeps its own position. Putting it on the clock
+      // would seek it to a time that means nothing in its own timeline.
+      if (kind === "sim") clock.addLoose(v); else clock.add(v);
+      frame.addEventListener("click", () => openInLightbox(frame, kind, ep, name, src));
     }
     fig.appendChild(frame);
 
@@ -661,6 +630,11 @@
 
   function makeClock(initialDuration) {
     const members = [];
+    // Clips that follow this row's play/pause and on-screen state but keep
+    // their own position: the simulator rollout is a different trajectory of a
+    // different length, so steering it onto `t` would seek it to a time that
+    // means nothing in its own timeline.
+    const loose = [];
     let duration = initialDuration > 0 ? initialDuration : 0;
     let t = 0, last = 0, raf = 0, paused = false, onScreen = false, dead = false;
 
@@ -714,6 +688,7 @@
     function run() {
       if (dead || paused || !onScreen) return;
       for (const v of members) v.play().catch(() => {});
+      for (const v of loose) v.play().catch(() => {});
       schedule();
     }
 
@@ -722,6 +697,7 @@
       raf = 0;
       last = 0;   // so the next frame starts with dt = 0 rather than the gap
       for (const v of members) { try { v.pause(); } catch (_e) {} }
+      for (const v of loose) { try { v.pause(); } catch (_e) {} }
     }
 
     return {
@@ -735,10 +711,17 @@
         });
         if (!paused && onScreen) run();
       },
+      addLoose(v) {
+        if (dead) return;
+        loose.push(v);
+        if (!paused && onScreen) run();
+      },
       drop(v) {
-        const i = members.indexOf(v);
-        if (i >= 0) members.splice(i, 1);
-        if (!members.length) halt();
+        for (const list of [members, loose]) {
+          const i = list.indexOf(v);
+          if (i >= 0) list.splice(i, 1);
+        }
+        if (!members.length && !loose.length) halt();
       },
       paused: () => paused,
       setPaused(p) {
@@ -755,6 +738,7 @@
         if (dead) return;
         t = 0;
         for (const v of members) seek(v, 0);
+        for (const v of loose) seek(v, 0);
         paused = false;
         run();
       },
@@ -766,6 +750,7 @@
         onScreen = false;
         halt();
         members.length = 0;
+        loose.length = 0;
       },
     };
   }
@@ -799,7 +784,7 @@
   let lbTrigger = null;
   let lbWatcher = null;
 
-  function openInLightbox(trigger, kind, ep, name) {
+  function openInLightbox(trigger, kind, ep, name, srcOverride) {
     const lb = document.getElementById("lightbox");
     const title = document.getElementById("lb-title");
     const sub = document.getElementById("lb-sub");
@@ -807,7 +792,8 @@
     const legend = document.getElementById("lb-legend");
     if (!lb || !vid) return;
     const role = ROLES[kind];
-    const src = asset(ep[kind]);
+    // `sim` has no entry on the episode, so the cell passes its own src
+    const src = srcOverride || asset(ep[kind]);
     if (!src) return;
 
     // main.js's dream-vs-real lightbox parks a two-video row beside #lb-video

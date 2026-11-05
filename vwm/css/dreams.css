@@ -45,6 +45,7 @@
   line-height: 1.35;
   box-shadow: var(--shadow-sm);
 }
+.rwd-key__item--sim      { --key-accent: #6f7b8c; }
 .rwd-key__item--real     { --key-accent: var(--real); }
 .rwd-key__item--skeleton { --key-accent: var(--skel); }
 .rwd-key__item--dream    { --key-accent: var(--dream); }
@@ -182,13 +183,20 @@
   gap: 8px;
 }
 
-/* ----------- the three-up ----------- */
-.rwd-trio {
+/* ----------- the two-by-two -----------
+   sim | skeleton on the top row, dream | real on the bottom: where the motion
+   came from and what was drawn from it, then what the model made of it and
+   what the robot did. Two columns rather than four in a line, so each clip is
+   about twice the width it had as a third of a row. */
+.rwd-quad {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
   background: var(--rule);
 }
+/* a task with no published sim rollout drops to three cells; the odd one out
+   spans both columns rather than leaving a gap beside it */
+.rwd-quad > .rwd-cell:nth-child(3):last-child { grid-column: 1 / -1; }
 .rwd-cell {
   margin: 0;
   padding: 13px 16px 15px;
@@ -198,6 +206,8 @@
 .rwd-cell--real     { --cell-accent: var(--real); }
 .rwd-cell--anchor   { --cell-accent: var(--real); }
 .rwd-cell--skeleton { --cell-accent: var(--skel); border-top-style: dashed; }
+/* dotted, because this cell is the only one that is not the episode on screen */
+.rwd-cell--sim      { --cell-accent: #6f7b8c; border-top-style: dotted; }
 .rwd-cell--dream    { --cell-accent: var(--dream); }
 
 .rwd-cell__head {
@@ -325,12 +335,13 @@ button.rwd-frame:hover {
 .lightbox__legend .legend--rwd-real  { color: var(--real);  border-top-color: var(--real); }
 .lightbox__legend .legend--rwd-skel  { color: #9aa3b2;      border-top-color: #9aa3b2; }
 .lightbox__legend .legend--rwd-dream { color: var(--dream); border-top-color: var(--dream); }
+.lightbox__legend .legend--rwd-sim   { color: #6f7b8c;      border-top-color: #6f7b8c; }
 
 /* ----------- responsive ----------- */
-/* 1180px of container gives three 448-wide clips room to breathe; below that
-   they stack, in the same real -> skeleton -> dream reading order. */
+/* Below 900px the two columns stack into one, keeping the same
+   sim -> skeleton -> dream -> real reading order. */
 @media (max-width: 900px) {
-  .rwd-trio { grid-template-columns: 1fr; }
+  .rwd-quad { grid-template-columns: 1fr; }
   .rwd-row__hdr { flex-wrap: wrap; }
   .rwd-row__cond { margin-left: 0; order: 3; }
   .rwd-row__ctrls { margin-left: auto; }

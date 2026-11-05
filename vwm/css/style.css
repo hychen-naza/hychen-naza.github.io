@@ -1417,16 +1417,9 @@ code {
   gap: 12px;
 }
 .gen-band__clips .tile { width: clamp(150px, 17vw, 210px); flex: none; }
-/* one task's two scenes, kept on the same line and visibly one unit */
-.gen-pair {
-  display: flex;
-  gap: 6px;
-  flex: none;
-  padding: 6px;
-  border: 1px solid var(--rule);
-  border-radius: 12px;
-}
-.gen-pair .tile { width: clamp(132px, 13vw, 184px); }
+/* the trained-on stripe: same tile width as the static band it replaces, so
+   switching one row to a marquee does not change the band's height */
+.gen-band__stripe .tile { width: clamp(150px, 17vw, 210px); flex: none; }
 
 /* The dreams strip runs edge to edge of the card; bleed it past the padding so
    clips really do leave the frame rather than stopping short of it. */
@@ -2718,60 +2711,2716 @@ button.rw-frame:hover {
 .rw-tab[aria-selected="true"] .sel__n { color: rgba(8,19,12,.72); }
 .rw-stage > .rw-row { margin: 0; }
 
-/* ------------------------------------------------- simulator source band
-   The rollouts a task's skeletons were fitted to. Set apart from the
-   real/skeleton/dream row below it because it is NOT the same episode: it is
-   where the trajectory came from, at its own length and its own instant. */
-.rwd-sim {
-  margin: 0 0 clamp(16px, 2vw, 26px);
-  padding: clamp(12px, 1.4vw, 18px);
-  border: 1px solid var(--rule);
-  border-left: 3px solid var(--dom-accent, var(--accent));
-  border-radius: 12px;
-  background: var(--bg-soft, rgba(127,127,127,.05));
+/* ============================================================
+   DreamRehearse project page
+   Palette lifted from the paper figures:
+     --accent  (dream)  : #f08200
+     --anchor  (real)   : #00aa00
+     --action           : #2a78d6
+   Typography:
+     Serif body : Source Serif 4, Charter, Georgia
+     UI chrome  : Inter, system-ui
+   ============================================================ */
+
+:root {
+  --accent: #f08200;
+  --accent-dk: #c86a00;
+  --accent-tint: #fff2e1;
+  --anchor: #00aa00;
+  --anchor-dk: #087b2b;
+  --action: #2a78d6;
+
+  /* the two-way pair used wherever a dream-trained thing sits next to a
+     real-only one (dream-vs-real tabs, real-robot ours-vs-base rows) */
+  --dream: #f08200;
+  --real: #2a78d6;
+  /* rollout outcomes; deliberately neither of the two accents above, so a
+     verdict is never read as a side */
+  --ok: #0f8a3c;
+  --bad: #c62828;
+
+  --ink: #0e1116;
+  --ink-soft: #2b313b;
+  --muted: #5d6472;
+  --rule: #e4e7ec;
+  --rule-strong: #c8cdd4;
+  --bg: #ffffff;
+  --bg-alt: #fafaf7;
+  --bg-panel: #f6f6f2;
+
+  --shadow-sm: 0 1px 2px rgba(14,17,22,.04), 0 1px 3px rgba(14,17,22,.06);
+  --shadow-md: 0 4px 10px rgba(14,17,22,.06), 0 8px 24px rgba(14,17,22,.08);
+  --shadow-lg: 0 10px 40px rgba(14,17,22,.14);
+
+  --maxw: 1180px;
+  --maxw-narrow: 760px;
+  --radius: 14px;
+  --radius-sm: 8px;
+
+  --serif: "Source Serif 4", Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
 }
-.rwd-sim__head { margin: 0 0 12px; }
-.rwd-sim__eyebrow {
+
+/* ----------- reset-ish ----------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
   margin: 0;
-  font-family: var(--sans);
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: .09em;
-  text-transform: uppercase;
-  color: var(--dom-accent, var(--accent));
+  font-family: var(--serif);
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  line-height: 1.6;
+  font-size: 17px;
 }
-.rwd-sim__label {
+img, svg, video { display: block; max-width: 100%; height: auto; }
+button { font: inherit; cursor: pointer; }
+a { color: var(--accent-dk); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code {
+  font-family: var(--mono);
+  font-size: 0.92em;
+  background: var(--bg-panel);
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--rule);
+}
+
+/* ----------- containers ----------- */
+.container {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.container--narrow { max-width: var(--maxw-narrow); }
+
+/* =========================================================================
+   Nav, in two pieces
+   -------------------------------------------------------------------------
+   .hero__nav sits transparent on top of the hero video while you are at the
+   top of the page. #topnav is a separate, opaque bar that slides in only once
+   the hero has scrolled away. Two elements rather than one that changes
+   colour: a single bar would have to be legible over both a 1080p video and a
+   white section, and a backdrop-blurred bar over moving video is the thing
+   that makes a hero look cheap.
+   ========================================================================= */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--sans);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-size: 1rem;
+  color: inherit;
+}
+.brand:hover { text-decoration: none; }
+.brand__mark {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dk));
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.5), var(--shadow-sm);
+  flex: none;
+}
+
+/* ---- the hero's own nav ---- */
+.hero__nav {
+  position: relative;
+  z-index: 3;
+  /* width:100% is load-bearing. `margin: 0 auto` on a flex item in a column
+     flexbox cancels the default align-items:stretch, so without an explicit
+     width the bar shrink-wraps its contents and space-between has no space to
+     distribute: the brand and the links end up centred side by side. */
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 26px 24px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  color: #fff;
+}
+.hero__navlinks {
+  display: flex;
+  gap: 22px;
+  font-family: var(--sans);
+  font-size: 0.93rem;
+}
+.hero__navlinks a {
+  color: rgba(255,255,255,.80);
+  padding: 6px 2px;
+  border-bottom: 2px solid transparent;
+  transition: color .18s, border-color .18s;
+}
+.hero__navlinks a:hover {
+  color: #fff;
+  border-bottom-color: var(--accent);
+  text-decoration: none;
+}
+
+/* ---- the sticky bar, for the rest of the page ---- */
+.topnav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  background: rgba(255,255,255,.88);
+  backdrop-filter: saturate(150%) blur(12px);
+  -webkit-backdrop-filter: saturate(150%) blur(12px);
+  box-shadow: inset 0 -1px 0 var(--rule), 0 1px 12px rgba(14,17,22,.05);
+  /* hidden by default and shown by js/main.js: visibility, not just transform,
+     so the links are not tabbable while the bar is off screen */
+  transform: translateY(-100%);
+  visibility: hidden;
+  transition: transform .32s var(--ease, cubic-bezier(.2,.8,.2,1)),
+              visibility 0s .32s;
+}
+.topnav.is-on {
+  transform: none;
+  visibility: visible;
+  transition: transform .32s var(--ease, cubic-bezier(.2,.8,.2,1)), visibility 0s;
+}
+.topnav__inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 11px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  color: var(--ink);
+}
+.topnav nav {
+  display: flex;
+  gap: 22px;
+  margin-left: auto;
+  font-family: var(--sans);
+  font-size: 0.93rem;
+}
+.topnav nav a {
+  color: var(--ink-soft);
+  padding: 6px 2px;
+  border-bottom: 2px solid transparent;
+  transition: border-color .18s, color .18s;
+}
+.topnav nav a:hover {
+  color: var(--accent-dk);
+  border-bottom-color: var(--accent);
+  text-decoration: none;
+}
+
+/* Six section links do not fit a phone. Rather than a hamburger (the only piece
+   of state on an otherwise static page), let the strip scroll sideways. */
+@media (max-width: 860px) {
+  .hero__navlinks, .topnav nav {
+    gap: 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    font-size: 0.86rem;
+  }
+  .hero__navlinks::-webkit-scrollbar,
+  .topnav nav::-webkit-scrollbar { display: none; }
+  .hero__navlinks a, .topnav nav a { white-space: nowrap; }
+  /* the wordmark would eat the whole bar next to a scrolling strip */
+  .hero__nav .brand__word, .topnav .brand__word { display: none; }
+}
+
+/* ----------- buttons ----------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.92rem;
+  border: 1px solid transparent;
+  transition: transform .08s ease, box-shadow .18s, background .18s, color .18s, border-color .18s;
+  white-space: nowrap;
+}
+.btn:hover { text-decoration: none; }
+.btn:active { transform: translateY(1px); }
+.btn--primary {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+.btn--primary:hover { background: var(--accent-dk); border-color: var(--accent-dk); }
+.btn--ghost {
+  background: #fff;
+  color: var(--ink);
+  border-color: var(--rule-strong);
+}
+.btn--ghost:hover { border-color: var(--accent); color: var(--accent-dk); }
+.btn--lg { padding: 12px 20px; font-size: 1rem; border-radius: 10px; }
+.btn[aria-disabled="true"] { opacity: .72; cursor: not-allowed; }
+
+/* =========================================================================
+   Hero
+   -------------------------------------------------------------------------
+   One viewport of robot video with the paper's front matter over it. The
+   layout is three stacked rows inside a flex column — nav, content, bottom
+   bar — so the content block grows to fill whatever height the viewport has
+   and the bottom bar stays pinned without absolute positioning fighting it.
+
+   Legibility over video is the whole problem here, and it is solved by
+   .hero__shade rather than by a translucent panel behind the text: a panel
+   would cover the robot, which is the thing worth showing. The shade is two
+   gradients — one darkening the left where the text is, one darkening the
+   bottom edge so the page below does not start on a hard seam.
+   ========================================================================= */
+.hero {
+  position: relative;
+  isolation: isolate;
+  /* svh, not vh: on mobile Safari vh counts the collapsing toolbar, so a 100vh
+     hero is taller than the screen and the buttons start below the fold. */
+  min-height: max(720px, 100svh);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #0b0b0d;
+  color: #fff;
+}
+.hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  /* Pushed right, and faded out on its left edge, so the robot sits in the
+     right half and the text sits over near-black rather than over detail. */
+  transform: translateX(16%);
+  mask-image: linear-gradient(to right, transparent, #000 16%);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 16%);
+}
+.hero__media img,
+.hero__media video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 48%;
+}
+.hero__media video {
+  opacity: 0;
+  transition: opacity .6s ease;
+}
+.hero__media video.is-on { opacity: 1; }
+.hero__shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(10,10,12,.94) 0%, rgba(10,10,12,.82) 32%,
+                    rgba(10,10,12,.28) 72%, rgba(10,10,12,.08) 100%),
+    linear-gradient(0deg, #0b0b0d 0, rgba(11,11,13,.7) 8%, transparent 28%,
+                    transparent 78%, rgba(11,11,13,.55) 100%);
+}
+
+.hero__content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  max-width: var(--maxw);
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(36px, 7vh, 88px) 24px 100px;
+}
+.hero__tagline {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+  font-family: var(--sans);
+}
+.pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-dk);
+  background: var(--accent-tint);
+  border: 1px solid rgba(240,130,0,.35);
+  letter-spacing: 0.01em;
+}
+.pill--muted {
+  color: var(--muted);
+  background: #fff;
+  border-color: var(--rule-strong);
+}
+/* On the dark hero the tinted pills would be two bright blocks above the title. */
+.pill--ondark {
+  color: rgba(255,255,255,.92);
+  background: rgba(255,255,255,.10);
+  border-color: rgba(255,255,255,.20);
+}
+.pill--ondark.pill--muted {
+  color: rgba(255,255,255,.62);
+  background: rgba(255,255,255,.05);
+  border-color: rgba(255,255,255,.13);
+}
+
+.hero__title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  line-height: 1.04;
+  max-width: 24ch;
+}
+/* The system name is set larger than the subtitle, so the two read as a name
+   and its explanation rather than one long sentence that happens to wrap. */
+.hero__name {
+  display: block;
+  font-size: clamp(2.5rem, 6vw, 4.6rem);
+}
+.hero__sub {
+  display: block;
+  margin-top: 10px;
+  font-size: clamp(1.15rem, 2.1vw, 1.72rem);
+  line-height: 1.22;
+  letter-spacing: -0.012em;
+  color: var(--accent);
+  max-width: 34ch;
+}
+.hero__br { display: none; }
+@media (min-width: 900px) { .hero__br { display: inline; } .hero__sub { max-width: none; } }
+
+.hero__summary {
+  margin: 22px 0 0;
+  max-width: 62ch;
+  font-family: var(--serif);
+  font-size: clamp(1rem, 1.3vw, 1.12rem);
+  line-height: 1.6;
+  color: rgba(255,255,255,.82);
+  text-wrap: pretty;
+}
+
+/* Collapsed by default: the abstract is the one thing on this page a reader
+   either wants in full or not at all, and open it would push the buttons off
+   the first screen. */
+.hero__abstract { max-width: 72ch; margin-top: 16px; }
+.hero__abstract summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 13px;
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.09);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.14);
+  cursor: pointer;
+  list-style: none;
+}
+.hero__abstract summary::-webkit-details-marker { display: none; }
+.hero__abstract summary::after {
+  content: "+";
+  font-weight: 700;
+  opacity: .7;
+}
+.hero__abstract[open] summary::after { content: "\2212"; }
+.hero__abstract summary:hover { background: rgba(255,255,255,.14); }
+.hero__abstract p {
+  margin: 12px 0 0;
+  padding: 16px 20px;
+  border-radius: 16px;
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  line-height: 1.62;
+  color: rgba(255,255,255,.84);
+  background: rgba(8,8,10,.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+  text-wrap: pretty;
+}
+.hero__abstract strong { color: #fff; }
+.hero__abstract code { color: rgba(255,255,255,.92); background: rgba(255,255,255,.08); }
+
+.hero__authors { margin: 24px 0 0; max-width: 72ch; font-family: var(--sans); }
+.hero__authors .names {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255,255,255,.93);
+}
+.hero__authors .names a { color: inherit; text-decoration: underline;
+  text-decoration-color: rgba(255,255,255,.35); text-underline-offset: 2px; }
+.hero__authors .names a:hover { text-decoration-color: var(--accent); }
+.hero__authors .affil {
+  margin: 5px 0 0;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: rgba(255,255,255,.58);
+}
+.hero__authors sup { font-size: 0.72em; }
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+/* ---- the glass control, shared by the hero's buttons and tags ---- */
+.glass {
+  position: relative;
+  isolation: isolate;
+  border-radius: 999px;
+  font-family: var(--sans);
+  color: rgba(255,255,255,.95);
+  background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.045));
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.16), 0 6px 22px rgba(0,0,0,.26);
+}
+.glass--btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 19px;
+  border: 0;
+  font-size: 0.94rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .18s, box-shadow .18s, transform .08s;
+}
+.glass--btn:hover {
+  text-decoration: none;
+  background: linear-gradient(180deg, rgba(255,255,255,.2), rgba(255,255,255,.09));
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.26), 0 8px 26px rgba(0,0,0,.3);
+}
+.glass--btn:active { transform: translateY(1px); }
+.glass--btn[aria-disabled="true"] { opacity: .6; cursor: not-allowed; }
+.glass--btn[aria-disabled="true"]:hover { background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.045)); }
+.glass--tag {
+  display: inline-block;
+  padding: 6px 13px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: rgba(255,255,255,.8);
+}
+
+.hero__bottom {
+  /* Pinned rather than in the flex flow: in the flow it added its own height to
+     the hero, which pushed the hero past one viewport and put the scroll cue
+     below the fold — exactly the thing the cue exists to prevent. */
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 2;
+  max-width: var(--maxw);
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+/* A chevron, drawn with a rotated square, that drifts down and back. It is the
+   only thing on the first screen that says the page continues. */
+.hero__cue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px; min-height: 44px;
+}
+.hero__cue span {
+  width: 11px; height: 11px;
+  border-right: 2px solid rgba(255,255,255,.75);
+  border-bottom: 2px solid rgba(255,255,255,.75);
+  transform: rotate(45deg);
+  animation: cue 2.1s var(--ease, ease-in-out) infinite;
+}
+@keyframes cue {
+  0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: .55; }
+  50%      { transform: rotate(45deg) translate(3px, 3px); opacity: 1; }
+}
+.hero__now { display: flex; align-items: center; gap: 10px; }
+.hero__toggle { padding: 9px 12px; }
+.hero__toggle .i-play { display: none; }
+.hero__toggle[data-paused="true"] .i-play { display: block; }
+.hero__toggle[data-paused="true"] .i-pause { display: none; }
+
+@media (max-width: 720px) {
+  .hero__content { padding-bottom: 96px; }
+  /* No sideways push on a narrow screen: there is no empty half to push into,
+     so the video is dimmed instead and the text sits over the whole frame. */
+  .hero__media {
+    transform: none;
+    mask-image: none;
+    -webkit-mask-image: none;
+    opacity: .5;
+  }
+  .hero__shade {
+    background: linear-gradient(0deg, rgba(11,11,13,.85), rgba(11,11,13,.45) 45%,
+                                rgba(11,11,13,.7));
+  }
+  .hero__now .glass--tag { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__cue span { animation: none; }
+}
+
+/* Screen-reader-only text, for punctuation that a sighted reader gets from the
+   line break (the colon after the system name). */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ----------- section skeleton ----------- */
+.section {
+  /* More air than the 72px this had: with the per-domain sections the page is a
+     sequence of long blocks, and the gap between them is the only thing marking
+     where one embodiment's argument ends. */
+  padding: 92px 0 100px;
+  /* the nav is sticky, so an anchor jump must stop short of it or the section
+     title lands underneath the nav bar */
+  scroll-margin-top: 64px;
+}
+/* --surface names whatever this section's own background is, so a sticky child
+   (the domain rail) can be opaque against it without having to know which
+   variant it is sitting in. */
+.section { --surface: var(--bg); }
+.section--alt {
+  --surface: var(--bg-alt);
+  background: var(--bg-alt);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.section--tight { padding: 48px 0; }
+.section__title {
+  font-family: var(--serif);
+  font-weight: 700;
+  /* Bigger and tighter than before. These headings now carry a finding rather
+     than a one-word topic, so they are sentences and need the display size and
+     the tighter tracking and leading to read as one. */
+  font-size: clamp(1.85rem, 3.3vw, 2.65rem);
+  line-height: 1.1;
+  letter-spacing: -0.024em;
+  margin: 0 0 12px;
+  max-width: 34ch;
+}
+/* A domain heading names an embodiment and its hardware, which is longer than a
+   claim and should not be set at display size. */
+.dom .section__title { font-size: clamp(1.5rem, 2.3vw, 1.95rem); max-width: 44ch; }
+.section__kicker {
+  font-family: var(--serif);
+  color: var(--muted);
+  font-size: 1.05rem;
+  margin: 0 0 36px;
+  max-width: 68ch;
+}
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent-dk);
+  margin: 0 0 6px;
+  font-weight: 700;
+}
+.prose { margin: 0 0 16px; }
+.prose strong { color: var(--ink); font-weight: 600; }
+
+/* =========================================================================
+   Method: prose left, one large panel right
+   -------------------------------------------------------------------------
+   The prose is the narrow column and the figure is the wide one. That is the
+   opposite of the obvious arrangement and it is the point: a pipeline panel
+   has to be read, and at a sidebar's width it cannot be, while prose is
+   easier to read at a narrow measure than a wide one. So both columns get the
+   width they actually need.
+
+   Only the current panel is visible. The three are stacked in one grid cell
+   and cross-faded, so there is no blank frame while a new file decodes, and
+   the stage's height does not jump between panels of different aspect.
+   ========================================================================= */
+.method-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 23rem) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 56px);
+  margin-top: 36px;
+  align-items: start;
+}
+.method-steps { min-width: 0; }
+.step {
+  padding: 30px 0 34px;
+  border-top: 1px solid var(--rule);
+}
+.step:first-child { padding-top: 2px; border-top: 0; }
+.step h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(1.14rem, 1.6vw, 1.34rem);
+  letter-spacing: -0.012em;
+  margin: 0;
+  color: var(--ink);
+}
+.step__claim {
+  font-family: var(--sans);
+  font-size: 0.93rem;
+  font-weight: 600;
+  color: var(--accent-dk);
+  margin: 7px 0 11px;
+  letter-spacing: -0.005em;
+}
+.step p:last-child {
+  font-size: 0.98rem;
+  line-height: 1.66;
+  color: var(--ink-soft);
+  margin: 0;
+}
+/* Only shown where the sticky figure is removed; see the narrow-screen block. */
+.step__fig { display: none; }
+
+.fw-mark {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  background: var(--accent-tint);
+  color: var(--accent-dk);
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 0.76rem;
+  border: 1px solid rgba(240,130,0,.35);
+}
+
+.method-fig {
+  position: sticky;
+  top: 78px;              /* clears the 58px sticky topnav plus air */
+  min-width: 0;
+}
+/* ---- the a / b / c rail ---- */
+.fw-rail {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+.fw-mark--btn {
+  width: 28px; height: 28px;
+  font-size: 0.84rem;
+  cursor: pointer;
+  background: #fff;
+  color: var(--muted);
+  border: 1px solid var(--rule-strong);
+  transition: background .25s, color .25s, border-color .25s, transform .25s;
+}
+.fw-mark--btn:hover { color: var(--accent-dk); border-color: var(--accent); }
+.fw-mark--btn[aria-current="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  transform: scale(1.08);
+}
+.fw-mark--btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.fw-rail__line {
+  flex: 1;
+  height: 1px;
+  max-width: 44px;
+  background: var(--rule-strong);
+}
+
+/* ---- the panel stage ---- */
+.fw-stage {
+  position: relative;
+  margin: 0;
+  display: grid;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 16px 16px 0;
+  overflow: hidden;
+}
+.fw-panel {
+  /* All three occupy the same grid cell. The tallest one sets the height, so
+     the stage does not resize as the panel changes — a stage that jumps height
+     mid-scroll drags the whole page under the reader's cursor. */
+  grid-area: 1 / 1;
+  width: 100%;
+  max-height: min(58vh, 520px);
+  object-fit: contain;
+  object-position: 50% 50%;
+  opacity: 0;
+  transform: scale(.985);
+  transition: opacity .42s var(--ease, cubic-bezier(.2,.8,.2,1)),
+              transform .42s var(--ease, cubic-bezier(.2,.8,.2,1));
+  cursor: zoom-in;
+}
+.fw-panel.is-on { opacity: 1; transform: none; }
+/* Before the script runs, panel (a) is the one on show, so the figure is never
+   an empty box on a page whose JS failed. */
+.js-off .fw-panel[data-step="a"] { opacity: 1; transform: none; }
+
+.fw-stage__cap {
+  grid-area: 2 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 2px 13px;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.fw-stage__label { display: none; }
+.fw-stage__label.is-on { display: inline; }
+.fw-zoom {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--rule-strong);
+  background: #fff;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: border-color .18s, color .18s;
+}
+.fw-zoom:hover { border-color: var(--accent); color: var(--accent-dk); }
+.fw-zoom:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Below 1000px there is no second column to be sticky in, so the figure column
+   is removed and each step carries its own panel inline instead. */
+@media (max-width: 1000px) {
+  .method-grid { grid-template-columns: minmax(0, 1fr); }
+  .method-fig { display: none; }
+  .step__fig {
+    display: block;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 0 14px;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-sm);
+    background: #fff;
+  }
+}
+
+.pipeline-full {
+  margin-top: 28px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 10px 18px;
+  box-shadow: var(--shadow-sm);
+}
+.pipeline-full summary {
+  cursor: pointer;
+  padding: 8px 0;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+.pipeline-full summary:hover { color: var(--accent-dk); }
+.pipeline-full img {
+  width: 100%;
+  margin-top: 10px;
+  border-radius: var(--radius-sm);
+}
+
+/* ----------- results ----------- */
+.results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.result {
+  display: grid;
+  grid-template-columns: 56px 240px 1fr;
+  align-items: center;
+  gap: 24px;
+  padding: 22px 26px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow .2s, transform .2s;
+}
+.result:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+.result__badge {
+  display: inline-grid;
+  place-items: center;
+  width: 46px; height: 46px;
+  border-radius: 11px;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: 0.98rem;
+  letter-spacing: 0.02em;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.3), 0 2px 6px rgba(240,130,0,.3);
+}
+.result__num {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+.result__big {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 3.4vw, 2.5rem);
+  line-height: 1;
+  color: var(--accent);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.result__pct {
+  font-size: 0.6em;
+  margin-left: 1px;
+}
+.result__unit {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+.result__body h3 {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin: 0 0 6px;
+}
+.result__body p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+.result__body strong { color: var(--ink); font-weight: 600; }
+
+@media (max-width: 820px) {
+  .result {
+    grid-template-columns: 56px 1fr;
+    grid-template-areas:
+      "badge num"
+      "body  body";
+    row-gap: 14px;
+  }
+  .result__badge { grid-area: badge; }
+  .result__num   { grid-area: num; }
+  .result__body  { grid-area: body; }
+}
+
+/* ----------- tabs ----------- */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+  padding: 6px;
+  background: var(--bg-panel);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  width: fit-content;
+  max-width: 100%;
+}
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  transition: background .15s, box-shadow .15s, color .15s, border-color .15s;
+}
+.tab:hover { color: var(--ink); }
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.tab[aria-selected="true"] {
+  background: #fff;
+  color: var(--ink);
+  border-color: var(--rule);
+  box-shadow: var(--shadow-sm);
+}
+.tab__dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--dot, var(--accent));
+}
+.tab__sub {
+  font-weight: 500;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-left: 2px;
+}
+@media (max-width: 560px) {
+  .tab__sub { display: none; }
+}
+
+/* ----------- strip loading state + footnotes ----------- */
+.gallery__loading {
+  color: var(--muted);
+  font-family: var(--sans);
+  padding: 40px 0;
+  text-align: center;
+}
+
+.gallery__note {
+  margin-top: 24px;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* ----------- lightbox ----------- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,12,16,.86);
+  display: grid;
+  place-items: center;
+  z-index: 100;
+  padding: 20px;
+  animation: fade .18s ease-out;
+}
+.lightbox[hidden] { display: none; }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.lightbox__inner {
+  background: #0e1116;
+  border-radius: 14px;
+  padding: 22px 24px 24px;
+  max-width: min(1200px, 96vw);
+  width: 100%;
+  color: #fff;
+  box-shadow: var(--shadow-lg);
+}
+.lightbox__title {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin: 0 0 2px;
+}
+.lightbox__sub {
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  color: #a7b0bd;
+  margin: 0 0 14px;
+}
+.lightbox__inner video {
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+  border-radius: 10px;
+  background: #000;
+}
+.lightbox__legend {
+  display: flex;
+  margin-top: 10px;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  color: #a7b0bd;
+  gap: 0;
+}
+.lightbox__legend span {
+  flex: 1;
+  text-align: center;
+  padding: 6px 0;
+  border-top: 2px solid #2b313b;
+}
+.lightbox__legend span + span { border-left: 1px solid #2b313b; }
+.lightbox__legend .legend--dream { color: var(--accent); border-top-color: var(--accent); }
+.lightbox__legend .legend--gt    { color: var(--anchor); border-top-color: var(--anchor); }
+/* single-clip legend for the real-robot rows: the outcome of this one rollout */
+.lightbox__legend .legend--ours  { color: var(--dream); border-top-color: var(--dream); }
+.lightbox__legend .legend--base  { color: var(--real); border-top-color: var(--real); }
+
+.lightbox__close {
+  position: absolute;
+  top: 20px; right: 24px;
+  width: 44px; height: 44px;
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 50%;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.lightbox__close:hover { background: rgba(255,255,255,.2); }
+
+/* ----------- bibtex ----------- */
+.code {
+  position: relative;
+  background: #0e1116;
+  color: #e3e6ec;
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  overflow: auto;
+  box-shadow: var(--shadow-md);
+  border: 1px solid #1a1f27;
+}
+.code pre {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.code__copy {
+  position: absolute;
+  top: 10px; right: 10px;
+  padding: 6px 12px;
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 7px;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.code__copy:hover { background: rgba(255,255,255,.16); }
+
+/* ----------- footer ----------- */
+.footer {
+  padding: 36px 0 48px;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 0.86rem;
+  border-top: 1px solid var(--rule);
+  background: #fff;
+}
+.footer p { margin: 0; }
+
+/* ----------- reduced motion ----------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .result { transition: none; }
+}
+
+/* ----------- dream vs real comparison ----------- */
+/* .cmp-grid is gone with the tab strip: the pairs are a .cmp-strip inside each
+   domain section now, and nothing on the page carries this class. */
+.cmp {
+  display: block; width: 100%; padding: 0;
+  background: #fff; border: 1px solid var(--rule); border-radius: 14px; overflow: hidden;
+  cursor: pointer; text-align: left; font-family: inherit;
+  box-shadow: 0 1px 2px rgba(10,15,25,0.04);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.cmp:hover, .cmp:focus-within {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(10,15,25,0.08);
+  border-color: #d9d4c7;
+}
+.cmp:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.cmp__pair { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: var(--rule); aspect-ratio: 32 / 12; }
+.cmp__half { position: relative; margin: 0; overflow: hidden; background: #0a0a0a; }
+.cmp__half img, .cmp__half video {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.cmp__half video { opacity: 0; transition: opacity .22s ease; }
+.cmp__half video.ready { opacity: 1; }
+.cmp__half figcaption {
+  position: absolute; left: 8px; top: 8px; z-index: 2;
+  padding: 3px 9px; font-family: var(--sans); font-size: 0.70rem; font-weight: 600;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: #fff; border-radius: 6px; backdrop-filter: blur(4px);
+  background: rgba(10, 10, 10, 0.55);
+}
+.cmp__half--dream figcaption { background: color-mix(in srgb, #f08200 85%, #000 15%); }
+.cmp__meta {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 10px 14px 12px; gap: 10px;
+  font-family: var(--sans);
+}
+.cmp__title { color: var(--ink); font-weight: 600; font-size: 0.98rem; }
+.cmp__sub { color: var(--muted); font-size: 0.80rem; }
+@media (max-width: 540px) {
+}
+
+/* ============================================================
+   Training marquee + trained-on / dreams-in rows
+   ============================================================ */
+
+/* ----------- stat row ----------- */
+.statrow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  margin: 26px 0 0;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.statrow__item { margin: 0; padding: 16px 18px; background: #fff; }
+.statrow__item dt {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.statrow__item dd {
+  margin: 4px 0 0;
+  font-family: var(--sans);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 720px) {
+  .statrow { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ----------- embodiment key ----------- */
+.emb-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  margin: 18px 0 4px;
+}
+.emb-key {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 7px 12px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+.emb-key__dot {
+  width: 9px; height: 9px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--dot, var(--muted));
+  transform: translateY(-1px);
+}
+.emb-key__name { font-weight: 600; color: var(--ink); }
+.emb-key__meta { color: var(--muted); }
+
+/* ----------- tile (one autoplaying clip) ----------- */
+.tile { margin: 0; }
+.tile__frame {
+  position: relative;
+  aspect-ratio: var(--tile-aspect, 4 / 3);
+  background: #0c0d10;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow .2s ease, border-color .2s ease;
+}
+.tile__frame::after {
+  /* the accent hairline is what ties a tile back to its embodiment chip */
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 3px;
+  background: var(--tile-accent, transparent);
+  z-index: 2;
+}
+.tile video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.tile__frame--missing::before {
+  content: "clip not downloaded";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  color: #8b919c;
+  background: repeating-linear-gradient(45deg, #15171c, #15171c 8px, #1b1e24 8px, #1b1e24 16px);
+}
+.tile__badge {
+  position: absolute;
+  left: 7px; top: 7px;
+  z-index: 3;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-family: var(--sans);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  background: color-mix(in srgb, var(--accent) 88%, #000 12%);
+}
+.tile figcaption {
+  margin-top: 7px;
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  line-height: 1.35;
+  color: var(--muted);
+  /* captions must not stretch the tile: one line, ellipsised */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ----------- marquee ----------- */
+.marquees { margin-top: 22px; display: grid; gap: 14px; }
+.marquee {
+  position: relative;
+  overflow: hidden;
+  /* fade the two ends so clips enter and leave rather than being chopped off */
+  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+}
+.marquee__track {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+  will-change: transform;
+  animation-duration: var(--marquee-duration, 60s);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.marquee__track--left  { animation-name: marquee-left; }
+.marquee__track--right { animation-name: marquee-right; }
+/* -50% is exactly one copy of the item list, so the loop is seamless */
+@keyframes marquee-left  { from { transform: translateX(0); }     to { transform: translateX(-50%); } }
+@keyframes marquee-right { from { transform: translateX(-50%); }  to { transform: translateX(0); } }
+
+/* hold the strip still while someone is actually looking at a clip */
+.marquee:hover .marquee__track,
+.marquee:focus-within .marquee__track { animation-play-state: paused; }
+
+.marquee .tile { width: clamp(180px, 22vw, 260px); flex: none; }
+.marquee .tile__frame { transition: transform .2s ease, box-shadow .2s ease; }
+.marquee .tile:hover .tile__frame {
+  transform: scale(1.03);
+  box-shadow: var(--shadow-md);
+}
+.marquee__hint { margin-top: 14px; }
+
+/* ----------- trained-on / dreams-in rows ----------- */
+/* The generalization hosts, one per domain section (#generalize-rows is gone with
+   the single combined section it belonged to). */
+#rt-generalize, #eb-generalize, #trex-generalize { display: grid; gap: 14px; margin-top: 20px; }
+.gen-row {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: #fff;
+  overflow: hidden;
+}
+.gen-row__hdr {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  padding: 13px 20px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg-alt);
+  font-family: var(--sans);
+}
+.gen-row__dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--row-accent);
+  transform: translateY(-1px);
+}
+.gen-row__title { margin: 0; font-size: 1.02rem; font-weight: 700; color: var(--ink); }
+/* Bare header: the embodiment name and robot line moved up to the section <h2>,
+   so all that is left is the dot and the axis pill. Without this the pill would
+   keep its margin-left:auto and float alone at the far right of an empty bar. */
+.gen-row__hdr--bare { padding: 10px 20px; }
+.gen-row__hdr--bare .gen-row__axis { margin-left: 0; }
+.gen-row__robot { font-size: 0.80rem; color: var(--muted); }
+.gen-row__axis {
+  margin-left: auto;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--row-accent) 70%, #000 30%);
+  background: color-mix(in srgb, var(--row-accent) 12%, #fff 88%);
+  border: 1px solid color-mix(in srgb, var(--row-accent) 28%, #fff 72%);
+}
+.gen-row__body {
+  display: grid;
+  gap: 4px;
+  padding: 16px 20px 20px;
+}
+
+/* ----------- one labelled band per side ----------- */
+.gen-band {
+  display: grid;
+  /* the label column is fixed so the two bands' clips line up under each other */
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.gen-band__head { font-family: var(--sans); }
+.gen-band__eyebrow {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--anchor-dk);
+}
+.gen-band--dreams .gen-band__eyebrow { color: var(--accent-dk); }
+.gen-band__label {
+  margin: 3px 0 0;
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.gen-band__note {
+  margin: 8px 0 0;
+  font-family: var(--serif);
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.gen-band__clips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.gen-band__clips .tile { width: clamp(150px, 17vw, 210px); flex: none; }
+/* the trained-on stripe: same tile width as the static band it replaces, so
+   switching one row to a marquee does not change the band's height */
+.gen-band__stripe .tile { width: clamp(150px, 17vw, 210px); flex: none; }
+
+/* The dreams strip runs edge to edge of the card; bleed it past the padding so
+   clips really do leave the frame rather than stopping short of it. */
+.gen-band--dreams .marquee {
+  margin-right: -20px;
+  padding-right: 20px;
+}
+.gen-band--dreams .marquee .tile { width: clamp(150px, 17vw, 210px); }
+
+.gen-arrow {
+  justify-self: start;
+  margin-left: 100px;
+  padding: 10px 0;
+  color: var(--rule-strong);
+}
+.gen-arrow svg { width: 22px; height: 22px; }
+
+@media (max-width: 860px) {
+  .gen-band { grid-template-columns: 1fr; gap: 12px; }
+  .gen-arrow { margin-left: 0; justify-self: center; }
+}
+
+/* ============================================================
+   Real-robot rollouts: ours vs base (#realworld, #robustness)
+   One row per task / OOD condition, two clips per row. The side accents are
+   the same pair as the dream-vs-real tabs: --dream for the policy that trained
+   on dreams, --real for the real-demos-only baseline.
+   ============================================================ */
+.rw-rows { display: grid; gap: 18px; margin-top: 26px; }
+.rw-row {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ----------- row header: label, caption, playback controls ----------- */
+.rw-row__hdr {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 13px 20px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg-alt);
+}
+.rw-row__title {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.02rem;
+  margin: 0;
+  color: var(--ink);
+}
+.rw-row__caption {
+  margin: 3px 0 0;
+  font-family: var(--serif);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--muted);
+  max-width: 76ch;
+}
+.rw-row__ctrls {
+  margin-left: auto;
+  flex: none;
+  display: flex;
+  gap: 8px;
+}
+.rw-ctrl {
+  display: inline-grid;
+  place-items: center;
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid var(--rule-strong);
+  color: var(--ink-soft);
+  transition: color .15s, border-color .15s;
+}
+.rw-ctrl:hover { color: var(--accent-dk); border-color: var(--accent); }
+.rw-ctrl:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rw-ctrl svg { width: 15px; height: 15px; }
+
+/* ----------- the pair ----------- */
+.rw-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--rule);
+}
+.rw-side {
+  margin: 0;
+  padding: 14px 18px 16px;
+  background: #fff;
+  border-top: 3px solid var(--side-accent);
+}
+.rw-side--ours { --side-accent: var(--dream); }
+.rw-side--base { --side-accent: var(--real); }
+
+.rw-side__head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin-bottom: 11px;
+  font-family: var(--sans);
+}
+.rw-side__eyebrow {
+  font-size: 0.70rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--side-accent) 74%, #000 26%);
+}
+.rw-side__policy { font-size: 0.78rem; color: var(--muted); }
+
+/* ----------- per-clip outcome badge ----------- */
+.rw-badge {
+  margin-left: auto;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-family: var(--sans);
+  font-size: 0.70rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.rw-badge__dot {
+  width: 7px; height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: currentColor;
+}
+.rw-badge--success {
+  color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 10%, #fff 90%);
+  border-color: color-mix(in srgb, var(--ok) 34%, #fff 66%);
+}
+.rw-badge--failure {
+  color: var(--bad);
+  background: color-mix(in srgb, var(--bad) 9%, #fff 91%);
+  border-color: color-mix(in srgb, var(--bad) 32%, #fff 68%);
+}
+/* "unclear" is its own verdict: neutral, dashed, never mistakable for either
+   of the two above */
+.rw-badge--unclear,
+.rw-badge--unknown {
+  color: var(--muted);
+  background: var(--bg-panel);
+  border-color: var(--rule-strong);
+  border-style: dashed;
+}
+.rw-badge--unknown { text-transform: none; letter-spacing: 0.01em; font-weight: 600; }
+
+/* ----------- the clip ----------- */
+.rw-frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  aspect-ratio: var(--rw-aspect, 16 / 9);
+  background: #0c0d10;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+.rw-frame video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+button.rw-frame:hover {
+  border-color: var(--side-accent);
+  box-shadow: var(--shadow-md);
+}
+.rw-frame:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* no clip encoded yet, or the mp4 failed to load */
+.rw-frame--missing::after {
+  content: "clip not available";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  color: #8b919c;
+  background: repeating-linear-gradient(45deg, #15171c, #15171c 8px, #1b1e24 8px, #1b1e24 16px);
+}
+
+.rw-side__meta {
+  margin-top: 8px;
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+.rw-side__meta:empty { display: none; }
+
+/* a clip's `note` from the index: the caveat that qualifies the badge above it
+   ("transfer not assessable"), so it is set as prose, not as metadata */
+.rw-side__note {
+  margin: 6px 0 0;
+  font-family: var(--serif);
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--muted);
+  border-left: 2px solid var(--rule-strong);
+  padding-left: 9px;
+}
+
+/* the robustness row's control strip: the shared .picker component (below)
+   with this card's own padding and rule, so it reads as a second row header */
+.rw-row .picker {
+  margin: 0;
+  padding: 12px 20px 13px;
+  border-bottom: 1px solid var(--rule);
+}
+
+@media (max-width: 760px) {
+  .rw-pair { grid-template-columns: 1fr; }
+  /* controls drop under the caption rather than wrapping only when the caption
+     happens to be long, so every row header looks the same */
+  .rw-row__hdr { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .rw-row__ctrls { margin-left: 0; }
+  .rw-row .picker { padding: 12px 16px 14px; }
+}
+
+/* ============================================================
+   Picker: the shuffle strip (.picker, .picker__btn)
+   Shared component. Used by the real-robot robustness row and by the dreams
+   section, so it carries no section chrome of its own — the section supplies
+   its own padding and rule, and the strip keeps its background, so it sits on
+   .section and .section--alt alike.
+   The button is the strip's only control, so it carries the whole affordance.
+   It is the page's pill button vocabulary (.btn / .btn--ghost: 999px radius,
+   white ground, --rule-strong edge, --accent on hover, 1px press) one step
+   larger, with the icon and the label both present so no state is signalled by
+   colour alone: hover changes the border, the ground and the lift as well as
+   the text, press flattens the shadow, focus draws the --accent ring every
+   other control on the page uses.
+   ============================================================ */
+.picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin: 0 0 14px;
+  font-family: var(--sans);
+}
+.picker__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 18px 9px 15px;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+  transition: transform .08s ease, box-shadow .18s, background .18s, color .18s, border-color .18s;
+}
+.picker__btn svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  color: var(--muted);
+  transition: color .18s, transform .18s ease;
+}
+.picker__btn:hover:not(:disabled) {
+  color: var(--accent-dk);
+  background: var(--accent-tint);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+}
+.picker__btn:hover:not(:disabled) svg { color: var(--accent-dk); transform: rotate(-12deg); }
+.picker__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+/* press: sinks by a pixel and loses its lift, so the feedback is not only a
+   colour change */
+.picker__btn:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: none;
+  background: color-mix(in srgb, var(--accent-tint) 64%, #fff 36%);
+}
+/* nothing else to draw, so say so rather than offering a button that no-ops */
+.picker__btn:disabled {
+  color: var(--muted);
+  background: var(--bg-panel);
+  border-color: var(--rule);
+  box-shadow: none;
+  opacity: .72;
+  cursor: not-allowed;
+}
+.picker__btn:disabled svg { color: var(--muted); }
+
+@media (max-width: 700px) {
+  .picker { flex-direction: column; align-items: stretch; gap: 10px; }
+  .picker__btn { justify-content: center; }
+}
+
+/* ----------- reduced motion: no drift, scroll it by hand instead ----------- */
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+  .marquee__track { animation: none; }
+  /* the second pass only exists to make the drift seamless; with no drift it is
+     just the same clips a second time */
+  .marquee .tile[aria-hidden="true"] { display: none; }
+  .marquee .tile { scroll-snap-align: start; }
+  .tile__frame, .marquee .tile__frame { transition: none; }
+  /* the real-robot rows also start paused under this preference; see RW_REDUCED */
+  .rw-frame, .rw-ctrl { transition: none; }
+  .picker__btn, .picker__btn svg { transition: none; }
+  .picker__btn:hover:not(:disabled) svg { transform: none; }
+  .picker__btn:active:not(:disabled) { transform: none; }
+}
+
+/* Repeated under the shuffled pair: with clip ids and the trial counter hidden,
+   this is the only on-screen cue that the two sides are unrelated rollouts. */
+.rw-pair__note {
+  margin: 0;
+  padding: 10px 20px 16px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+  font-family: var(--sans, inherit);
+}
+
+/* ============================================================
+   Domain sections (RoboTwin / EgoBench / real robot / T-Rex)
+   ------------------------------------------------------------
+   The page is organised by embodiment, not by question: each domain section
+   asks the same three questions in the same order (does it render, where can
+   it dream, what does a policy get). The per-domain accent colour is set
+   inline on the <section> as --dom-accent, so one rule set serves all four and
+   adding a fifth embodiment needs no new CSS. Everything here falls back to
+   --accent if that variable is missing.
+   ============================================================ */
+.dom__dot {
+  display: inline-block;
+  width: 0.62em; height: 0.62em;
+  margin-right: 0.5em;
+  border-radius: 50%;
+  background: var(--dom-accent, var(--accent));
+  vertical-align: 0.08em;
+}
+/* A subhead inside a domain, one per question. Smaller than section__title so
+   the embodiment stays the dominant heading and the three questions read as
+   its parts, and ruled above so the eye can find where one question ends. */
+.dom__sub {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(1.22rem, 1.8vw, 1.55rem);
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+  max-width: 44ch;
+  margin: 52px 0 14px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+}
+/* the first subhead sits right under the kicker and needs no rule or gap */
+.dom__sub:first-of-type {
+  margin-top: 8px;
+  padding-top: 0;
+  border-top: 0;
+}
+.dom__sub::before {
+  content: "";
+  display: inline-block;
+  width: 3px; height: 0.95em;
+  margin-right: 0.55em;
+  border-radius: 2px;
+  background: var(--dom-accent, var(--accent));
+  vertical-align: -0.1em;
+}
+/* the line introducing the pairs strip under a featured triplet block */
+.dom__more {
+  font-family: var(--serif);
+  color: var(--muted);
+  font-size: 0.97rem;
+  margin: 26px 0 14px;
+  max-width: 68ch;
+}
+/* A single result card carried inside a prose section rather than a results
+   list: no top margin fight with the paragraph above it. */
+.results--inline { margin-top: 26px; }
+
+/* Within a domain section the result card's badge takes the domain's colour,
+   so C2/C3/C4 are visibly attached to the embodiment they were measured on. */
+.dom .result__badge { background: var(--dom-accent, var(--accent)); }
+
+@media (max-width: 720px) {
+  .dom__sub { margin-top: 36px; }
+}
+
+/* ------------------------------------------------------------
+   Pair strip (dream-vs-real supporting evidence, inside a domain)
+   ------------------------------------------------------------
+   Replaces .cmp-grid, which laid the 10 RoboTwin and 12 EgoBench pairs out as
+   five and six full-width rows and so dominated the domain section it was meant
+   to support. One horizontally scrolled row instead: scroll-snap so a card lands
+   square, and the cards keep their own width rather than shrinking to fit.
+   ------------------------------------------------------------ */
+.cmp-strip {
+  display: flex;
+  gap: 16px;
+  margin-top: 18px;
+  padding: 2px 2px 12px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+.cmp-strip > .cmp {
+  flex: 0 0 380px;
+  scroll-snap-align: start;
+}
+.cmp-strip:focus-visible { outline: 2px solid var(--dom-accent, var(--accent)); outline-offset: 4px; }
+.cmp-strip__count {
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  color: var(--muted);
   margin: 2px 0 0;
+}
+@media (max-width: 720px) {
+  .cmp-strip > .cmp { flex-basis: 84vw; }
+}
+
+/* =========================================================================
+   Scroll reveal
+   -------------------------------------------------------------------------
+   Deliberately gated on .js-reveal, which js/main.js puts on <html> only when
+   it is actually going to run the observer. So the default state of a .reveal
+   element is fully visible: if the script fails, is blocked, or the visitor
+   asked for reduced motion, the page is a normal page rather than a column of
+   invisible blocks. The usual mistake is the other way round.
+   ========================================================================= */
+.js-reveal .reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .55s var(--ease, cubic-bezier(.2,.8,.2,1)),
+              transform .55s var(--ease, cubic-bezier(.2,.8,.2,1));
+}
+.js-reveal .reveal.is-in { opacity: 1; transform: none; }
+/* Staggered children, for a row of cards that should arrive in sequence rather
+   than as one block. Three steps is as far as this goes; more reads as a delay. */
+.js-reveal .reveal--d1 { transition-delay: .07s; }
+.js-reveal .reveal--d2 { transition-delay: .14s; }
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* =========================================================================
+   Dark domain section
+   -------------------------------------------------------------------------
+   Used on #realrobot, which is entirely robot video. Video reads better on
+   near-black than on a white card, and one dark section gives the page a
+   light / dark / light rhythm instead of a run of near-identical white slabs.
+
+   The approach is to remap the ink and surface variables for the subtree, so
+   every component inside keeps its own rules and only the palette changes.
+   What the remap cannot reach is the handful of places that hardcode `#fff`
+   as a surface; those are listed explicitly at the end of this block. If you
+   add a component here with a literal white background, add it to that list.
+   ========================================================================= */
+.dom--dark {
+  --ink: #f2f3f5;
+  --ink-soft: rgba(242,243,245,.80);
+  --muted: rgba(242,243,245,.58);
+  --rule: rgba(255,255,255,.12);
+  --rule-strong: rgba(255,255,255,.22);
+  --bg: #121215;
+  --bg-alt: #1a1a1e;
+  --bg-panel: #1f1f24;
+  --accent-tint: rgba(74,222,128,.14);
+  --accent-dk: #7ee2a4;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.35), 0 10px 28px rgba(0,0,0,.3);
+  background: #121215;
+  color: var(--ink);
+  border: 0;
+}
+/* The surfaces that name white directly. Each is a card or a chip that would
+   otherwise be a bright block on a dark field. */
+.dom--dark .rwd-row,
+.dom--dark .rwd-row__cond,
+.dom--dark .rwd-key__item,
+.dom--dark .rw-row,
+.dom--dark .rw-side,
+.dom--dark .result,
+.dom--dark .picker__btn,
+.dom--dark .rwd-shuffle,
+.dom--dark table {
+  background: var(--bg-alt);
+  border-color: var(--rule);
+}
+.dom--dark .rwd-row__hdr,
+.dom--dark .rw-row__hdr {
+  background: var(--bg-panel);
+}
+/* Video cells keep a near-black bed, so a letterboxed clip does not show a
+   lighter box around itself. */
+.dom--dark .rwd-cell,
+.dom--dark .rw-side__media,
+.dom--dark .media { background: #08080a; }
+.dom--dark a { color: var(--accent-dk); }
+.dom--dark .result__badge { color: #06130b; }
+.dom--dark code { background: rgba(255,255,255,.08); color: var(--ink); }
+
+/* The transition bands into and out of the dark section. Height is enough to
+   read as a fade at a normal scroll speed and not so much that it becomes an
+   empty screen. */
+.bleed { height: 104px; }
+/* The first and last stops match the actual neighbouring sections, both of
+   which are plain white, so neither end of the band shows a step. */
+.bleed--todark {
+  background: linear-gradient(180deg, #ffffff 0%, #d7d8da 26%,
+                              #74767c 55%, #2c2d31 80%, #121215 100%);
+}
+.bleed--tolight {
+  background: linear-gradient(180deg, #121215 0%, #2c2d31 20%,
+                              #74767c 45%, #d7d8da 74%, #ffffff 100%);
+}
+@media (max-width: 720px) {
+  .bleed { height: 64px; }
+}
+
+/* The lightbox's still-image pane, used by the pipeline panels. */
+#lb-image {
+  display: block;
+  width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+  background: #fff;
+  border-radius: var(--radius-sm);
+}
+
+/* =========================================================================
+   Results: figures and tables
+   -------------------------------------------------------------------------
+   The figures are the paper's own, rasterized by
+   website_check/make_result_figs.py. They are shown at their natural aspect on
+   a white card, because every one of them was drawn for a white page and a
+   dark card would put a frame of the wrong colour around the plot's own
+   background.
+
+   The tables are real tables, not pictures of tables: they reflow on a phone,
+   the numbers can be selected and copied, and a screen reader reads the row
+   and column headers with each cell. A screenshot of a LaTeX table does none
+   of that.
+   ========================================================================= */
+.resfig {
+  margin: 26px 0 0;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 18px 18px 4px;
+  box-shadow: var(--shadow-sm);
+}
+.resfig img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.resfig figcaption {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--muted);
+  padding: 13px 2px 14px;
+  max-width: 88ch;
+}
+.resfig figcaption strong { color: var(--ink-soft); font-weight: 600; }
+/* For a portrait figure, which would otherwise be blown up to the full column
+   width and tower over everything around it. */
+.resfig--narrow { max-width: 520px; }
+
+/* Two figures of different shapes, side by side on a wide screen. Not a fixed
+   two-column grid: the wide chart needs about twice the width of the narrow
+   one, so they are given 3fr and 2fr. */
+.resfig-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 920px) {
+  .resfig-pair { grid-template-columns: minmax(0, 1fr); }
+}
+
+.restable {
+  margin-top: 26px;
+  /* A table of eight columns will not fit a phone no matter how it is styled,
+     so it scrolls sideways inside its own box rather than forcing the page to.
+     tabindex + role make the scroll container reachable by keyboard. */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+.restable table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-variant-numeric: tabular-nums;
+}
+.restable caption {
+  caption-side: bottom;
+  text-align: left;
+  padding: 13px 18px 16px;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--muted);
+  max-width: 92ch;
+}
+.restable caption strong { color: var(--ink-soft); font-weight: 600; }
+.restable th,
+.restable td {
+  padding: 9px 14px;
+  text-align: right;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--rule);
+}
+.restable thead th {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+  text-transform: none;
+  vertical-align: bottom;
+}
+.restable thead tr:first-child th { border-bottom: 1px solid var(--rule-strong); }
+.restable tbody th[scope="row"],
+.restable tfoot th[scope="row"],
+.restable thead th:first-child {
+  text-align: left;
+  font-weight: 600;
+  color: var(--ink);
+}
+.restable tbody tr:last-child td,
+.restable tbody tr:last-child th { border-bottom: 1px solid var(--rule-strong); }
+.restable tfoot th,
+.restable tfoot td { border-bottom: 0; font-weight: 600; }
+.restable td strong { color: var(--ink); font-weight: 700; }
+/* Our column, tinted so the comparison does not depend on reading the header
+   every time. One tint, not a border: a border would read as a table division. */
+.restable .is-ours { background: color-mix(in srgb, var(--accent) 7%, #fff 93%); }
+.restable tr.is-ours th,
+.restable tr.is-ours td { background: color-mix(in srgb, var(--accent) 7%, #fff 93%); }
+.restable__paren { color: var(--muted); font-weight: 400; font-size: 0.92em; }
+
+/* On the dark section the cards and the our-column tint both have to flip. */
+.dom--dark .resfig,
+.dom--dark .restable { background: var(--bg-alt); border-color: var(--rule); }
+.dom--dark .resfig img { border-radius: var(--radius-sm); }
+.dom--dark .restable .is-ours,
+.dom--dark .restable tr.is-ours th,
+.dom--dark .restable tr.is-ours td {
+  background: color-mix(in srgb, var(--dom-accent, var(--accent)) 14%, #16161a 86%);
+}
+
+/* =========================================================================
+   Scoreboard
+   -------------------------------------------------------------------------
+   Four cells, one per claim, each a link into the section that earns it. Set
+   in the sans and the tabular figures rather than the display serif, so it
+   reads as an index and not as a fifth heading competing with the hero.
+
+   Each cell carries its own --score-accent, matching the domain section it
+   points at, which is how a reader learns the page's colour code before
+   meeting it.
+   ========================================================================= */
+.scoreboard {
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--rule);
+  padding: 34px 0 38px;
+}
+.scoreboard__eyebrow {
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 18px;
+}
+.scoreboard__row {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  /* Auto-fit, not a hard 4: the scoreboard carries one cell per claim, and that
+     count changes. A fixed track left an empty column when C1 came out. */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1px;                 /* hairline dividers, drawn by the cells' own rule */
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+/* Four rows shared by all four cells, so the big numbers sit on one line even
+   when one cell's unit wraps to two. Each cell opts into the parent's rows with
+   `subgrid`; where subgrid is missing the cells simply size themselves, which
+   is the layout this had before and is not broken, only less tidy. */
+.scoreboard__row { grid-template-rows: auto auto auto 1fr; }
+.score {
+  --score-accent: var(--accent);
+  background: #fff;
+  display: grid;
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+}
+.score > a {
+  display: grid;
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+  gap: 2px;
+  height: 100%;
+  padding: 18px 20px 20px;
+  color: inherit;
+  /* The accent is a top edge that only fills in on hover/focus, so four
+     coloured bars do not shout over the numbers at rest. */
+  box-shadow: inset 0 3px 0 transparent;
+  transition: box-shadow .2s, background .2s;
+}
+.score > a:hover,
+.score > a:focus-visible {
+  text-decoration: none;
+  background: #fff;
+  box-shadow: inset 0 3px 0 var(--score-accent);
+}
+.score__ix {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--score-accent);
+}
+.score__big {
+  font-family: var(--sans);
+  font-size: clamp(1.4rem, 2.1vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.score__pct { font-size: 0.6em; font-weight: 600; margin-left: 1px; }
+.score__to { color: var(--muted); font-weight: 400; }
+.score__unit {
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+.score__what {
+  font-family: var(--serif);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+@media (max-width: 960px) {
+  .scoreboard__row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .scoreboard__row { grid-template-columns: minmax(0, 1fr); }
+  .score__what { display: none; }     /* the number and its unit still carry it */
+}
+
+/* =========================================================================
+   Domain rail
+   -------------------------------------------------------------------------
+   The three (or four) questions a domain section asks, as a row of chips
+   under its heading. Two jobs: skip-links inside a very long section, and a
+   standing reminder that every domain asks the same questions in the same
+   order, which is the page's whole structure and is otherwise only visible
+   to someone who reads all of it.
+
+   Sticky, so it stays available while you are inside the section, and it
+   tucks under the topnav rather than next to it.
+   ========================================================================= */
+.domrail {
+  position: sticky;
+  top: 58px;                /* directly under the topnav */
+  z-index: 20;
+  margin: 2px 0 10px;
+  padding: 9px 0;
+  /* Opaque, not translucent. A blurred bar over a chart lets the gridlines and
+     axis labels bleed through the chips, which reads as a rendering fault
+     rather than as depth. --surface is whatever the enclosing section's own
+     background is. */
+  background: var(--surface, var(--bg));
+  border-bottom: 1px solid var(--rule);
+}
+.domrail ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  counter-reset: domrail;
+}
+.domrail li { counter-increment: domrail; }
+.domrail a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 5px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--rule-strong);
+  font-family: var(--sans);
+  font-size: 0.79rem;
+  font-weight: 600;
+  color: var(--muted);
+  transition: color .2s, border-color .2s, background .2s;
+}
+/* The step number comes from a counter, not the markup, so reordering the
+   list cannot leave the numbers wrong. */
+.domrail a::before {
+  content: counter(domrail);
+  font-size: 0.86em;
+  font-weight: 700;
+  color: var(--dom-accent, var(--accent));
+  opacity: .65;
+}
+.domrail a:hover {
+  text-decoration: none;
+  color: var(--ink);
+  border-color: var(--dom-accent, var(--accent));
+}
+.domrail a[aria-current="true"] {
+  color: #fff;
+  background: var(--dom-accent, var(--accent));
+  border-color: var(--dom-accent, var(--accent));
+}
+.domrail a[aria-current="true"]::before { color: #fff; opacity: .8; }
+
+.dom--dark { --surface: #121215; }
+.dom--dark .domrail { border-bottom-color: var(--rule); }
+.dom--dark .domrail a[aria-current="true"] { color: #08130c; }
+
+/* A subhead's anchor jump has to clear the topnav AND the rail. */
+.dom__sub { scroll-margin-top: 118px; }
+
+@media (max-width: 720px) {
+  .domrail {
+    padding: 7px 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .domrail::-webkit-scrollbar { display: none; }
+  .domrail ol { flex-wrap: nowrap; }
+  .domrail a { white-space: nowrap; }
+}
+
+/* =========================================================================
+   Dataset cards
+   -------------------------------------------------------------------------
+   Three cards, one per embodiment, each carrying the facts someone needs
+   before deciding to download: size, task count, clip count. The size is
+   given prominence because it is the one number that changes whether a reader
+   clicks, and burying it in prose would be the unhelpful choice.
+
+   Each card takes the accent of the domain section it corresponds to, so the
+   colour coding established by the scoreboard holds here too.
+   ========================================================================= */
+.dsets {
+  list-style: none;
+  margin: 32px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* subgrid so the three cards' facts rows and links align across columns
+     even when one card's prose runs a line longer */
+  grid-template-rows: auto auto auto 1fr auto;
+  gap: 18px;
+}
+.dset {
+  --dset-accent: var(--accent);
+  display: grid;
+  grid-row: span 5;
+  grid-template-rows: subgrid;
+  gap: 0;
+  padding: 20px 22px 22px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  /* the domain's colour as a top edge, which is the lightest way to tie a card
+     to its section without colouring the whole surface */
+  border-top: 3px solid var(--dset-accent);
+}
+.dset__hd h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.12rem;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+}
+.dset__robot {
+  margin: 5px 0 0;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.dset__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 22px;
+  margin: 15px 0 0;
+  padding: 13px 0 0;
+  border-top: 1px solid var(--rule);
+  font-family: var(--sans);
+}
+.dset__facts dt {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.dset__facts dd {
+  margin: 2px 0 0;
+  font-size: 1.02rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.dset__what {
+  margin: 14px 0 16px;
+  font-family: var(--serif);
+  font-size: 0.92rem;
+  line-height: 1.58;
+  color: var(--ink-soft);
+}
+.dset__what code {
+  font-size: 0.86em;
+  background: var(--bg-panel);
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+.dset__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  align-self: end;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--dset-accent);
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--dset-accent) 72%, #000 28%);
+  transition: background .18s, color .18s;
+}
+.dset__link:hover {
+  text-decoration: none;
+  background: var(--dset-accent);
+  color: #fff;
+}
+.dset__link:focus-visible { outline: 2px solid var(--dset-accent); outline-offset: 2px; }
+
+@media (max-width: 980px) {
+  .dsets { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .dset { grid-row: auto; grid-template-rows: none; }
+}
+
+/* A heading over each dataset group. The two groups are "what went in" and
+   "what came out", which is the distinction the whole page rests on, so it
+   gets a real heading rather than being implied by order. */
+.dsets__group {
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 34px 0 0;
+}
+.dsets__group + .dsets { margin-top: 14px; }
+/* Two cards should not stretch to a three-column track and leave a gap. */
+.dsets:has(> .dset:nth-child(2):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+
+
+/* =========================================================================
+   Hover-expand comparison, on the "unseen scenes" dream tiles
+   -------------------------------------------------------------------------
+   Hovering a dream tile opens a panel showing the same episode three ways:
+   the simulator's render, the conditioning skeleton, and the dream. The
+   skeleton is the pane that carries the argument — it shows the only input
+   was a drawing — so it sits in the middle, between cause and effect.
+
+   The panel is positioned relative to the tile and lifted above the marquee.
+   The marquee already pauses on hover (its own rule), which is what makes a
+   panel anchored to a moving element viable at all.
+   ========================================================================= */
+.tile { position: relative; }
+.tilex {
+  /* fixed, and parented to <body>: see the comment in makeTile. left/top are
+     set from JS against the tile's measured rect. */
+  position: fixed;
+  z-index: 60;
+  transform: translateY(6px) scale(.98);
+  transform-origin: center;
+  /* Wide enough that three panes are legible rather than three thumbnails.
+     Clamped to the viewport so a tile at the edge of the strip does not open
+     a panel half off screen. */
+  /* Larger than the tiles it replaces: the point of the panel is to be looked
+     at closely, so each pane gets real size rather than being a thumbnail. */
+  width: min(96vw, calc(var(--tilex-cols) * 27rem));
+  display: grid;
+  grid-template-columns: repeat(var(--tilex-cols, 3), minmax(0, 1fr));
+  gap: 6px;
+  padding: 10px 10px 4px;
+  border-radius: var(--radius);
+  background: #0e0e11;
+  box-shadow: 0 18px 50px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.1);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;      /* the tile owns the hover, not the panel */
+  transition: opacity .18s ease, transform .18s ease, visibility 0s .18s;
+}
+.tilex--on {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity .18s ease, transform .18s ease, visibility 0s;
+}
+
+.tilex__cell { margin: 0; min-width: 0; }
+/* `.tile video` absolutely positions every video inside a tile so it fills the
+   tile frame. These panes live inside the same .tile but must be in normal
+   flow, or they are pulled out of it and the panel collapses to its captions.
+   Hence the explicit `position: static` — not redundant. */
+.tilex__cell video {
+  position: static;
+  inset: auto;
+  /* floor the pane height so a 2-pane panel is not shorter than a 3-pane one */
+  min-height: 15rem;
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #000;
+  box-shadow: inset 0 0 0 2px var(--cell-accent, transparent);
+}
+/* One colour per role, matching the key used in the simulation sections, so a
+   reader who has seen that key does not have to learn a second one. */
+.tilex__cell--gt    { --cell-accent: #2a78d6; }
+.tilex__cell--skel  { --cell-accent: #8a8f98; }
+.tilex__cell--dream { --cell-accent: #f08200; }
+.tilex__cap {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 6px 2px 0;
+  font-family: var(--sans);
+}
+.tilex__eyebrow {
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--cell-accent, #fff);
+}
+.tilex__role { font-size: 0.64rem; color: rgba(255,255,255,.52); }
+.tilex__foot {
+  grid-column: 1 / -1;
+  margin: 2px 0 6px;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  line-height: 1.45;
+  color: rgba(255,255,255,.58);
+}
+
+.tile__swap {
+  position: absolute;
+  left: 6px; bottom: 6px;
+  z-index: 2;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(10,10,12,.72);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  pointer-events: none;
+  transition: background .18s ease;
+}
+.tile--open .tile__swap { background: var(--accent); }
+.tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.tile:has(.tilex) .tile__frame { cursor: zoom-in; }
+
+@media (hover: none) {
+  /* No pointer: the panel is unreachable, so do not advertise it. */
+  .tile__swap, .tilex { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tilex, .tilex--on { transition: opacity .18s ease, visibility 0s; transform: none; }
+}
+
+/* Two dream stripes in a generalization row. A small gap and no reversal: the
+   pair should read as one wide band. The second stripe gets a different
+   duration so the two do not march in lockstep, which looks mechanical. */
+.gen-stripes { display: grid; gap: 8px; }
+.gen-stripes .marquee:nth-child(2) .marquee__track { --marquee-duration: 74s; }
+
+/* =========================================================================
+   Real-robot task selector
+   -------------------------------------------------------------------------
+   One task on screen, chips to switch, replacing a stack of three rows. The
+   score rides on the chip so the selector doubles as the results table — a
+   reader sees all three outcomes without clicking through, which a plain tab
+   strip would hide.
+   ========================================================================= */
+/* ---------------------------------------------------------------- selector
+   A task list in a column beside the thing it selects, shared by the
+   real-robot rows and the real-world dream rows. Two reasons it is a column
+   and not a strip: a row of buttons has to stay short to fit the width, which
+   caps what each button can say, and a 16:9 video wants the width more than
+   the buttons do. `align-items: start` so the column does not stretch to the
+   height of a tall stage and leave the buttons floating in the middle.
+
+   Below 900px it folds back to a row above the stage, because at phone width a
+   fixed sidebar would leave the video about 60% of a narrow screen. */
+.sel {
+  display: grid;
+  grid-template-columns: minmax(13rem, 17rem) minmax(0, 1fr);
+  gap: clamp(16px, 2.2vw, 30px);
+  align-items: start;
+}
+.sel__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  position: sticky;
+  /* a tall stage scrolls past; the list stays reachable beside it */
+  top: 84px;
+}
+.sel__stage { min-width: 0; }
+
+.sel__btn {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--rule-strong);
+  background: var(--bg);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .18s, background .18s, transform .08s;
+}
+.sel__btn:hover { border-color: var(--dom-accent, var(--accent)); }
+.sel__btn:active { transform: translateY(1px); }
+.sel__btn:focus-visible {
+  outline: 2px solid var(--dom-accent, var(--accent));
+  outline-offset: 2px;
+}
+.sel__n {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  flex: 0 0 auto;
+}
+.sel__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sel__name {
   font-family: var(--sans);
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--ink);
 }
-.rwd-sim__note {
-  margin: 5px 0 0;
-  max-width: 62ch;
-  font-size: 0.8rem;
-  line-height: 1.5;
+.sel__meta {
+  font-family: var(--sans);
+  font-size: 0.72rem;
   color: var(--muted);
 }
-.rwd-sim__clips {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
-  gap: 12px;
+.sel__btn[aria-selected="true"] {
+  background: var(--dom-accent, var(--accent));
+  border-color: var(--dom-accent, var(--accent));
 }
-.rwd-sim__clip { margin: 0; min-width: 0; }
-.rwd-sim__clip video {
-  display: block;
+.sel__btn[aria-selected="true"] .sel__name { color: #08130c; }
+.sel__btn[aria-selected="true"] .sel__meta,
+.sel__btn[aria-selected="true"] .sel__n { color: rgba(8,19,12,.72); }
+
+@media (max-width: 900px) {
+  .sel { grid-template-columns: minmax(0, 1fr); }
+  .sel__list { flex-direction: row; flex-wrap: wrap; position: static; }
+  .sel__list > .sel__btn, .sel__list > .rw-tab { width: auto; }
+}
+
+.rw-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+/* in the sidebar the chips are the column, so they fill it and stack */
+.sel > .rw-tabs {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  margin: 0;
+  position: sticky;
+  top: 84px;
+}
+.sel > .rw-tabs > .rw-tab {
   width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  border-radius: 9px;
-  background: #0d0f12;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 10px;
+  text-align: left;
+  padding: 11px 14px;
 }
-.rwd-sim__clip figcaption {
-  margin-top: 5px;
+@media (max-width: 900px) {
+  .sel > .rw-tabs { flex-direction: row; flex-wrap: wrap; position: static; }
+  .sel > .rw-tabs > .rw-tab { width: auto; }
+}
+.rw-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 9px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--rule-strong);
+  background: var(--bg);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color .18s, background .18s, transform .08s;
+}
+.rw-tab:hover { border-color: var(--dom-accent, var(--accent)); }
+.rw-tab:active { transform: translateY(1px); }
+.rw-tab:focus-visible { outline: 2px solid var(--dom-accent, var(--accent)); outline-offset: 2px; }
+.rw-tab__name {
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.rw-tab__score {
   font-family: var(--sans);
   font-size: 0.72rem;
   font-variant-numeric: tabular-nums;
   color: var(--muted);
 }
+.rw-tab[aria-selected="true"] {
+  background: var(--dom-accent, var(--accent));
+  border-color: var(--dom-accent, var(--accent));
+}
+.rw-tab[aria-selected="true"] .rw-tab__name { color: #08130c; }
+.rw-tab[aria-selected="true"] .rw-tab__score,
+.rw-tab[aria-selected="true"] .sel__n { color: rgba(8,19,12,.72); }
+.rw-stage > .rw-row { margin: 0; }
+

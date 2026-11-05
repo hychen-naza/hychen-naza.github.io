@@ -397,26 +397,27 @@
         return el;
       };
 
-      const seen = document.createElement("div");
-      seen.className = "gen-band__clips";
-      // Clips that share a `group` are one comparison — the same task in the
-      // clean and the randomised scene — so they go in a wrapper that wraps as
-      // a unit. Without it, fourteen loose tiles reflow into rows of five and
-      // a task's two scenes end up on different lines, which is precisely the
-      // pairing the band exists to show. Ungrouped clips stay loose tiles.
-      let pen = null, penKey = null;
-      for (const c of row.trained_on.clips) {
-        const tile = makeTile(VIDEOS_BASE + c.local_path, {
-          label: c.label, aspect: "4 / 3", accent: "var(--anchor)",
-        });
-        if (!c.group) { seen.appendChild(tile); pen = penKey = null; continue; }
-        if (c.group !== penKey) {
-          pen = document.createElement("div");
-          pen.className = "gen-pair";
-          penKey = c.group;
-          seen.appendChild(pen);
+      // A drifting stripe where the row asks for one, a static wrap otherwise.
+      // Seven 4:3 tiles wrap to two ragged lines at most widths; one stripe
+      // keeps the band a single line and matches the dreams strip below it, so
+      // the two read as the same kind of evidence seen before and after.
+      let seen;
+      if (row.trained_on.marquee) {
+        seen = buildMarquee(
+          row.trained_on.clips.map(c => ({ src: VIDEOS_BASE + c.local_path, label: c.label })),
+          // drifts the other way from the dreams strips under it, so the two
+          // bands are not mistaken for one continuous belt
+          { direction: "right", accent: "var(--anchor)", aspect: "4 / 3" });
+        seen.classList.add("gen-band__stripe");
+        seen.setAttribute("aria-label", "World-model training clips, clean scene");
+      } else {
+        seen = document.createElement("div");
+        seen.className = "gen-band__clips";
+        for (const c of row.trained_on.clips) {
+          seen.appendChild(makeTile(VIDEOS_BASE + c.local_path, {
+            label: c.label, aspect: "4 / 3", accent: "var(--anchor)",
+          }));
         }
-        pen.appendChild(tile);
       }
 
       const asItem = c => ({
