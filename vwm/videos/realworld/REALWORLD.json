@@ -20,7 +20,8 @@
     "duration_s": 19.0,
     "width": 1280,
     "height": 720
-   }
+   },
+   "score": "16/20 \u00b7 base 0/20"
   },
   {
    "task": "pour",
@@ -43,7 +44,8 @@
     "duration_s": 23.0,
     "width": 1280,
     "height": 720
-   }
+   },
+   "score": "17/20 \u00b7 base 3/20"
   },
   {
    "task": "tongs",
@@ -64,7 +66,8 @@
     "duration_s": 23.0,
     "width": 1280,
     "height": 720
-   }
+   },
+   "score": "17/20 \u00b7 base 7/20"
   }
  ],
  "robustness": [
@@ -141,6 +144,7 @@
    "ours": "ACT trained on 5 real demonstrations plus 40 world-model dream demonstrations. For the robustness row it additionally saw out-of-distribution dreams (a white tablecloth and a different cluttered object layout).",
    "base": "ACT trained on the same 5 real demonstrations only, with no dream data. For the robustness row it saw no OOD dreams."
   },
-  "encode": "H.264 (libx264, preset slow, CRF 23), yuv420p, high profile, +faststart, no audio. Scaled to 720p on the long edge preserving the source 16:9 aspect ratio (1280x720), source frame rate and real-time playback speed preserved; each clip is a straight trim of one raw take."
+  "encode": "H.264 (libx264, preset slow, CRF 23), yuv420p, high profile, +faststart, no audio. Scaled to 720p on the long edge preserving the source 16:9 aspect ratio (1280x720), source frame rate and real-time playback speed preserved; each clip is a straight trim of one raw take.",
+  "_score_note": "comparison[].score is the real+dream student over 20 trials with the real-only baseline beside it, from the paper's real-robot table. It labels the task, not the individual clip shown: each clip is ONE rollout and carries its own outcome badge."
  }
 }

@@ -776,6 +776,7 @@
     {
       host: "real-exec",
       key: "comparison",
+      selector: true,
       idKey: "task",
       noun: "task",
       mode: "pair",
@@ -840,6 +841,68 @@
       return;
     }
     host.innerHTML = "";
+
+    // A task selector rather than a stack, once there is more than one task.
+    // Three tasks shown at once is three times the vertical space for a
+    // comparison a reader makes one task at a time anyway, and it buries the
+    // results card below it. One row on screen, chips to switch.
+    if (rows.length > 1 && section.selector) {
+      const strip = document.createElement("div");
+      strip.className = "rw-tabs";
+      strip.setAttribute("role", "tablist");
+      strip.setAttribute("aria-label", `Choose a ${section.noun}`);
+
+      const stage = document.createElement("div");
+      stage.className = "rw-stage";
+
+      const built = rows.map(r => buildRealworldRow(section, r));
+      const chips = rows.map((row, i) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "rw-tab";
+        b.setAttribute("role", "tab");
+        // The outcome rides on the chip, so the selector doubles as the result
+        // table: a reader sees all three scores without clicking through.
+        const score = row.score || (row.ours && row.ours.score) || "";
+        b.innerHTML = `<span class="rw-tab__name">${escapeHTML(row.label || "")}</span>` +
+                      (score ? `<span class="rw-tab__score">${escapeHTML(score)}</span>` : "");
+        b.addEventListener("click", () => show(i));
+        // arrow keys move between tabs, which is what a tablist owes a keyboard user
+        b.addEventListener("keydown", e => {
+          const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+          if (!d) return;
+          e.preventDefault();
+          const n = (i + d + rows.length) % rows.length;
+          show(n);
+          chips[n].focus();
+        });
+        strip.appendChild(b);
+        return b;
+      });
+
+      let current = -1;
+      function show(i) {
+        if (i === current) return;
+        current = i;
+        stage.innerHTML = "";
+        stage.appendChild(built[i]);
+        chips.forEach((c, n) => {
+          c.setAttribute("aria-selected", String(n === i));
+          c.tabIndex = n === i ? 0 : -1;
+        });
+        // Only the visible row should be decoding video.
+        built.forEach((r, n) => {
+          if (n !== i && r._pause) r._pause();
+        });
+        if (built[i]._play) built[i]._play();
+        observeRealworldRows(stage);
+      }
+
+      host.append(strip, stage);
+      show(0);
+      return;
+    }
+
     for (const row of rows) host.appendChild(buildRealworldRow(section, row));
     observeRealworldRows(host);
   }

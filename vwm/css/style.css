@@ -2451,7 +2451,9 @@ button.rw-frame:hover {
   /* Wide enough that three panes are legible rather than three thumbnails.
      Clamped to the viewport so a tile at the edge of the strip does not open
      a panel half off screen. */
-  width: min(92vw, calc(var(--tilex-cols) * 19rem));
+  /* Larger than the tiles it replaces: the point of the panel is to be looked
+     at closely, so each pane gets real size rather than being a thumbnail. */
+  width: min(96vw, calc(var(--tilex-cols) * 27rem));
   display: grid;
   grid-template-columns: repeat(var(--tilex-cols, 3), minmax(0, 1fr));
   gap: 6px;
@@ -2479,6 +2481,8 @@ button.rw-frame:hover {
 .tilex__cell video {
   position: static;
   inset: auto;
+  /* floor the pane height so a 2-pane panel is not shorter than a 3-pane one */
+  min-height: 15rem;
   width: 100%;
   height: auto;
   display: block;
@@ -2552,3 +2556,53 @@ button.rw-frame:hover {
    duration so the two do not march in lockstep, which looks mechanical. */
 .gen-stripes { display: grid; gap: 8px; }
 .gen-stripes .marquee:nth-child(2) .marquee__track { --marquee-duration: 74s; }
+
+/* =========================================================================
+   Real-robot task selector
+   -------------------------------------------------------------------------
+   One task on screen, chips to switch, replacing a stack of three rows. The
+   score rides on the chip so the selector doubles as the results table — a
+   reader sees all three outcomes without clicking through, which a plain tab
+   strip would hide.
+   ========================================================================= */
+.rw-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+.rw-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 9px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--rule-strong);
+  background: var(--bg);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color .18s, background .18s, transform .08s;
+}
+.rw-tab:hover { border-color: var(--dom-accent, var(--accent)); }
+.rw-tab:active { transform: translateY(1px); }
+.rw-tab:focus-visible { outline: 2px solid var(--dom-accent, var(--accent)); outline-offset: 2px; }
+.rw-tab__name {
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.rw-tab__score {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+.rw-tab[aria-selected="true"] {
+  background: var(--dom-accent, var(--accent));
+  border-color: var(--dom-accent, var(--accent));
+}
+.rw-tab[aria-selected="true"] .rw-tab__name { color: #08130c; }
+.rw-tab[aria-selected="true"] .rw-tab__score { color: rgba(8,19,12,.72); }
+.rw-stage > .rw-row { margin: 0; }
