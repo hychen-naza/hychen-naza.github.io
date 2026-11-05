@@ -328,6 +328,31 @@
     return wrap;
   }
 
+  // Deal the clips round-robin across tasks, so consecutive tiles on a stripe
+  // are different tasks. The manifest lists them task by task (all four
+  // `click_bell` scenes, then all four `dump_bin_bigbin`), and a strip in that
+  // order shows one task for several seconds before moving on, which reads as a
+  // single task's gallery rather than a sweep across seven of them.
+  //
+  // Deterministic, not shuffled: the same manifest always produces the same
+  // strip, so a screenshot of the page can be reproduced from the data.
+  // The label's leading words before the "·" are the task; clips with no label
+  // fall in one bucket and keep their relative order.
+  function interleaveByTask(clips) {
+    const buckets = new Map();
+    for (const c of clips) {
+      const key = String(c.label || "").split("·")[0].trim().toLowerCase();
+      if (!buckets.has(key)) buckets.set(key, []);
+      buckets.get(key).push(c);
+    }
+    const lists = [...buckets.values()];
+    const out = [];
+    for (let i = 0; out.length < clips.length; i++) {
+      for (const list of lists) if (i < list.length) out.push(list[i]);
+    }
+    return out;
+  }
+
   // ---------------------------------------------------------- trained-on / dreams-in
   // Which section each generalization row belongs to. The key is matched as a prefix
   // so "T-Rex real" lands on the T-Rex host without hard-coding the suffix.
@@ -428,7 +453,7 @@
         realSrc: c.real_path ? VIDEOS_BASE + c.real_path : undefined,
         skeletonSrc: c.skeleton_path ? VIDEOS_BASE + c.skeleton_path : undefined,
       });
-      const all = row.dreams_in.clips.map(asItem);
+      const all = interleaveByTask(row.dreams_in.clips).map(asItem);
       // Two stripes once there are enough episodes to fill them. Both drift the
       // same way, so the pair reads as one wide band rather than two things
       // moving against each other. The episodes that expand to three panes are

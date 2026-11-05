@@ -229,7 +229,53 @@
      "fps": 20
     }
    ],
-   "note": "There is no real column for these scenes and none can be made. The scenes were never demonstrated: each episode pairs a held-out saved simulation demo with a single cam1 still of the current real scene, and the per-episode manifest says in so many words that this is a scene reference rather than synchronised per-step images or a real rollout. The anchor is that still, the one real pixel budget the model was given. The trajectories come from the success-filtered sim replay set tableheight-0750-0755-n147.hdf5 (table height 0.750 to 0.755 m, task_type hammer_hit_nail, env DexScaleLiteSimStateReplay), so the conditioning skeletons are rendered from simulated joint positions, not real measured ones."
+   "note": "There is no real column for these scenes and none can be made. The scenes were never demonstrated: each episode pairs a held-out saved simulation demo with a single cam1 still of the current real scene, and the per-episode manifest says in so many words that this is a scene reference rather than synchronised per-step images or a real rollout. The anchor is that still, the one real pixel budget the model was given. The trajectories come from the success-filtered sim replay set tableheight-0750-0755-n147.hdf5 (table height 0.750 to 0.755 m, task_type hammer_hit_nail, env DexScaleLiteSimStateReplay), so the conditioning skeletons are rendered from simulated joint positions, not real measured ones.",
+   "real_rollouts": true
+  },
+  {
+   "variant": "position",
+   "label": "Shifted object placement",
+   "caption": "The same hammer task with the block moved well outside the band of positions the five real demonstrations covered.",
+   "conditioning": "sim skeleton (held-out sim demo)",
+   "episodes": [
+    {
+     "id": "demo_107",
+     "dream": {
+      "src": "videos/realworld_dreams/ood_position_demo_107_dream.mp4"
+     },
+     "skeleton": {
+      "src": "videos/realworld_dreams/ood_position_demo_107_skeleton.mp4"
+     },
+     "anchor": {
+      "src": "videos/realworld_dreams/ood_position_demo_107_anchor.png"
+     }
+    },
+    {
+     "id": "demo_112",
+     "dream": {
+      "src": "videos/realworld_dreams/ood_position_demo_112_dream.mp4"
+     },
+     "skeleton": {
+      "src": "videos/realworld_dreams/ood_position_demo_112_skeleton.mp4"
+     },
+     "anchor": {
+      "src": "videos/realworld_dreams/ood_position_demo_112_anchor.png"
+     }
+    },
+    {
+     "id": "demo_119",
+     "dream": {
+      "src": "videos/realworld_dreams/ood_position_demo_119_dream.mp4"
+     },
+     "skeleton": {
+      "src": "videos/realworld_dreams/ood_position_demo_119_skeleton.mp4"
+     },
+     "anchor": {
+      "src": "videos/realworld_dreams/ood_position_demo_119_anchor.png"
+     }
+    }
+   ],
+   "real_rollouts": false
   }
  ],
  "meta": {
@@ -241,7 +287,8 @@
    "tongs": "hf://datasets/hchen657Naza/realworld_vwm_all @ tongs/real/{dreams_realskel_wm_h53_step2500,skeletons,videos}",
    "pour_dream": "hf://datasets/hchen657Naza/realworld_vwm_all @ pour/dream/{dreams,skeletons}",
    "pour_real": "capture node <capture-node> @ <capture-path>/<group>/<source_episode>/rgb_448x256.mp4, mapped via pour/dream/manifest.json (demo_28 and demo_47 are both group front_pointcloud)",
-   "ood_vision": "hf://datasets/hchen657Naza/real_world_videos @ OOD/vision/<episode>/{dream.mp4,skeleton_448x256.mp4,cam1_rgb.png}"
+   "ood_vision": "hf://datasets/hchen657Naza/real_world_videos @ OOD/vision/<episode>/{dream.mp4,skeleton_448x256.mp4,cam1_rgb.png}",
+   "ood_position": "hf://datasets/hchen657Naza/real_world_videos @ OOD/position/<episode>/{dream.mp4,skeleton_448x256.mp4,cam1_rgb.png}"
   },
   "checkpoints": {
    "hammer": "OSCAR-2B + LoRA r16, ckpt_real_hammer_handover_448x256_hist5_lora29/lora_step4500.pt, 5 history + 24 future",

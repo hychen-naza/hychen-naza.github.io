@@ -630,23 +630,42 @@
       where the recording does not settle it. The success rates are in the results below.
     </p>
 
-    <h3 class="dom__sub reveal" id="real-ood-h">A tablecloth and kitchen clutter neither policy was shown</h3>
+    <h3 class="dom__sub reveal" id="real-ood-h">Two shifts neither policy was shown</h3>
     <p class="section__kicker reveal">
-      Neither policy saw a <em>real</em> demonstration from this scene, but <strong>ours</strong>
-      trained on dreams of out-of-distribution scenes, so it is not novel to ours the way it is to
-      <strong>base</strong>. This vision shift is the only out-of-distribution condition with
-      real-robot rollouts: a position-OOD variant exists as dream data but was never rolled out on
-      the robot, so it is not shown here.
-    </p>
-    <p class="section__kicker reveal">
-      One rollout per policy at a time, and <strong>Shuffle</strong> re-rolls the two sides
-      <em>separately</em>: these are <strong>independent trials, not matched pairs</strong>, so
-      whichever two land on screen together the pairing is arbitrary. Each badge is the outcome of
-      that one rollout, not a rate.
+      Pick a shift on the left. A <strong>vision shift</strong> &mdash; the dark lab table draped
+      in a white cloth and littered with kitchen objects &mdash; and a <strong>position
+      shift</strong>, the same task with the block moved well outside the band of placements the
+      five real demonstrations covered. Neither was ever demonstrated on the robot, so there is no
+      real video of either: the first cell is the real frame the dream starts from, a still, and
+      its absence of a clip is a property of the data rather than a missing file.
     </p>
 
-    <div id="real-ood" class="rw-rows">
-      <p class="gallery__loading">Loading out-of-distribution rollouts&hellip;</p>
+    <div id="real-ood-dreams" class="rwd-rows">
+      <p class="gallery__loading">Loading out-of-distribution dreams&hellip;</p>
+    </div>
+
+    <!-- The ours-vs-base real rollouts. These exist for the VISION shift only;
+         the position shift was never run on the robot. dreams.js publishes the
+         selected variant here as data attributes so this block hides itself for
+         a variant with no rollouts, instead of sitting under a position-shift
+         selection implying it belongs to it. -->
+    <div id="real-ood-rollouts" data-variant="vision" data-rollouts="some">
+      <h4 class="rwd-sub reveal">On the robot, under the vision shift</h4>
+      <p class="section__kicker reveal">
+        <strong>Ours</strong> trained on dreams of out-of-distribution scenes, so this scene is not
+        novel to it the way it is to <strong>base</strong>. One rollout per policy at a time, and
+        <strong>Shuffle</strong> re-rolls the two sides <em>separately</em>: these are
+        <strong>independent trials, not matched pairs</strong>, so whichever two land on screen
+        together the pairing is arbitrary. Each badge is the outcome of that one rollout, not a rate.
+      </p>
+      <div id="real-ood" class="rw-rows">
+        <p class="gallery__loading">Loading out-of-distribution rollouts&hellip;</p>
+      </div>
+      <p class="rwd-norollouts">
+        The position shift was dreamed but never rolled out on the robot, so there are no
+        real-hardware trials to show for it. The vision shift above is the only
+        out-of-distribution condition with real rollouts.
+      </p>
     </div>
 
     <h3 class="dom__sub reveal" id="real-results-h">16/20, 17/20 and 17/20, from five real demonstrations</h3>

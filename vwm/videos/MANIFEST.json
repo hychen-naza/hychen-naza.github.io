@@ -604,7 +604,8 @@
        "local_path": "generalize/EgoBench/trained_insert_cans_r1t1.mp4",
        "label": "Insert cans \u00b7 room 1"
       }
-     ]
+     ],
+     "marquee": true
     },
     "dreams_in": {
      "label": "Three rooms it never saw",

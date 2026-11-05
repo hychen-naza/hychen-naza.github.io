@@ -1,10 +1,15 @@
 /* DreamRehearse project page — real-world world-model dreams (#dreams)
    - loads videos/realworld_dreams/DREAMS.json
-   - all four groups are on the page at once, one three-up row each: real
-     (ground truth) | skeleton (the conditioning input) | dream (the only
-     generated video). A row shows ONE of its group's episodes; the section's
-     single Shuffle button re-rolls every row at once, independently per group
-     and never onto the episode that row is already showing.
+   - two independent panels: the demonstrated tasks render into #real-dreams,
+     the out-of-distribution variants into #real-ood-dreams, each with its own
+     side selector and its own Shuffle. One group is on screen per panel, as a
+     two-by-two: simulator rollout | skeleton over dream | real. Shuffle
+     re-rolls only the group showing in that panel, and never onto the episode
+     it is already showing.
+   - the OOD panel publishes its selected variant on #real-ood-rollouts as data
+     attributes, so the real ours-vs-base rollouts (owned and rendered by
+     main.js) can be hidden for a variant that has none. Only the vision shift
+     was ever run on the robot.
    - a row's group context — label, caption, conditioning chip and the caveat
      derived from the conditioning string — is built once with the row and
      never moves, because reading one group's caveat beside another group's
@@ -35,11 +40,16 @@
   const DREAMS_URL = "videos/realworld_dreams/DREAMS.json";
 
   const host = document.getElementById("real-dreams");
+  // The OOD variants render into the out-of-distribution section instead of the
+  // task section: vision shift and position shift are two answers to the same
+  // question, so they belong in one place with a selector, not scattered as
+  // extra tabs on the end of the task list.
+  const oodHost = document.getElementById("real-ood-dreams");
   // The section is spliced in separately from this file, so do nothing at all
   // when it is absent: no fetch, no listeners, no console noise.
-  if (!host) return;
+  if (!host && !oodHost) return;
 
-  const section = host.closest(".section") || host;
+  const section = (host || oodHost).closest(".section") || host || oodHost;
 
   // ---------------------------------------------------------- roles
   // The three columns, in reading order. `anchor` is the still-image form of
@@ -114,22 +124,14 @@
   const rows = new Map();   // Element -> clock
   let io = null;            // one observer for the life of the page
 
-  // One record per group, in the file's own order, each holding its block, its
-  // entry, the caveat derived from that entry's conditioning string, its usable
-  // episodes and which of them is on screen. The group context travels with the
-  // row rather than being looked up at swap time, so a row's header can never
-  // belong to a different group than the video under it.
-  let groups = [];
+  // The group context travels with the row rather than being looked up at swap
+  // time, so a row's header can never belong to a different group than the
+  // video under it.
 
-  // Selector state. `active` is an index into groups, or -1 before the first
-  // activate(); the other three are null until buildSelector() runs, which it
-  // does not when there is only one group to show.
-  let active = -1;
-  let selList = null;
-  let selStage = null;
-  let selBtns = [];
-  let pickerHint = null;
-  let pickerBtn = null;
+  // One entry per block that has a host and at least one group. Each carries
+  // its own host, groups, selected index, tab buttons, stage and shuffle
+  // control, because the two panels are switched and re-rolled independently.
+  let panels = [];
 
   // ---------------------------------------------------------- fetch + render
   fetch(DREAMS_URL, { cache: "no-store" })
@@ -152,13 +154,26 @@
            and that index come from a separate encoding step.`);
     });
 
+  // Either host may be absent, and on a load failure both want the message, so
+  // this writes to whichever ones are actually on the page.
   function pending(html) {
-    host.innerHTML = `<p class="gallery__loading">${html}</p>`;
+    for (const h of [host, oodHost]) {
+      if (h) h.innerHTML = `<p class="gallery__loading">${html}</p>`;
+    }
   }
 
+  // Two independent panels, one per block, each with its own host, selector,
+  // shuffle button and "which group is showing" state. They were one panel with
+  // one `active` index when every group lived in the task section; moving the
+  // OOD variants to their own section means two of everything, so the state
+  // travels on the panel rather than in module-level variables that only one
+  // panel could own.
   function render(data) {
-    groups = [];
+    panels = [];
     for (const block of BLOCKS) {
+      const h = block.key === "ood" ? oodHost : host;
+      if (!h) continue;
+      const groups = [];
       for (const entry of entriesOf(data, block)) {
         // a null hole in the episode list is not an episode
         const episodes = entry.episodes.filter(Boolean);
@@ -177,9 +192,13 @@
           cur: -1,      // index into episodes
         });
       }
+      if (groups.length) {
+        panels.push({ block, host: h, groups, active: -1, btns: [],
+                      stage: null, hint: null, shuffle: null });
+      }
     }
 
-    if (!groups.length) {
+    if (!panels.length) {
       pending(`<strong>Assets pending.</strong> <code>${DREAMS_URL}</code> carries no
         <code>tasks</code> or <code>ood</code> entries yet, so there is nothing to show here.`);
       return;
@@ -188,76 +207,84 @@
     // The encoded size is recorded once for the whole file; use it so a
     // re-encode at another resolution is letterboxed correctly rather than
     // cropped to a hard-coded aspect.
-    const res = /^(\d+)\s*[x×]\s*(\d+)$/i.exec(String((data.meta || {}).resolution || ""));
+    const res = /^(\d+)\s*[x\u00d7]\s*(\d+)$/i.exec(String((data.meta || {}).resolution || ""));
     if (res) section.style.setProperty("--rwd-aspect", `${res[1]} / ${res[2]}`);
 
-    host.innerHTML = "";
-    host.appendChild(buildPicker());
-
-    groups.forEach((g, i) => {
-      g.titleId = `dreams-${g.block.key}-${slugify(g.entry[g.block.idKey] || g.name) || i}`;
-      g.el = buildGroup(g);
-    });
-
-    // One group on screen, chosen from a column beside it, rather than all four
-    // stacked. Four three-up rows is four screens of scrolling for a comparison
-    // a reader makes one task at a time, and only the visible group decodes
-    // video — which matters here, where every row drives three clips off one clock.
-    if (groups.length > 1) {
-      host.appendChild(buildSelector());
-      activate(0);
-    } else {
-      const stage = document.createElement("div");
-      stage.className = "rwd-stage";
-      stage.appendChild(groups[0].el);
-      host.appendChild(stage);
-      showEpisode(groups[0], 0);
+    for (const panel of panels) {
+      panel.host.innerHTML = "";
+      panel.host.appendChild(buildPicker(panel));
+      panel.groups.forEach((g, i) => {
+        g.titleId = `dreams-${g.block.key}-${slugify(g.entry[g.block.idKey] || g.name) || i}`;
+        g.el = buildGroup(g);
+      });
+      if (panel.groups.length > 1) {
+        panel.host.appendChild(buildSelector(panel));
+        activate(panel, 0);
+      } else {
+        const stage = document.createElement("div");
+        stage.className = "rwd-stage";
+        stage.appendChild(panel.groups[0].el);
+        panel.host.appendChild(stage);
+        panel.stage = stage;
+        panel.active = 0;
+        showEpisode(panel.groups[0], 0);
+        announceVariant(panel);
+        refreshPickerHint(panel);
+      }
     }
   }
 
   // ---------------------------------------------------------- task selector
-  function buildSelector() {
+  function buildSelector(panel) {
     const wrap = document.createElement("div");
     wrap.className = "sel";
 
-    selList = document.createElement("div");
-    selList.className = "sel__list";
-    selList.setAttribute("role", "tablist");
-    selList.setAttribute("aria-orientation", "vertical");
-    selList.setAttribute("aria-label", "Choose a task");
+    const list = document.createElement("div");
+    list.className = "sel__list";
+    list.setAttribute("role", "tablist");
+    list.setAttribute("aria-orientation", "vertical");
+    list.setAttribute("aria-label",
+      panel.block.key === "ood" ? "Choose a shift" : "Choose a task");
 
-    selStage = document.createElement("div");
-    selStage.className = "sel__stage rwd-stage";
+    const stage = document.createElement("div");
+    stage.className = "sel__stage rwd-stage";
+    panel.stage = stage;
 
-    selBtns = groups.map((g, i) => {
+    panel.btns = panel.groups.map((g, i) => {
       const b = document.createElement("button");
       b.type = "button";
       b.className = `sel__btn sel__btn--${g.block.key}`;
       b.setAttribute("role", "tab");
       const n = g.episodes.length;
-      const sim = (g.entry.sim && g.entry.sim.clips || []).length;
+      // What a reader needs before clicking: how many dreams there are, and —
+      // for the OOD panel — whether this shift was ever actually run on the
+      // robot, because only one of the two was.
+      const meta = panel.block.key === "ood"
+        ? `${n} dream${n === 1 ? "" : "s"} &middot; ` +
+          (g.entry.real_rollouts === false
+            ? "no real rollouts" : "real rollouts below")
+        : `${n} episode${n === 1 ? "" : "s"}`;
       b.innerHTML =
         `<span class="sel__n" aria-hidden="true">${i + 1}</span>` +
         `<span class="sel__text">` +
           `<span class="sel__name">${esc(g.name)}</span>` +
-          `<span class="sel__meta">${n} episode${n === 1 ? "" : "s"}` +
-          (sim ? ` &middot; ${sim} sim rollout${sim === 1 ? "" : "s"}` : "") +
-          `</span></span>`;
-      b.addEventListener("click", () => activate(i));
+          `<span class="sel__meta">${meta}</span>` +
+        `</span>`;
+      b.addEventListener("click", () => activate(panel, i));
       b.addEventListener("keydown", e => {
         const d = (e.key === "ArrowDown" || e.key === "ArrowRight") ? 1
                 : (e.key === "ArrowUp" || e.key === "ArrowLeft") ? -1 : 0;
         if (!d) return;
         e.preventDefault();
-        const j = (i + d + groups.length) % groups.length;
-        activate(j);
-        selBtns[j].focus();
+        const j = (i + d + panel.groups.length) % panel.groups.length;
+        activate(panel, j);
+        panel.btns[j].focus();
       });
-      selList.appendChild(b);
+      list.appendChild(b);
       return b;
     });
 
-    wrap.append(selList, selStage);
+    wrap.append(list, stage);
     return wrap;
   }
 
@@ -265,25 +292,40 @@
   // detached, not parked: leaving it inside its own (detached) group element
   // would mean the next activate() appends a second row beside it, and its
   // clock's rAF loop would keep running for a group nobody can see.
-  function activate(i) {
-    if (i === active) return;
-    const prev = groups[active];
+  function activate(panel, i) {
+    if (i === panel.active) return;
+    const prev = panel.groups[panel.active];
     if (prev) {
       teardownRow(prev.row);
       if (prev.row) prev.row.remove();
       prev.row = null;
       prev.cur = -1;
     }
-    active = i;
-    const g = groups[i];
-    selStage.innerHTML = "";
-    selStage.appendChild(g.el);
-    selBtns.forEach((b, n) => {
+    panel.active = i;
+    const g = panel.groups[i];
+    panel.stage.innerHTML = "";
+    panel.stage.appendChild(g.el);
+    panel.btns.forEach((b, n) => {
       b.setAttribute("aria-selected", String(n === i));
       b.tabIndex = n === i ? 0 : -1;
     });
     showEpisode(g, 0);
-    refreshPickerHint();
+    announceVariant(panel);
+    refreshPickerHint(panel);
+  }
+
+  // The real ours-vs-base rollouts in this section exist for the vision shift
+  // only. Rather than duplicating that fact in prose, the selected variant is
+  // published on the section so CSS can hide the rollout block (and show the
+  // note in its place) when a variant with no rollouts is selected. main.js
+  // still owns and renders those rows; nothing here reaches into them.
+  function announceVariant(panel) {
+    if (panel.block.key !== "ood") return;
+    const g = panel.groups[panel.active];
+    const holder = document.getElementById("real-ood-rollouts");
+    if (!holder || !g) return;
+    holder.dataset.variant = String(g.entry[panel.block.idKey] || "");
+    holder.dataset.rollouts = g.entry.real_rollouts === false ? "none" : "some";
   }
 
   function entriesOf(data, block) {
@@ -296,7 +338,7 @@
   // .picker/.picker__btn are the page-wide picker component defined in
   // css/style.css and shared with the robustness section; nothing here
   // restyles them, so both strips are the same control rather than lookalikes.
-  function buildPicker() {
+  function buildPicker(panel) {
     const strip = document.createElement("div");
     strip.className = "picker";
 
@@ -305,51 +347,54 @@
     btn.className = "picker__btn rwd-shuffle";
     // icon plus a word: the glyph alone would carry the whole meaning by shape,
     // and the label alone would not read as the section's one action
-    btn.innerHTML = `${DR_ICON.shuffle}<span class="rwd-shuffle__text">Shuffle episodes</span>`;
-    btn.setAttribute("aria-label", "Shuffle: show a different recorded episode in every row");
-    btn.addEventListener("click", shuffleAll);
+    const noun = panel.block.key === "ood" ? "dreams" : "episodes";
+    btn.innerHTML = `${DR_ICON.shuffle}<span class="rwd-shuffle__text">Shuffle ${noun}</span>`;
+    btn.setAttribute("aria-label",
+      `Shuffle: show a different recorded ${noun.replace(/s$/, "")} in this row`);
+    btn.addEventListener("click", () => shufflePanel(panel));
 
     const hint = document.createElement("p");
     hint.className = "rwd-shuffle__hint";
 
-    pickerBtn = btn;
-    pickerHint = hint;
+    panel.shuffle = btn;
+    panel.hint = hint;
     strip.append(btn, hint);
-    refreshPickerHint();
+    refreshPickerHint(panel);
     return strip;
   }
 
-  // The hint has to be recomputed on every task switch, not written once: with
-  // one group on screen, Shuffle re-rolls that group only, and its pool is the
-  // selected task's episode count. A fixed "re-rolls all 4 rows" line would be
-  // describing behaviour the selector removed.
-  function refreshPickerHint() {
-    if (!pickerHint) return;
-    const g = groups[active];
+  // Recomputed on every switch, not written once: with one group on screen
+  // Shuffle re-rolls that group only, and its pool is the selected group's
+  // episode count. A fixed "re-rolls all 4 rows" line would describe behaviour
+  // the selector removed.
+  function refreshPickerHint(panel) {
+    if (!panel.hint) return;
+    const g = panel.groups[panel.active];
+    const noun = panel.block.key === "ood" ? "dream" : "recorded episode";
     if (g) {
       const n = g.episodes.length;
-      pickerHint.textContent = n > 1
-        ? `one click re-rolls the ${g.name} row, drawing from its ${n} recorded episodes`
-        : `${g.name} has only one recorded episode, so there is nothing to re-roll`;
-      if (pickerBtn) pickerBtn.disabled = n < 2;
+      panel.hint.textContent = n > 1
+        ? `one click re-rolls the ${g.name} row, drawing from its ${n} ${noun}s`
+        : `${g.name} has only one ${noun}, so there is nothing to re-roll`;
+      if (panel.shuffle) panel.shuffle.disabled = n < 2;
       return;
     }
-    const pool = groups.reduce((n, x) => n + x.episodes.length, 0);
-    pickerHint.textContent =
-      `one click re-rolls this row, drawing from ${pool} recorded ` +
-      `${pool === 1 ? "episode" : "episodes"}`;
-    if (pickerBtn) pickerBtn.disabled = !groups.some(x => x.episodes.length > 1);
+    const pool = panel.groups.reduce((n, x) => n + x.episodes.length, 0);
+    panel.hint.textContent =
+      `one click re-rolls this row, drawing from ${pool} ${noun}${pool === 1 ? "" : "s"}`;
+    if (panel.shuffle) {
+      panel.shuffle.disabled = !panel.groups.some(x => x.episodes.length > 1);
+    }
   }
 
-  // Re-roll whichever group is on screen. Groups that are not displayed have no
-  // row to re-roll — their row was destroyed when they were switched away from,
-  // and they rebuild on episode 0 when selected again.
-  function shuffleAll() {
-    for (const g of groups) {
-      if (active >= 0 && g !== groups[active]) continue;
-      const j = pickOther(g);
-      if (j !== g.cur) showEpisode(g, j);
-    }
+  // Re-roll whichever group this panel is showing. Groups that are not
+  // displayed have no row to re-roll: theirs was destroyed when they were
+  // switched away from, and rebuilds on episode 0 when selected again.
+  function shufflePanel(panel) {
+    const g = panel.groups[panel.active];
+    if (!g) return;
+    const j = pickOther(g);
+    if (j !== g.cur) showEpisode(g, j);
   }
 
   // Draw from the other episodes only: pick one of the n-1 others, then step
@@ -490,9 +535,16 @@
 
     // ---- sim | skeleton over dream | real, always in that order so the eye
     // can run down a column across rows
+    // The column list depends on what this row actually has. With a simulator
+    // rollout it is the full 2x2. Without one -- the OOD variants, which have
+    // no source rollout published -- the still the dream starts FROM leads,
+    // because putting it last would read as an outcome rather than a starting
+    // point.
+    const cols = simSrc(entry) ? COLUMNS : ["real", "skeleton", "dream"];
+
     const quad = document.createElement("div");
     quad.className = "rwd-quad";
-    for (const col of COLUMNS) {
+    for (const col of cols) {
       // An OOD episode has no `real` video, only an `anchor` still. Fall back
       // to it for that cell rather than rendering an empty one.
       const kind = (col === "real" && !asset(ep.real) && asset(ep.anchor)) ? "anchor" : col;

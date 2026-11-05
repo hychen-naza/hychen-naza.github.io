@@ -356,3 +356,34 @@ button.rwd-frame:hover {
 @media (prefers-reduced-motion: reduce) {
   .rwd-frame { transition: none; }
 }
+
+/* ----------- out-of-distribution: rollouts only where they exist -----------
+   dreams.js writes the selected variant onto #real-ood-rollouts. The vision
+   shift has real ours-vs-base trials; the position shift was dreamed but never
+   run on the robot. Driving the swap off a data attribute keeps main.js the
+   only owner of those rows -- nothing here reaches in and edits them -- and
+   means the "no rollouts" sentence is shown by the same switch that hides the
+   rollouts, so the two can never disagree. */
+#real-ood-rollouts > .rwd-norollouts {
+  display: none;
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px dashed var(--rule-strong);
+  border-radius: 12px;
+  max-width: 70ch;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+#real-ood-rollouts[data-rollouts="none"] > h4,
+#real-ood-rollouts[data-rollouts="none"] > .section__kicker,
+#real-ood-rollouts[data-rollouts="none"] > #real-ood { display: none; }
+#real-ood-rollouts[data-rollouts="none"] > .rwd-norollouts { display: block; }
+
+.rwd-sub {
+  margin: clamp(22px, 2.6vw, 34px) 0 6px;
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  font-weight: 650;
+  color: var(--ink);
+}
