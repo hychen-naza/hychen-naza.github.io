@@ -772,7 +772,7 @@
         </div>
         <dl class="dset__facts">
           <div><dt>Size</dt><dd>0.56 GB</dd></div>
-          <div><dt>Tasks</dt><dd>8</dd></div>
+          <div><dt>Tasks</dt><dd>7 evaluated<span class="dset__sub">8 in the training mix</span></dd></div>
           <div><dt>Episodes</dt><dd>490</dd></div>
         </dl>
         <p class="dset__what">
@@ -780,6 +780,12 @@
           model predicts, and the rendered skeleton that conditions it. Split into
           <code>success/</code> and <code>failed/</code> &mdash; the failures are deliberate, so the
           downstream filter has something to reject.
+        </p>
+        <p class="dset__what">
+          The <strong>seven tasks this paper evaluates</strong> are the ones shown everywhere else
+          on this page. The download carries an eighth, <code>place_cans_plasticbox</code>, because
+          the world model was fitted to it too: dropping it would leave a &ldquo;training
+          set&rdquo; that cannot reproduce the model. It is training-only and is scored nowhere.
         </p>
         <a class="dset__link"
            href="https://huggingface.co/datasets/hchen657Naza/wm_8tasks_training_dataset">

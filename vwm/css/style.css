@@ -5424,3 +5424,18 @@ button.rw-frame:hover {
 .rw-tab[aria-selected="true"] .sel__n { color: rgba(8,19,12,.72); }
 .rw-stage > .rw-row { margin: 0; }
 
+
+/* A qualifier under a dataset fact, for the one number that needs it: the
+   RoboTwin training set is 7 evaluated tasks out of 8 the model was fitted to,
+   and a bare "8" there contradicted every other count on the page while a bare
+   "7" would have misdescribed the download. */
+.dset__sub {
+  display: block;
+  margin-top: 1px;
+  font-size: 0.64rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: .01em;
+  color: var(--muted);
+  text-transform: none;
+}
