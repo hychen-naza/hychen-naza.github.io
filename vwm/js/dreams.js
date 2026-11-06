@@ -6,10 +6,11 @@
      two-by-two: simulator rollout | skeleton over dream | real. Shuffle
      re-rolls only the group showing in that panel, and never onto the episode
      it is already showing.
-   - the OOD panel publishes its selected variant on #real-ood-rollouts as data
-     attributes, so the real ours-vs-base rollouts (owned and rendered by
-     main.js) can be hidden for a variant that has none. Only the vision shift
-     was ever run on the robot.
+   - each OOD variant's extra evidence (the ours-vs-base rollouts for the
+     vision shift, a placement figure for the position shift) is moved out of
+     #real-ood-extras into that variant's group, so it reads as part of the
+     variant rather than as a block that happens to sit below the selector.
+     Only the vision shift was ever run on the robot.
    - a row's group context — label, caption, conditioning chip and the caveat
      derived from the conditioning string — is built once with the row and
      never moves, because reading one group's caveat beside another group's
@@ -216,6 +217,7 @@
       panel.groups.forEach((g, i) => {
         g.titleId = `dreams-${g.block.key}-${slugify(g.entry[g.block.idKey] || g.name) || i}`;
         g.el = buildGroup(g);
+        attachExtra(g);
       });
       if (panel.groups.length > 1) {
         panel.host.appendChild(buildSelector(panel));
@@ -228,7 +230,6 @@
         panel.stage = stage;
         panel.active = 0;
         showEpisode(panel.groups[0], 0);
-        announceVariant(panel);
         refreshPickerHint(panel);
       }
     }
@@ -255,20 +256,21 @@
       b.type = "button";
       b.className = `sel__btn sel__btn--${g.block.key}`;
       b.setAttribute("role", "tab");
-      const n = g.episodes.length;
-      // What a reader needs before clicking: how many dreams there are, and —
-      // for the OOD panel — whether this shift was ever actually run on the
-      // robot, because only one of the two was.
+      // No episode counts on the buttons: the number of recorded episodes
+      // behind a task is an artefact of what was captured, not something a
+      // reader chooses between, and printing it invites reading a task with
+      // three as better evidenced than one with one. The OOD panel does carry a
+      // sub-label, because whether a shift was ever run on the robot changes
+      // what its tab contains and only one of the two was.
       const meta = panel.block.key === "ood"
-        ? `${n} dream${n === 1 ? "" : "s"} &middot; ` +
-          (g.entry.real_rollouts === false
-            ? "no real rollouts" : "real rollouts below")
-        : `${n} episode${n === 1 ? "" : "s"}`;
+        ? (g.entry.real_rollouts === false
+            ? "dreams only, never run on the robot" : "dreams and real rollouts")
+        : "";
       b.innerHTML =
         `<span class="sel__n" aria-hidden="true">${i + 1}</span>` +
         `<span class="sel__text">` +
           `<span class="sel__name">${esc(g.name)}</span>` +
-          `<span class="sel__meta">${meta}</span>` +
+          (meta ? `<span class="sel__meta">${meta}</span>` : "") +
         `</span>`;
       b.addEventListener("click", () => activate(panel, i));
       b.addEventListener("keydown", e => {
@@ -310,22 +312,7 @@
       b.tabIndex = n === i ? 0 : -1;
     });
     showEpisode(g, 0);
-    announceVariant(panel);
     refreshPickerHint(panel);
-  }
-
-  // The real ours-vs-base rollouts in this section exist for the vision shift
-  // only. Rather than duplicating that fact in prose, the selected variant is
-  // published on the section so CSS can hide the rollout block (and show the
-  // note in its place) when a variant with no rollouts is selected. main.js
-  // still owns and renders those rows; nothing here reaches into them.
-  function announceVariant(panel) {
-    if (panel.block.key !== "ood") return;
-    const g = panel.groups[panel.active];
-    const holder = document.getElementById("real-ood-rollouts");
-    if (!holder || !g) return;
-    holder.dataset.variant = String(g.entry[panel.block.idKey] || "");
-    holder.dataset.rollouts = g.entry.real_rollouts === false ? "none" : "some";
   }
 
   function entriesOf(data, block) {
@@ -427,8 +414,27 @@
       ${block.note ? `<p class="rwd-group__note">${esc(squash(block.note))}</p>` : ""}
       ${caveat.group ? `<p class="rwd-group__note">${esc(squash(caveat.group))}</p>` : ""}`;
     group.appendChild(hdr);
-
     return group;
+  }
+
+  // Per-variant evidence lives in #real-ood-extras in the markup and is MOVED
+  // (not cloned) into the group it belongs to, so it sits under that variant's
+  // dream instead of in a separate block below the selector. Moving rather than
+  // copying matters: #real-ood is rendered by main.js by id, and two copies of
+  // that id would be one live block and one permanently "Loading…".
+  function attachExtra(g) {
+    if (g.block.key !== "ood" || !g.el) return;
+    const store = document.getElementById("real-ood-extras");
+    if (!store) return;
+    const key = String(g.entry[g.block.idKey] || "");
+    const node = store.querySelector(`.rwd-extra[data-variant="${CSS.escape(key)}"]`);
+    if (!node) return;
+    g.el.appendChild(node);
+    // loading="lazy" inside a [hidden] subtree never begins; now that the block
+    // lives in a group that can be shown, let the image load normally
+    for (const img of node.querySelectorAll('img[loading="lazy"]')) {
+      img.loading = "eager";
+    }
   }
 
   // Swap in one of this group's episodes: build the new row first, then tear
@@ -440,8 +446,16 @@
 
     const art = buildRow(g, ep);
     const old = g.row;
-    if (old && old.isConnected) old.replaceWith(art);
-    else g.el.appendChild(art);
+    if (old && old.isConnected) {
+      old.replaceWith(art);
+    } else {
+      // The variant's extra evidence was attached to the group before any row
+      // existed, so a plain appendChild would put the dream row BELOW it. The
+      // row belongs between the header and the evidence that supports it.
+      const extra = g.el.querySelector(":scope > .rwd-extra");
+      if (extra) g.el.insertBefore(art, extra);
+      else g.el.appendChild(art);
+    }
     teardownRow(old);
 
     g.row = art;

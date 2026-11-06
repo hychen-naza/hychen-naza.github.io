@@ -630,42 +630,58 @@
       where the recording does not settle it. The success rates are in the results below.
     </p>
 
-    <h3 class="dom__sub reveal" id="real-ood-h">Two shifts neither policy was shown</h3>
+    <h3 class="dom__sub reveal" id="real-ood-h">Two shifts the world model was never trained on</h3>
     <p class="section__kicker reveal">
       Pick a shift on the left. A <strong>vision shift</strong> &mdash; the dark lab table draped
       in a white cloth and littered with kitchen objects &mdash; and a <strong>position
       shift</strong>, the same task with the block moved well outside the band of placements the
-      five real demonstrations covered. Neither was ever demonstrated on the robot, so there is no
-      real video of either: the first cell is the real frame the dream starts from, a still, and
-      its absence of a clip is a property of the data rather than a missing file.
+      demonstrations covered. Neither appears anywhere in the world model's training data, and
+      neither was ever demonstrated on the robot, so there is no real video of either: the first
+      cell is the real frame the dream starts from, a still, and its absence of a clip is a
+      property of the data rather than a missing file. What each shift has underneath its dream
+      differs, because only one of the two was ever run on the hardware.
     </p>
 
     <div id="real-ood-dreams" class="rwd-rows">
       <p class="gallery__loading">Loading out-of-distribution dreams&hellip;</p>
     </div>
 
-    <!-- The ours-vs-base real rollouts. These exist for the VISION shift only;
-         the position shift was never run on the robot. dreams.js publishes the
-         selected variant here as data attributes so this block hides itself for
-         a variant with no rollouts, instead of sitting under a position-shift
-         selection implying it belongs to it. -->
-    <div id="real-ood-rollouts" data-variant="vision" data-rollouts="some">
-      <h4 class="rwd-sub reveal">On the robot, under the vision shift</h4>
-      <p class="section__kicker reveal">
-        <strong>Ours</strong> trained on dreams of out-of-distribution scenes, so this scene is not
-        novel to it the way it is to <strong>base</strong>. One rollout per policy at a time, and
-        <strong>Shuffle</strong> re-rolls the two sides <em>separately</em>: these are
-        <strong>independent trials, not matched pairs</strong>, so whichever two land on screen
-        together the pairing is arbitrary. Each badge is the outcome of that one rollout, not a rate.
-      </p>
-      <div id="real-ood" class="rw-rows">
-        <p class="gallery__loading">Loading out-of-distribution rollouts&hellip;</p>
+    <!-- Per-variant evidence, moved by dreams.js into whichever OOD group is on
+         screen so it sits directly under that variant's dream rather than in a
+         block of its own below the selector. Hidden here; the moved copies are
+         inside .rwd-group and show with it. #real-ood stays owned and rendered
+         by main.js wherever it ends up, since it is found by id. -->
+    <div id="real-ood-extras" hidden>
+      <div class="rwd-extra" data-variant="vision">
+        <h4 class="rwd-sub">On the robot, under this shift</h4>
+        <p class="rwd-extra__note">
+          <strong>Ours</strong> trained on dreams of out-of-distribution scenes, so this scene is
+          not novel to it the way it is to <strong>base</strong>. One rollout per policy at a time,
+          and <strong>Shuffle</strong> above re-rolls the two sides <em>separately</em>: these are
+          <strong>independent trials, not matched pairs</strong>, so whichever two land on screen
+          together the pairing is arbitrary. Each badge is the outcome of that one rollout, not a
+          rate.
+        </p>
+        <div id="real-ood" class="rw-rows">
+          <p class="gallery__loading">Loading out-of-distribution rollouts&hellip;</p>
+        </div>
       </div>
-      <p class="rwd-norollouts">
-        The position shift was dreamed but never rolled out on the robot, so there are no
-        real-hardware trials to show for it. The vision shift above is the only
-        out-of-distribution condition with real rollouts.
-      </p>
+
+      <div class="rwd-extra" data-variant="position">
+        <h4 class="rwd-sub">Where the object was put, and how it went</h4>
+        <figure class="resfig resfig--inline">
+          <img src="assets/results/res_position.png" width="1852" height="550" loading="lazy"
+               decoding="async"
+               alt="Two views of the workspace from the robot's camera. Left: green dots mark the nail placements that were demonstrated, inside a small green box, and orange squares mark the much wider spread of placements that were only dreamed. Right: green ticks and red crosses mark the policy's outcome at those dreamed placements."/>
+          <figcaption>
+            Left: the nail placements that were actually demonstrated (green, inside the box)
+            against the placements that were only ever dreamed (orange). Right: the policy's
+            outcome at those dreamed placements. This shift has dream data and scored outcomes but
+            was never rolled out on the robot as ours-vs-base video, so it is shown here as a
+            figure rather than as a pair of clips.
+          </figcaption>
+        </figure>
+      </div>
     </div>
 
     <h3 class="dom__sub reveal" id="real-results-h">16/20, 17/20 and 17/20, from five real demonstrations</h3>
@@ -722,19 +738,6 @@
       </table>
     </div>
 
-    <figure class="resfig reveal">
-      <img src="assets/results/res_position.png" width="1852" height="550" loading="lazy"
-           decoding="async"
-           alt="Two views of the workspace from the robot's camera. Left: green dots mark the nail placements that were demonstrated, inside a small green box, and orange squares mark the much wider spread of placements that were only dreamed. Right: green ticks and red crosses mark the policy's outcome at those dreamed placements."/>
-      <figcaption>
-        The other out-of-distribution axis: <strong>where the object is</strong>, not what the scene
-        looks like. Left: the nail placements that were actually demonstrated (green, inside the
-        box) against the placements that were only ever dreamed (orange). Right: the policy's
-        outcome at those dreamed placements. This axis has dream data and scored outcomes but no
-        ours-vs-base rollout videos, which is why it appears here as a figure and not above as
-        video.
-      </figcaption>
-    </figure>
   </div>
 </section>
 
